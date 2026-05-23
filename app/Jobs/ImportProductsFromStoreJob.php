@@ -7,6 +7,7 @@ use App\Models\JobLog;
 use App\Services\ProductImportService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Throwable;
 
 class ImportProductsFromStoreJob implements ShouldQueue
@@ -17,6 +18,11 @@ class ImportProductsFromStoreJob implements ShouldQueue
     public int $timeout = 300;
 
     public function __construct(private Store $store) {}
+
+    public function middleware(): array
+    {
+        return [new WithoutOverlapping('import-store-' . $this->store->id)];
+    }
 
     public function handle(ProductImportService $importService): void
     {
