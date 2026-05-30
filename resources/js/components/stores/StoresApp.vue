@@ -50,7 +50,14 @@
           </tr>
         </tbody>
       </table>
+
+      <div v-if="loadingMore" class="text-center py-4 text-gray-400 text-sm">Loading more…</div>
+      <div v-else-if="!hasMore" class="text-center py-3 text-gray-400 text-xs border-t">
+        All {{ total }} stores loaded
+      </div>
     </div>
+
+    <div ref="sentinel" class="h-1"></div>
   </div>
 </template>
 
@@ -62,22 +69,59 @@ export default {
     return {
       stores: [],
       loading: true,
+      loadingMore: false,
       message: null,
+      currentPage: 1,
+      lastPage: 1,
+      total: 0,
+      observer: null,
     };
   },
 
+  computed: {
+    hasMore() {
+      return this.currentPage < this.lastPage;
+    },
+  },
+
   async created() {
-    await this.fetchStores();
+    await this.fetchStores(1, true);
+  },
+
+  mounted() {
+    this.$nextTick(() => {
+      this.observer = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting && this.hasMore && !this.loadingMore) {
+          this.fetchStores(this.currentPage + 1, false);
+        }
+      }, { rootMargin: '200px' });
+      if (this.$refs.sentinel) this.observer.observe(this.$refs.sentinel);
+    });
+  },
+
+  beforeUnmount() {
+    this.observer?.disconnect();
   },
 
   methods: {
-    async fetchStores() {
-      this.loading = true;
+    async fetchStores(page = 1, replace = false) {
+      if (replace) {
+        this.loading = true;
+        this.stores = [];
+      } else {
+        this.loadingMore = true;
+      }
+
       try {
-        const data = await window.api('/api/stores');
-        this.stores = data.data.map(s => ({ ...s, syncing: false }));
+        const data = await window.api(`/api/stores?page=${page}`);
+        const rows = data.data.map(s => ({ ...s, syncing: false }));
+        this.stores = replace ? rows : [...this.stores, ...rows];
+        this.currentPage = data.current_page;
+        this.lastPage = data.last_page;
+        this.total = data.total;
       } finally {
         this.loading = false;
+        this.loadingMore = false;
       }
     },
 
@@ -91,8 +135,7 @@ export default {
         store.sync_status = 'idle';
         store.last_synced_at = new Date().toLocaleString();
         this.message = { type: 'success', text: res.message };
-        // Refresh to get updated products_count
-        await this.fetchStores();
+        await this.fetchStores(1, true);
       } catch (e) {
         store.sync_status = 'error';
         this.message = { type: 'error', text: e.data?.message || 'Sync failed. Check your channel credentials.' };

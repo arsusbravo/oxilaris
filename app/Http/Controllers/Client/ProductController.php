@@ -29,7 +29,9 @@ class ProductController extends Controller
             });
         }
 
-        if ($request->filled('store_id')) {
+        if ($request->filled('store_ids')) {
+            $query->whereIn('store_id', (array) $request->store_ids);
+        } elseif ($request->filled('store_id')) {
             $query->where('store_id', $request->store_id);
         }
 

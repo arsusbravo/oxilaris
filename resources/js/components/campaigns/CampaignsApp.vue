@@ -35,13 +35,20 @@
               <span v-if="c.ai_content?.length" class="text-green-600">{{ c.ai_content.length }} ads generated</span>
               <span v-else class="text-gray-400">Not generated</span>
             </td>
-            <td class="px-6 py-4 text-right space-x-3">
+            <td class="px-6 py-4 text-right">
               <a :href="`/campaigns/${c.id}`" class="text-sm text-indigo-600 hover:underline">View</a>
             </td>
           </tr>
         </tbody>
       </table>
+
+      <div v-if="loadingMore" class="text-center py-4 text-gray-400 text-sm">Loading more…</div>
+      <div v-else-if="!hasMore" class="text-center py-3 text-gray-400 text-xs border-t">
+        All {{ total }} campaigns loaded
+      </div>
     </div>
+
+    <div ref="sentinel" class="h-1"></div>
   </div>
 </template>
 
@@ -53,19 +60,60 @@ export default {
     return {
       campaigns: [],
       loading: true,
+      loadingMore: false,
+      currentPage: 1,
+      lastPage: 1,
+      total: 0,
+      observer: null,
     };
   },
 
+  computed: {
+    hasMore() {
+      return this.currentPage < this.lastPage;
+    },
+  },
+
   async created() {
-    try {
-      const data = await window.api('/api/campaigns');
-      this.campaigns = data.data;
-    } finally {
-      this.loading = false;
-    }
+    await this.fetchCampaigns(1, true);
+  },
+
+  mounted() {
+    this.$nextTick(() => {
+      this.observer = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting && this.hasMore && !this.loadingMore) {
+          this.fetchCampaigns(this.currentPage + 1, false);
+        }
+      }, { rootMargin: '200px' });
+      if (this.$refs.sentinel) this.observer.observe(this.$refs.sentinel);
+    });
+  },
+
+  beforeUnmount() {
+    this.observer?.disconnect();
   },
 
   methods: {
+    async fetchCampaigns(page = 1, replace = false) {
+      if (replace) {
+        this.loading = true;
+        this.campaigns = [];
+      } else {
+        this.loadingMore = true;
+      }
+
+      try {
+        const data = await window.api(`/api/campaigns?page=${page}`);
+        this.campaigns = replace ? data.data : [...this.campaigns, ...data.data];
+        this.currentPage = data.current_page;
+        this.lastPage = data.last_page;
+        this.total = data.total;
+      } finally {
+        this.loading = false;
+        this.loadingMore = false;
+      }
+    },
+
     statusBadge(status) {
       return {
         draft:  'bg-gray-100 text-gray-600',

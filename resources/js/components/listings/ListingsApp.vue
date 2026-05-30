@@ -14,9 +14,44 @@
           <h3 class="font-semibold text-gray-700">Select Products</h3>
           <span class="text-sm text-gray-400">{{ selectedProducts.length }} selected</span>
         </div>
-        <div class="px-4 py-2 border-b">
+        <div class="px-4 py-2 border-b flex gap-2">
           <input v-model="search" @input="debouncedSearch" type="text" placeholder="Search products…"
-            class="w-full border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+            class="flex-1 border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+
+          <!-- Store filter dropdown -->
+          <div class="relative" ref="storeDropdownRef">
+            <button @click="storeDropdownOpen = !storeDropdownOpen" type="button"
+              class="flex items-center gap-1.5 border rounded px-3 py-1.5 text-sm whitespace-nowrap transition-colors"
+              :class="selectedStoreIds.length
+                ? 'border-indigo-400 bg-indigo-50 text-indigo-700'
+                : 'border-gray-300 text-gray-600 hover:border-gray-400'">
+              <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              {{ selectedStoreIds.length ? `${selectedStoreIds.length} store${selectedStoreIds.length > 1 ? 's' : ''}` : 'All stores' }}
+              <svg class="w-3 h-3 shrink-0 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            <div v-show="storeDropdownOpen"
+              class="absolute right-0 top-full mt-1 w-52 bg-white border border-gray-200 rounded-lg shadow-lg z-20 py-1">
+              <div v-if="stores.length === 0" class="px-3 py-2 text-sm text-gray-400">No stores available</div>
+              <label v-for="store in stores" :key="store.id"
+                class="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                <input type="checkbox" :value="store.id" v-model="selectedStoreIds"
+                  @change="fetchProducts(1, true)" class="rounded text-indigo-600" />
+                <span class="text-sm text-gray-700 truncate">{{ store.name }}</span>
+              </label>
+              <div v-if="selectedStoreIds.length" class="border-t mt-1 pt-1">
+                <button @click="clearStoreFilter" type="button"
+                  class="w-full text-left px-3 py-1.5 text-xs text-red-500 hover:bg-red-50 transition-colors">
+                  Clear filter
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
         <div v-if="loadingProducts && products.length === 0" class="text-center py-8 text-gray-400 text-sm">Loading…</div>
         <div v-else-if="products.length === 0" class="text-center py-8 text-gray-400 text-sm">No products found.</div>
@@ -78,32 +113,40 @@
       </div>
       <div v-if="loadingListings" class="text-center py-8 text-gray-400 text-sm">Loading…</div>
       <div v-else-if="listings.length === 0" class="text-center py-8 text-gray-400 text-sm">No listings yet.</div>
-      <table v-else class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Channel</th>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Last Pushed</th>
-            <th class="px-4 py-3"></th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200">
-          <tr v-for="listing in listings" :key="listing.id">
-            <td class="px-4 py-3 text-sm text-gray-900">{{ listing.product?.title }}</td>
-            <td class="px-4 py-3 text-sm text-gray-500">{{ listing.channel_integration?.name }}</td>
-            <td class="px-4 py-3">
-              <span :class="statusBadge(listing.status)" class="px-2 py-1 rounded text-xs font-medium">{{ listing.status }}</span>
-            </td>
-            <td class="px-4 py-3 text-sm text-gray-400">{{ listing.last_pushed_at || 'Never' }}</td>
-            <td class="px-4 py-3 text-right space-x-3">
-              <button @click="push(listing)" class="text-sm text-green-600 hover:underline font-medium">Re-push</button>
-              <button @click="remove(listing)" class="text-sm text-red-500 hover:underline">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <template v-else>
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Channel</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Last Pushed</th>
+              <th class="px-4 py-3"></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr v-for="listing in listings" :key="listing.id">
+              <td class="px-4 py-3 text-sm text-gray-900">{{ listing.product?.title }}</td>
+              <td class="px-4 py-3 text-sm text-gray-500">{{ listing.channel_integration?.name }}</td>
+              <td class="px-4 py-3">
+                <span :class="statusBadge(listing.status)" class="px-2 py-1 rounded text-xs font-medium">{{ listing.status }}</span>
+              </td>
+              <td class="px-4 py-3 text-sm text-gray-400">{{ listing.last_pushed_at || 'Never' }}</td>
+              <td class="px-4 py-3 text-right space-x-3">
+                <button @click="push(listing)" class="text-sm text-green-600 hover:underline font-medium">Re-push</button>
+                <button @click="remove(listing)" class="text-sm text-red-500 hover:underline">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div v-if="listingsLoadingMore" class="text-center py-4 text-gray-400 text-sm">Loading more…</div>
+        <div v-else-if="!listingsHasMore" class="text-center py-3 text-gray-400 text-xs border-t">
+          All {{ listingsTotal }} listings loaded
+        </div>
+      </template>
     </div>
+
+    <div ref="listingsSentinel" class="h-1"></div>
   </div>
 </template>
 
@@ -115,18 +158,27 @@ export default {
     return {
       products: [],
       listings: [],
+      stores: [],
       marketplaceChannels: [],
       selectedProducts: [],
       selectedChannels: [],
+      selectedStoreIds: [],
+      storeDropdownOpen: false,
       loadingProducts: true,
       loadingMore: false,
       loadingListings: true,
+      listingsLoadingMore: false,
       pushing: false,
       message: null,
       search: '',
       searchTimer: null,
       currentPage: 1,
       lastPage: 1,
+      listingsPage: 1,
+      listingsLastPage: 1,
+      listingsTotal: 0,
+      listingsObserver: null,
+      clickOutsideHandler: null,
     };
   },
 
@@ -140,10 +192,41 @@ export default {
     hasMore() {
       return this.currentPage < this.lastPage;
     },
+    listingsHasMore() {
+      return this.listingsPage < this.listingsLastPage;
+    },
   },
 
   async created() {
-    await Promise.all([this.fetchProducts(1, true), this.fetchListings(), this.fetchChannels()]);
+    await Promise.all([
+      this.fetchProducts(1, true),
+      this.fetchListings(1, true),
+      this.fetchChannels(),
+      this.fetchStores(),
+    ]);
+  },
+
+  mounted() {
+    this.$nextTick(() => {
+      this.listingsObserver = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting && this.listingsHasMore && !this.listingsLoadingMore) {
+          this.fetchListings(this.listingsPage + 1, false);
+        }
+      }, { rootMargin: '200px' });
+      if (this.$refs.listingsSentinel) this.listingsObserver.observe(this.$refs.listingsSentinel);
+
+      this.clickOutsideHandler = (e) => {
+        if (this.$refs.storeDropdownRef && !this.$refs.storeDropdownRef.contains(e.target)) {
+          this.storeDropdownOpen = false;
+        }
+      };
+      document.addEventListener('click', this.clickOutsideHandler);
+    });
+  },
+
+  beforeUnmount() {
+    this.listingsObserver?.disconnect();
+    document.removeEventListener('click', this.clickOutsideHandler);
   },
 
   methods: {
@@ -158,6 +241,7 @@ export default {
       try {
         const params = new URLSearchParams({ page });
         if (this.search) params.set('search', this.search);
+        this.selectedStoreIds.forEach(id => params.append('store_ids[]', id));
         const data = await window.api(`/api/products?${params}`);
 
         this.products = replace ? data.data : [...this.products, ...data.data];
@@ -192,14 +276,35 @@ export default {
       }
     },
 
-    async fetchListings() {
-      this.loadingListings = true;
+    async fetchListings(page = 1, replace = false) {
+      if (replace) {
+        this.loadingListings = true;
+        this.listings = [];
+      } else {
+        this.listingsLoadingMore = true;
+      }
+
       try {
-        const data = await window.api('/api/listings');
-        this.listings = data.data;
+        const data = await window.api(`/api/listings?page=${page}`);
+        this.listings = replace ? data.data : [...this.listings, ...data.data];
+        this.listingsPage = data.current_page;
+        this.listingsLastPage = data.last_page;
+        this.listingsTotal = data.total;
       } finally {
         this.loadingListings = false;
+        this.listingsLoadingMore = false;
       }
+    },
+
+    async fetchStores() {
+      const data = await window.api('/api/stores/all');
+      this.stores = data || [];
+    },
+
+    clearStoreFilter() {
+      this.selectedStoreIds = [];
+      this.storeDropdownOpen = false;
+      this.fetchProducts(1, true);
     },
 
     async fetchChannels() {
@@ -222,7 +327,7 @@ export default {
       );
 
       await Promise.allSettled(requests);
-      await this.fetchListings();
+      await this.fetchListings(1, true);
 
       this.message = {
         type: errors === 0 ? 'success' : 'error',

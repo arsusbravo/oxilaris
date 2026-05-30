@@ -1,11 +1,14 @@
 <template>
   <div>
     <div class="flex items-center justify-between mb-4">
-      <h3 class="text-lg font-semibold text-gray-700">Products</h3>
+      <div>
+        <h3 class="text-lg font-semibold text-gray-700">Products</h3>
+        <p v-if="total > 0" class="text-sm text-gray-400 mt-0.5">{{ total }} products total</p>
+      </div>
       <div class="flex gap-2">
         <input v-model="search" @input="debouncedSearch" type="text" placeholder="Search…"
           class="border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-        <select v-model="storeFilter" @change="fetchProducts(1)" class="border border-gray-300 rounded px-3 py-1.5 text-sm">
+        <select v-model="storeFilter" @change="fetchProducts(1, true)" class="border border-gray-300 rounded px-3 py-1.5 text-sm">
           <option value="">All stores</option>
           <option v-for="s in stores" :key="s.id" :value="s.id">{{ s.name }}</option>
         </select>
@@ -19,6 +22,10 @@
     </div>
 
     <div v-else class="bg-white rounded-lg shadow overflow-hidden">
+      <div class="px-4 py-2 border-b bg-gray-50 flex items-center justify-between text-xs text-gray-500">
+        <span>Showing {{ products.length }} of {{ total }}</span>
+        <span v-if="hasMore" class="text-indigo-500">Scroll down to load more</span>
+      </div>
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
@@ -48,17 +55,14 @@
           </tr>
         </tbody>
       </table>
-
-      <div class="px-4 py-3 flex items-center justify-between border-t text-sm text-gray-500">
-        <span>{{ meta.total }} products</span>
-        <div class="flex gap-2">
-          <button @click="fetchProducts(meta.current_page - 1)" :disabled="meta.current_page <= 1"
-            class="px-3 py-1 border rounded disabled:opacity-40 hover:bg-gray-50">Prev</button>
-          <button @click="fetchProducts(meta.current_page + 1)" :disabled="meta.current_page >= meta.last_page"
-            class="px-3 py-1 border rounded disabled:opacity-40 hover:bg-gray-50">Next</button>
-        </div>
+      <div v-if="loadingMore" class="text-center py-4 text-gray-400 text-sm">Loading more…</div>
+      <div v-else-if="!hasMore" class="text-center py-3 text-gray-400 text-xs border-t">
+        All {{ total }} products loaded
       </div>
     </div>
+
+    <!-- Sentinel outside v-else so it exists in DOM from mount -->
+    <div ref="sentinel" class="h-1"></div>
   </div>
 </template>
 
@@ -71,44 +75,74 @@ export default {
       products: [],
       stores: [],
       loading: true,
+      loadingMore: false,
       search: '',
       storeFilter: '',
-      meta: { current_page: 1, last_page: 1, total: 0 },
+      currentPage: 1,
+      lastPage: 1,
+      total: 0,
       searchTimer: null,
+      observer: null,
     };
+  },
+
+  computed: {
+    hasMore() {
+      return this.currentPage < this.lastPage;
+    },
   },
 
   async created() {
     const [, storeData] = await Promise.all([
-      this.fetchProducts(1),
+      this.fetchProducts(1, true),
       window.api('/api/stores/all'),
     ]);
     this.stores = storeData || [];
   },
 
+  mounted() {
+    this.$nextTick(() => {
+      this.observer = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting && this.hasMore && !this.loadingMore) {
+          this.fetchProducts(this.currentPage + 1, false);
+        }
+      }, { rootMargin: '200px' });
+      if (this.$refs.sentinel) this.observer.observe(this.$refs.sentinel);
+    });
+  },
+
+  beforeUnmount() {
+    this.observer?.disconnect();
+  },
+
   methods: {
-    async fetchProducts(page = 1) {
-      this.loading = true;
+    async fetchProducts(page = 1, replace = false) {
+      if (replace) {
+        this.loading = true;
+        this.products = [];
+      } else {
+        this.loadingMore = true;
+      }
+
       try {
         const params = new URLSearchParams({ page });
         if (this.search) params.set('search', this.search);
         if (this.storeFilter) params.set('store_id', this.storeFilter);
 
         const data = await window.api(`/api/products?${params}`);
-        this.products = data.data;
-        this.meta = {
-          current_page: data.current_page,
-          last_page:    data.last_page,
-          total:        data.total,
-        };
+        this.products = replace ? data.data : [...this.products, ...data.data];
+        this.currentPage = data.current_page;
+        this.lastPage = data.last_page;
+        this.total = data.total;
       } finally {
         this.loading = false;
+        this.loadingMore = false;
       }
     },
 
     debouncedSearch() {
       clearTimeout(this.searchTimer);
-      this.searchTimer = setTimeout(() => this.fetchProducts(1), 350);
+      this.searchTimer = setTimeout(() => this.fetchProducts(1, true), 350);
     },
   },
 };
