@@ -64,14 +64,15 @@ class MagentoDriver extends AbstractDriver
             ], $configurableOptions);
         }
 
-        // Simple / virtual products: pull readable spec attributes from custom_attributes
+        // Simple / virtual products: pull readable spec attributes from the pre-parsed flat map
         $specCodes = ['color', 'size', 'material', 'pattern', 'weight', 'width', 'height', 'length', 'gender', 'age_group'];
         $attributes = [];
-        foreach ($item['custom_attributes'] ?? [] as $attr) {
-            if (in_array($attr['attribute_code'], $specCodes) && $attr['value'] !== '' && $attr['value'] !== null) {
+        foreach ($specCodes as $code) {
+            $value = $customAttributes[$code] ?? null;
+            if ($value !== null && $value !== '') {
                 $attributes[] = [
-                    'name'   => ucwords(str_replace('_', ' ', $attr['attribute_code'])),
-                    'values' => [$attr['value']],
+                    'name'   => ucwords(str_replace('_', ' ', $code)),
+                    'values' => [(string) $value],
                 ];
             }
         }
@@ -98,6 +99,9 @@ class MagentoDriver extends AbstractDriver
             'price'        => (float) ($item['price'] ?? 0),
             'stock'        => (int) ($item['extension_attributes']['stock_item']['qty'] ?? 0),
             'sku'          => $item['sku'] ?? null,
+            'product_url'  => isset($customAttributes['url_key'])
+                ? rtrim($this->credentials()['base_url'], '/') . '/' . $customAttributes['url_key'] . '.html'
+                : null,
             'images'       => array_map(
                 fn($e) => rtrim($this->credentials()['base_url'], '/') . '/pub/media/catalog/product' . $e['file'],
                 array_values($mediaGallery)

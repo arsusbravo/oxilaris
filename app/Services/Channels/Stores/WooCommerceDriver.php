@@ -84,6 +84,7 @@ class WooCommerceDriver extends AbstractDriver
             'price'        => (float) ($item['price'] ?? 0),
             'stock'        => (int) ($item['stock_quantity'] ?? 0),
             'sku'          => $item['sku'] ?? null,
+            'product_url'  => $item['permalink'] ?? null,
             'images'       => array_map(fn($img) => $img['src'], $item['images'] ?? []),
             'categories'   => array_map(fn($cat) => $cat['name'], $item['categories'] ?? []),
             'attributes'   => array_map(fn($attr) => [

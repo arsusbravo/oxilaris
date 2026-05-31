@@ -92,6 +92,7 @@ class ShopifyDriver extends AbstractDriver
             'price'        => (float) ($firstVariant['price'] ?? 0),
             'stock'        => array_sum(array_column($variants, 'inventory_quantity')),
             'sku'          => $firstVariant['sku'] ?? null,
+            'product_url'  => isset($item['handle']) ? "https://{$this->shopDomain()}/products/{$item['handle']}" : null,
             'images'       => array_map(fn($img) => $img['src'], $item['images'] ?? []),
             'categories'   => [], // Shopify uses collections, not product categories
             'attributes'   => array_map(fn($opt) => [
