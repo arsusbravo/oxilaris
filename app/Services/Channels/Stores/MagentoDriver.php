@@ -53,6 +53,32 @@ class MagentoDriver extends AbstractDriver
         return array_map([$this, 'normalizeProduct'], $items);
     }
 
+    private function extractMagentoAttributes(array $item, array $customAttributes): array
+    {
+        // Configurable products expose their axes (Color, Size) in configurable_product_options
+        $configurableOptions = $item['extension_attributes']['configurable_product_options'] ?? [];
+        if (! empty($configurableOptions)) {
+            return array_map(fn($opt) => [
+                'name'   => $opt['label'],
+                'values' => array_column($opt['values'] ?? [], 'value_index'),
+            ], $configurableOptions);
+        }
+
+        // Simple / virtual products: pull readable spec attributes from custom_attributes
+        $specCodes = ['color', 'size', 'material', 'pattern', 'weight', 'width', 'height', 'length', 'gender', 'age_group'];
+        $attributes = [];
+        foreach ($item['custom_attributes'] ?? [] as $attr) {
+            if (in_array($attr['attribute_code'], $specCodes) && $attr['value'] !== '' && $attr['value'] !== null) {
+                $attributes[] = [
+                    'name'   => ucwords(str_replace('_', ' ', $attr['attribute_code'])),
+                    'values' => [$attr['value']],
+                ];
+            }
+        }
+
+        return $attributes;
+    }
+
     private function normalizeProduct(array $item): array
     {
         $customAttributes = [];
@@ -80,8 +106,8 @@ class MagentoDriver extends AbstractDriver
                 fn($link) => (string) ($link['category_id'] ?? $link),
                 $item['extension_attributes']['category_links'] ?? []
             ),
-            'attributes'   => [], // Extended attributes fetched separately if needed
-            'variants'     => [], // Magento configurable children fetched separately
+            'attributes'   => $this->extractMagentoAttributes($item, $customAttributes),
+            'variants'     => [], // Magento configurable children require separate API calls
         ];
     }
 }

@@ -39,6 +39,7 @@ class CsCartDriver extends AbstractDriver
                 'page'           => $page,
                 'items_per_page' => $perPage,
                 'status'         => 'A',
+                'features'       => 'Y',
             ]);
 
         if (! $response->successful()) {
@@ -53,6 +54,52 @@ class CsCartDriver extends AbstractDriver
         }
 
         return array_map([$this, 'normalizeProduct'], $products);
+    }
+
+    private function extractCsCartFeatures(array $item): array
+    {
+        $attributes = [];
+        foreach ($item['product_features'] ?? [] as $feature) {
+            $name = $feature['description'] ?? ($feature['feature_name'] ?? null);
+            if (! $name) continue;
+
+            // Collect selected variant labels
+            $values = [];
+            foreach ($feature['variants'] ?? [] as $variant) {
+                $label = $variant['variant'] ?? ($variant['value'] ?? null);
+                if ($label !== null && $label !== '') {
+                    $values[] = (string) $label;
+                }
+            }
+
+            if (! empty($values)) {
+                $attributes[] = ['name' => $name, 'values' => $values];
+            }
+        }
+
+        return $attributes;
+    }
+
+    private function extractCsCartVariants(array $item): array
+    {
+        $variants = [];
+        foreach ($item['combinations'] ?? [] as $combo) {
+            $attrs = [];
+            foreach ($combo['combination'] ?? [] as $option) {
+                $optName  = $option['option_name'] ?? ($option['option_id'] ?? 'Option');
+                $optValue = $option['variant_name'] ?? ($option['variant_id'] ?? '');
+                $attrs[$optName] = $optValue;
+            }
+            $variants[] = [
+                'external_id' => (string) ($combo['combination_id'] ?? uniqid()),
+                'sku'         => $combo['combination_code'] ?? null,
+                'price'       => (float) ($combo['price'] ?? $item['price'] ?? 0),
+                'stock'       => (int) ($combo['amount'] ?? 0),
+                'attributes'  => $attrs,
+            ];
+        }
+
+        return $variants;
     }
 
     private function normalizeProduct(array $item): array
@@ -70,8 +117,8 @@ class CsCartDriver extends AbstractDriver
             'sku'          => $item['product_code'] ?? null,
             'images'       => $image ? [$image] : [],
             'categories'   => array_values(array_filter((array) ($item['category_ids'] ?? []))),
-            'attributes'   => [],
-            'variants'     => [],
+            'attributes'   => $this->extractCsCartFeatures($item),
+            'variants'     => $this->extractCsCartVariants($item),
         ];
     }
 }

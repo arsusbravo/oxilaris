@@ -62,6 +62,16 @@ class WooCommerceDriver extends AbstractDriver
             throw new \RuntimeException('WooCommerce returned an unexpected response (not JSON). Status: ' . $response->status());
         }
 
+        // Fetch full variation data for variable products (WooCommerce only returns IDs inline)
+        foreach ($products as &$product) {
+            if (($product['type'] ?? '') === 'variable' && ! empty($product['variations'])) {
+                $varResp = Http::withBasicAuth(...$this->auth())
+                    ->get($this->baseUrl() . "/products/{$product['id']}/variations", ['per_page' => 100]);
+                $product['_variations'] = $varResp->successful() ? $varResp->json() : [];
+            }
+        }
+        unset($product);
+
         return array_map([$this, 'normalizeProduct'], $products);
     }
 
@@ -85,11 +95,12 @@ class WooCommerceDriver extends AbstractDriver
                 'sku'         => $v['sku'] ?? null,
                 'price'       => (float) ($v['price'] ?? 0),
                 'stock'       => (int) ($v['stock_quantity'] ?? 0),
-                'attributes'  => array_column(
-                    array_map(fn($a) => [$a['name'] => $a['option']], $v['attributes'] ?? []),
-                    null
+                'attributes'  => array_reduce(
+                    $v['attributes'] ?? [],
+                    fn($carry, $a) => array_merge($carry, [$a['name'] => $a['option']]),
+                    []
                 ),
-            ], $item['variations_data'] ?? []),
+            ], $item['_variations'] ?? []),
         ];
     }
 }

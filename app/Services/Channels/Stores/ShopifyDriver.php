@@ -98,17 +98,22 @@ class ShopifyDriver extends AbstractDriver
                 'name' => $opt['name'],
                 'values' => $opt['values'],
             ], $item['options'] ?? []),
-            'variants'     => array_map(fn($v) => [
-                'external_id' => (string) $v['id'],
-                'sku'         => $v['sku'] ?? null,
-                'price'       => (float) ($v['price'] ?? 0),
-                'stock'       => (int) ($v['inventory_quantity'] ?? 0),
-                'attributes'  => array_filter([
-                    $v['option1'] ? ['option1' => $v['option1']] : null,
-                    $v['option2'] ? ['option2' => $v['option2']] : null,
-                    $v['option3'] ? ['option3' => $v['option3']] : null,
-                ]),
-            ], $variants),
+            'variants'     => array_map(function ($v) use ($item) {
+                $optionNames = array_column($item['options'] ?? [], 'name');
+                $attrs = [];
+                foreach (['option1', 'option2', 'option3'] as $i => $key) {
+                    if (isset($v[$key], $optionNames[$i]) && $v[$key] !== 'Default Title') {
+                        $attrs[$optionNames[$i]] = $v[$key];
+                    }
+                }
+                return [
+                    'external_id' => (string) $v['id'],
+                    'sku'         => $v['sku'] ?? null,
+                    'price'       => (float) ($v['price'] ?? 0),
+                    'stock'       => (int) ($v['inventory_quantity'] ?? 0),
+                    'attributes'  => $attrs,
+                ];
+            }, $variants),
         ];
     }
 }
