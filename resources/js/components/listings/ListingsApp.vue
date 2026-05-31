@@ -80,17 +80,36 @@
       <!-- Right: channels + action -->
       <div class="space-y-4">
         <div class="bg-white rounded-lg shadow p-4">
-          <h3 class="font-semibold text-gray-700 mb-3">Marketplace Channels</h3>
-          <div v-if="marketplaceChannels.length === 0" class="text-sm text-gray-400">
-            No active marketplace channels. Connect a BOL.com or Amazon channel first.
+          <h3 class="font-semibold text-gray-700 mb-3">Push to Channels</h3>
+
+          <!-- Marketplaces -->
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">Marketplaces</p>
+          <div v-if="marketplaceChannels.length === 0" class="text-sm text-gray-400 mb-3">
+            No active marketplace channels (BOL.com, Amazon).
           </div>
-          <div v-else class="space-y-2">
+          <div v-else class="space-y-1.5 mb-3">
             <label v-for="channel in marketplaceChannels" :key="channel.id"
               class="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" :value="channel.id" v-model="selectedChannels" class="rounded" />
               <span class="text-sm text-gray-700">{{ channel.name }}</span>
               <span class="text-xs text-gray-400 capitalize">({{ channel.channel_type }})</span>
             </label>
+          </div>
+
+          <!-- Stores -->
+          <div class="border-t pt-3">
+            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">Stores</p>
+            <div v-if="storeChannels.length === 0" class="text-sm text-gray-400">
+              No active store channels (WooCommerce, Shopify…).
+            </div>
+            <div v-else class="space-y-1.5">
+              <label v-for="channel in storeChannels" :key="channel.id"
+                class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" :value="channel.id" v-model="selectedChannels" class="rounded" />
+                <span class="text-sm text-gray-700">{{ channel.name }}</span>
+                <span class="text-xs text-gray-400 capitalize">({{ channel.channel_type.replace('_', ' ') }})</span>
+              </label>
+            </div>
           </div>
         </div>
 
@@ -160,6 +179,7 @@ export default {
       listings: [],
       stores: [],
       marketplaceChannels: [],
+      storeChannels: [],
       selectedProducts: [],
       selectedChannels: [],
       selectedStoreIds: [],
@@ -309,7 +329,9 @@ export default {
 
     async fetchChannels() {
       const data = await window.api('/api/channels');
-      this.marketplaceChannels = data.filter(c => ['bol', 'amazon'].includes(c.channel_type) && c.status === 'active');
+      const active = data.filter(c => c.status === 'active');
+      this.marketplaceChannels = active.filter(c => ['bol', 'amazon'].includes(c.channel_type));
+      this.storeChannels = active.filter(c => ['woocommerce', 'shopify', 'magento', 'cs_cart'].includes(c.channel_type));
     },
 
     async pushToMarketplaces() {

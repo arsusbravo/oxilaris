@@ -7,6 +7,7 @@ use App\Models\JobLog;
 use App\Services\Channels\ChannelManager;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class ExportProductToMarketplaceJob implements ShouldQueue
@@ -30,6 +31,13 @@ class ExportProductToMarketplaceJob implements ShouldQueue
             'started_at' => now(),
         ]);
 
+        $logger = Log::channel('jobs_export');
+        $logger->info('Export started', [
+            'listing_id' => $listing->id,
+            'product'    => $listing->product->title,
+            'channel'    => $listing->channelIntegration->name,
+        ]);
+
         try {
             $driver = $channelManager->driver($listing->channelIntegration);
 
@@ -48,9 +56,12 @@ class ExportProductToMarketplaceJob implements ShouldQueue
             ]);
 
             $log->update(['status' => 'done', 'result' => ['external_id' => $externalId], 'finished_at' => now()]);
+            $logger->info('Export completed', ['listing_id' => $listing->id, 'external_id' => $externalId]);
         } catch (Throwable $e) {
             $listing->update(['status' => 'error', 'error_message' => $e->getMessage()]);
             $log->update(['status' => 'failed', 'error' => $e->getMessage(), 'finished_at' => now()]);
+
+            $logger->error('Export failed', ['listing_id' => $listing->id, 'error' => $e->getMessage()]);
             throw $e;
         }
     }

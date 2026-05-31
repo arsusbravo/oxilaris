@@ -75,6 +75,35 @@ class WooCommerceDriver extends AbstractDriver
         return array_map([$this, 'normalizeProduct'], $products);
     }
 
+    public function pushProduct(array $productData): string
+    {
+        $payload = [
+            'name'           => $productData['title'],
+            'description'    => $productData['description'] ?? '',
+            'regular_price'  => (string) ($productData['price'] ?? '0'),
+            'manage_stock'   => true,
+            'stock_quantity' => (int) ($productData['stock'] ?? 0),
+            'sku'            => $productData['sku'] ?? '',
+            'status'         => 'publish',
+            'images'         => array_map(fn($url) => ['src' => $url], $productData['images'] ?? []),
+            'categories'     => array_map(fn($cat) => ['name' => $cat], $productData['categories'] ?? []),
+            'attributes'     => array_map(fn($attr) => [
+                'name'    => $attr['name'],
+                'options' => $attr['values'] ?? [],
+                'visible' => true,
+            ], $productData['attributes'] ?? []),
+        ];
+
+        $response = Http::withBasicAuth(...$this->auth())
+            ->post($this->baseUrl() . '/products', $payload);
+
+        if (! $response->successful()) {
+            throw new \RuntimeException('WooCommerce pushProduct failed: ' . $response->status() . ' — ' . $response->body());
+        }
+
+        return (string) $response->json('id');
+    }
+
     private function normalizeProduct(array $item): array
     {
         return [

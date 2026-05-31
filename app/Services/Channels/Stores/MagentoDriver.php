@@ -53,6 +53,41 @@ class MagentoDriver extends AbstractDriver
         return array_map([$this, 'normalizeProduct'], $items);
     }
 
+    public function pushProduct(array $productData): string
+    {
+        $sku = $productData['sku'] ?: 'MANUAL-' . strtolower(preg_replace('/[^a-z0-9]+/i', '-', $productData['title'])) . '-' . time();
+
+        $payload = [
+            'product' => [
+                'sku'             => $sku,
+                'name'            => $productData['title'],
+                'price'           => (float) ($productData['price'] ?? 0),
+                'status'          => 1,
+                'type_id'         => 'simple',
+                'attribute_set_id' => 4,
+                'weight'          => 1,
+                'custom_attributes' => [
+                    ['attribute_code' => 'description', 'value' => $productData['description'] ?? ''],
+                ],
+                'extension_attributes' => [
+                    'stock_item' => [
+                        'qty'         => (int) ($productData['stock'] ?? 0),
+                        'is_in_stock' => ($productData['stock'] ?? 0) > 0,
+                    ],
+                ],
+            ],
+        ];
+
+        $response = Http::withHeaders($this->headers())
+            ->post($this->baseUrl() . '/products', $payload);
+
+        if (! $response->successful()) {
+            throw new \RuntimeException('Magento pushProduct failed: ' . $response->status() . ' — ' . ($response->json('message') ?? $response->body()));
+        }
+
+        return (string) $response->json('id');
+    }
+
     private function extractMagentoAttributes(array $item, array $customAttributes): array
     {
         // Configurable products expose their axes (Color, Size) in configurable_product_options

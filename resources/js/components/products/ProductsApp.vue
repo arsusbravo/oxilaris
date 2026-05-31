@@ -9,8 +9,9 @@
         <input v-model="search" @input="debouncedSearch" type="text" placeholder="Search…"
           class="border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
         <select v-model="storeFilter" @change="fetchProducts(1, true)" class="border border-gray-300 rounded px-3 py-1.5 text-sm">
-          <option value="">All stores</option>
-          <option v-for="s in stores" :key="s.id" :value="s.id">{{ s.name }}</option>
+          <option value="">All products</option>
+          <option value="none">— No store</option>
+          <option v-for="s in stores" :key="s.id" :value="String(s.id)">{{ s.name }}</option>
         </select>
       </div>
     </div>
@@ -50,7 +51,7 @@
             <td class="px-4 py-3 text-sm text-gray-700">{{ product.stock }}</td>
             <td class="px-4 py-3 text-sm text-gray-400">{{ product.store?.name }}</td>
             <td class="px-4 py-3 text-right">
-              <a :href="`/products/${product.id}`" class="text-sm text-indigo-600 hover:underline">View</a>
+              <a :href="`/products/${product.id}${storeFilter ? '?back=' + storeFilter : ''}`" class="text-sm text-indigo-600 hover:underline">View</a>
             </td>
           </tr>
         </tbody>
@@ -77,7 +78,7 @@ export default {
       loading: true,
       loadingMore: false,
       search: '',
-      storeFilter: '',
+      storeFilter: new URLSearchParams(window.location.search).get('store_id') || '',
       currentPage: 1,
       lastPage: 1,
       total: 0,
@@ -128,6 +129,10 @@ export default {
         const params = new URLSearchParams({ page });
         if (this.search) params.set('search', this.search);
         if (this.storeFilter) params.set('store_id', this.storeFilter);
+        // Update the browser URL to reflect the current filter (without page reload)
+        const url = new URL(window.location);
+        this.storeFilter ? url.searchParams.set('store_id', this.storeFilter) : url.searchParams.delete('store_id');
+        window.history.replaceState({}, '', url);
 
         const data = await window.api(`/api/products?${params}`);
         this.products = replace ? data.data : [...this.products, ...data.data];

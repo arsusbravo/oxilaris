@@ -32,4 +32,9 @@ class Store extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function isManual(): bool
+    {
+        return $this->channel_integration_id === null;
+    }
 }

@@ -35,9 +35,9 @@ return [
         ],
     ],
 
-    'ollama' => [
-        'host'  => env('OLLAMA_HOST', 'http://localhost:11434'),
-        'model' => env('OLLAMA_MODEL', 'llama3'),
+    'openrouter' => [
+        'key'   => env('OPENROUTER_API_KEY'),
+        'model' => env('OPENROUTER_MODEL', 'google/gemini-1.5-flash'),
     ],
 
     'shopify' => [

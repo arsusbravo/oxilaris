@@ -45,13 +45,17 @@ class ListingController extends Controller
 
         $channel = ChannelIntegration::where('id', $validated['channel_integration_id'])
             ->where('user_id', $request->user()->id)
-            ->whereIn('channel_type', ['bol', 'amazon'])
+            ->where('status', 'active')
             ->firstOrFail();
 
         $listing = ChannelListing::firstOrCreate(
             ['product_id' => $product->id, 'channel_integration_id' => $channel->id],
             ['user_id' => $request->user()->id, 'status' => 'pending', 'listing_data' => $validated['listing_data'] ?? null]
         );
+
+        if ($listing->wasRecentlyCreated) {
+            ExportProductToMarketplaceJob::dispatch($listing);
+        }
 
         return response()->json($listing->load(['product', 'channelIntegration']), 201);
     }
@@ -63,7 +67,7 @@ class ListingController extends Controller
         ExportProductToMarketplaceJob::dispatch($listing);
         $listing->update(['status' => 'pending']);
 
-        return back()->with('success', 'Export queued.');
+        return response()->json(['success' => true, 'message' => 'Export queued.']);
     }
 
     public function destroy(Request $request, ChannelListing $listing)

@@ -80,6 +80,37 @@ class ShopifyDriver extends AbstractDriver
         return array_map([$this, 'normalizeProduct'], $response->json('products', []));
     }
 
+    public function pushProduct(array $productData): string
+    {
+        $payload = [
+            'product' => [
+                'title'     => $productData['title'],
+                'body_html' => $productData['description'] ?? '',
+                'status'    => 'active',
+                'variants'  => [[
+                    'price'              => (string) ($productData['price'] ?? '0'),
+                    'sku'                => $productData['sku'] ?? '',
+                    'inventory_quantity' => (int) ($productData['stock'] ?? 0),
+                    'inventory_management' => 'shopify',
+                ]],
+                'images'  => array_map(fn($url) => ['src' => $url], $productData['images'] ?? []),
+                'options' => array_map(fn($attr) => [
+                    'name'   => $attr['name'],
+                    'values' => $attr['values'] ?? [],
+                ], $productData['attributes'] ?? []),
+            ],
+        ];
+
+        $response = Http::withHeaders($this->headers())
+            ->post($this->baseUrl() . '/products.json', $payload);
+
+        if (! $response->successful()) {
+            throw new \RuntimeException('Shopify pushProduct failed: ' . $response->status() . ' — ' . $response->body());
+        }
+
+        return (string) $response->json('product.id');
+    }
+
     private function normalizeProduct(array $item): array
     {
         $variants = $item['variants'] ?? [];

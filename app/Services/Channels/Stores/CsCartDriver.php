@@ -100,6 +100,27 @@ class CsCartDriver extends AbstractDriver
         return array_map(fn ($product) => $this->normalizeProduct($product, $categoryNames), $products);
     }
 
+    public function pushProduct(array $productData): string
+    {
+        $payload = [
+            'product'          => $productData['title'],
+            'full_description' => $productData['description'] ?? '',
+            'price'            => (float) ($productData['price'] ?? 0),
+            'amount'           => (int) ($productData['stock'] ?? 0),
+            'product_code'     => $productData['sku'] ?? '',
+            'status'           => 'A',
+        ];
+
+        $response = Http::withBasicAuth(...$this->auth())
+            ->post($this->baseUrl() . '/products', $payload);
+
+        if (! $response->successful()) {
+            throw new \RuntimeException('CS-Cart pushProduct failed: ' . $response->status() . ' — ' . $response->body());
+        }
+
+        return (string) $response->json('product_id');
+    }
+
     private function buildProductUrl(array $item): string
     {
         $storeUrl = rtrim($this->credentials()['store_url'], '/');

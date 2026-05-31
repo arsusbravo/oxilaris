@@ -8,6 +8,7 @@ use App\Models\JobLog;
 use App\Services\AiContentService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class GenerateAdContentJob implements ShouldQueue
@@ -33,6 +34,9 @@ class GenerateAdContentJob implements ShouldQueue
             'started_at' => now(),
         ]);
 
+        $logger = Log::channel('jobs_ai');
+        $logger->info('AI content generation started', ['campaign_id' => $this->campaign->id]);
+
         try {
             $campaign = $this->campaign->load('channelIntegration');
             $channelType = $campaign->channelIntegration->channel_type;
@@ -52,13 +56,14 @@ class GenerateAdContentJob implements ShouldQueue
                 ];
             }
 
-            $campaign->update([
-                'ai_content' => $generatedContent,
-            ]);
-
+            $campaign->update(['ai_content' => $generatedContent]);
             $log->update(['status' => 'done', 'result' => ['count' => count($generatedContent)], 'finished_at' => now()]);
+
+            $logger->info('AI content generation completed', ['campaign_id' => $this->campaign->id, 'count' => count($generatedContent)]);
         } catch (Throwable $e) {
             $log->update(['status' => 'failed', 'error' => $e->getMessage(), 'finished_at' => now()]);
+
+            $logger->error('AI content generation failed', ['campaign_id' => $this->campaign->id, 'error' => $e->getMessage()]);
             throw $e;
         }
     }

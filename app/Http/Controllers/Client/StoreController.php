@@ -33,18 +33,22 @@ class StoreController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'channel_integration_id' => 'required|exists:channel_integrations,id',
+            'channel_integration_id' => 'nullable|exists:channel_integrations,id',
             'name' => 'required|string|max:255',
             'url' => 'nullable|url|max:255',
         ]);
 
-        $integration = ChannelIntegration::where('id', $validated['channel_integration_id'])
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
+        $integrationId = null;
+        if (! empty($validated['channel_integration_id'])) {
+            $integration = ChannelIntegration::where('id', $validated['channel_integration_id'])
+                ->where('user_id', $request->user()->id)
+                ->firstOrFail();
+            $integrationId = $integration->id;
+        }
 
         $store = Store::create([
             'user_id' => $request->user()->id,
-            'channel_integration_id' => $integration->id,
+            'channel_integration_id' => $integrationId,
             'name' => $validated['name'],
             'url' => $validated['url'] ?? null,
         ]);
@@ -55,9 +59,10 @@ class StoreController extends Controller
     public function show(Request $request, Store $store)
     {
         abort_if($store->user_id !== $request->user()->id, 403);
-        $store->load(['channelIntegration', 'products']);
+        $store->load('channelIntegration');
+        $productCount = $store->products()->count();
 
-        return view('stores.show', compact('store'));
+        return view('stores.show', compact('store', 'productCount'));
     }
 
     public function edit(Request $request, Store $store)
@@ -110,6 +115,13 @@ class StoreController extends Controller
     public function sync(Request $request, Store $store)
     {
         abort_if($store->user_id !== $request->user()->id, 403);
+
+        if ($store->isManual()) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Manual stores cannot be synced.'], 422);
+            }
+            return back()->with('error', 'Manual stores cannot be synced.');
+        }
 
         $store->update(['sync_status' => 'syncing']);
 

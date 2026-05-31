@@ -19,6 +19,8 @@ Route::middleware(['auth'])->prefix('api')->name('api.')->group(function () {
     Route::get('/stores', [StoreController::class, 'apiIndex'])->name('stores.index');
     Route::get('/stores/all', [StoreController::class, 'apiAll'])->name('stores.all');
     Route::get('/products', [ProductController::class, 'apiIndex'])->name('products.index');
+    Route::post('/products/upload-image',  [ProductController::class, 'uploadImage'])->name('api.products.upload-image');
+    Route::post('/products/analyze-image', [ProductController::class, 'analyzeImage'])->name('api.products.analyze-image');
     Route::get('/channels', [ChannelController::class, 'apiIndex'])->name('channels.index');
     Route::get('/campaigns', [CampaignController::class, 'apiIndex'])->name('campaigns.index');
     Route::get('/listings', [ListingController::class, 'apiIndex'])->name('listings.index');
@@ -38,7 +40,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('stores/{store}/sync', [StoreController::class, 'sync'])->name('stores.sync');
 
     // Products
-    Route::resource('products', ProductController::class)->only(['index', 'show']);
+    Route::get('products/export', [ProductController::class, 'export'])->name('products.export');
+    Route::resource('products', ProductController::class)->only(['index', 'show', 'create', 'store', 'edit', 'update', 'destroy']);
 
     // Channel integrations
     Route::resource('channels', ChannelController::class);
