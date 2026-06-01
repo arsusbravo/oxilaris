@@ -25,13 +25,8 @@
 
                 <!-- Mobile top bar -->
                 <div class="lg:hidden flex items-center justify-between bg-slate-900 px-4 py-3 shrink-0">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
-                        <div class="w-7 h-7 rounded-md bg-indigo-600 flex items-center justify-center">
-                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                        </div>
-                        <span class="text-white font-bold text-sm">{{ config('app.name') }}</span>
+                    <a href="{{ route('dashboard') }}">
+                        <x-oxilaris-logo size="sm" variant="dark" />
                     </a>
                     <button @click="mobileOpen = true" class="text-slate-400 hover:text-white p-1.5 rounded-md hover:bg-slate-800 transition-colors">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

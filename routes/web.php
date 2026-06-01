@@ -12,7 +12,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ChannelSettingsController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn() => redirect()->route('dashboard'));
+Route::get('/', fn() => view('welcome'));
 
 // WooCommerce posts credentials here server-to-server — no session, no auth middleware
 Route::match(['get', 'post'], '/channels/woocommerce/callback', [ChannelController::class, 'woocommerceCallback'])
