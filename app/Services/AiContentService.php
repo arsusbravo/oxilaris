@@ -44,12 +44,15 @@ class AiContentService
                     [
                         'type' => 'text',
                         'text' => 'You are a professional e-commerce copywriter. Analyze this product image and write compelling retail copy. '
-                            . 'Respond with ONLY a valid JSON object, no extra text: {"title": "...", "description": "..."}. '
+                            . 'Respond with ONLY a valid JSON object, no extra text, with exactly these keys: '
+                            . '{"title": "...", "description": "...", "categories": ["...", "..."], "specifications": [{"name": "...", "values": ["..."]}]}. '
                             . 'title: concise, specific product name (max 100 characters). '
                             . 'description: 3 short paragraphs separated by \n\n. '
                             . 'Paragraph 1 (2-3 sentences): powerful opening that highlights the key benefit and who it is for. '
                             . 'Paragraph 2 (2-3 sentences): key features and specifications in natural language, not bullet points. '
                             . 'Paragraph 3 (1-2 sentences): closing call to action or brand statement. '
+                            . 'categories: array of 1-3 broad e-commerce category strings (e.g. "Electronics", "Audio", "Headphones"). '
+                            . 'specifications: array of up to 6 relevant spec objects, each with a "name" (e.g. "Color", "Material", "Size") and "values" array. Only include specs clearly visible or strongly implied by the image. '
                             . 'Tone: confident, professional, concise. No markdown, no bullet points, no hype words like "amazing" or "incredible". '
                             . $langInstruction,
                     ],
@@ -63,12 +66,14 @@ class AiContentService
 
         if (is_array($decoded) && (isset($decoded['title']) || isset($decoded['description']))) {
             return [
-                'title'       => trim($decoded['title'] ?? ''),
-                'description' => trim($decoded['description'] ?? ''),
+                'title'          => trim($decoded['title'] ?? ''),
+                'description'    => trim($decoded['description'] ?? ''),
+                'categories'     => array_values(array_filter((array) ($decoded['categories'] ?? []))),
+                'specifications' => array_values(array_filter((array) ($decoded['specifications'] ?? []), fn($s) => !empty($s['name']))),
             ];
         }
 
-        return ['title' => '', 'description' => trim($raw)];
+        return ['title' => '', 'description' => trim($raw), 'categories' => [], 'specifications' => []];
     }
 
     private function chat(array $messages, int $maxTokens = 800): string

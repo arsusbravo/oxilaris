@@ -65,6 +65,8 @@
                     if (d.error) { this.analyzeError = d.error; return; }
                     if (d.title)       document.getElementById('title').value       = d.title;
                     if (d.description) document.getElementById('description').value = d.description.replace(/\\n/g, '\n');
+                    if (d.categories?.length) document.getElementById('categories').value = d.categories.join(', ');
+                    if (d.specifications?.length) this.attributes = d.specifications.map(s => ({ name: s.name, values: Array.isArray(s.values) ? s.values.join(', ') : s.values }));
                   } catch(e) { this.analyzeError = e.message; }
                   finally { this.analyzing = false; }
                 }

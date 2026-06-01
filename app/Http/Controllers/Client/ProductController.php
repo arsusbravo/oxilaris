@@ -187,23 +187,42 @@ class ProductController extends Controller
         }
 
         try {
-            // Derive relative storage path from the public URL
-            $imageUrl     = $request->input('url');
-            $publicBase   = Storage::disk('public')->url('');
-            $relativePath = ltrim(str_replace($publicBase, '', $imageUrl), '/');
-            $contents     = Storage::disk('public')->get($relativePath);
-            $mime         = Storage::disk('public')->mimeType($relativePath) ?: 'image/jpeg';
-            $b64          = base64_encode($contents);
+            $imageUrl   = $request->input('url');
+            $publicBase = rtrim(Storage::disk('public')->url(''), '/');
 
+            if (str_starts_with($imageUrl, $publicBase)) {
+                // Locally uploaded file — read from disk
+                $relativePath = ltrim(str_replace($publicBase, '', $imageUrl), '/');
+                $contents     = Storage::disk('public')->get($relativePath);
+                $mime         = Storage::disk('public')->mimeType($relativePath) ?: 'image/jpeg';
+            } else {
+                // External URL — fetch over HTTP
+                $response = \Illuminate\Support\Facades\Http::withHeaders([
+                    'User-Agent' => 'Mozilla/5.0 (compatible; ProductBot/1.0)',
+                ])->timeout(15)->get($imageUrl);
+
+                if (! $response->successful()) {
+                    throw new \RuntimeException("Could not fetch image (HTTP {$response->status()}).");
+                }
+
+                $contents = $response->body();
+                $mime     = $response->header('Content-Type') ?: 'image/jpeg';
+                // Strip any charset suffix: "image/jpeg; charset=..." → "image/jpeg"
+                $mime = strtok($mime, ';');
+            }
+
+            $b64    = base64_encode($contents);
             $locale = $request->input('locale') ?: ($request->user()->ui_locale ?? 'en');
             $result = app(AiContentService::class)->analyzeProductImage("data:{$mime};base64,{$b64}", $locale);
 
             return response()->json([
-                'title'       => $result['title'] ?? '',
-                'description' => $result['description'] ?? '',
+                'title'          => $result['title'] ?? '',
+                'description'    => $result['description'] ?? '',
+                'categories'     => $result['categories'] ?? [],
+                'specifications' => $result['specifications'] ?? [],
             ]);
         } catch (\Throwable $e) {
-            return response()->json(['title' => '', 'description' => '', 'error' => $e->getMessage()]);
+            return response()->json(['title' => '', 'description' => '', 'categories' => [], 'specifications' => [], 'error' => $e->getMessage()]);
         }
     }
 
