@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 
 class ChannelController extends Controller
 {
+    // OAuth-capable channel types that only need minimal user input
+    private const OAUTH_TYPES = ['shopify', 'woocommerce', 'tiktok_shop', 'shopee'];
+
     public function __construct(private ChannelManager $channelManager) {}
 
     public function index(Request $request)
@@ -38,26 +41,41 @@ class ChannelController extends Controller
             ARRAY_FILTER_USE_KEY
         );
 
-        return view('channels.create', compact('channelTypes'));
+        $platformAppSet = [
+            'shopify'     => (bool) config('services.shopify.client_id'),
+            'woocommerce' => (bool) config('services.woocommerce.app_name'),
+            'tiktok_shop' => (bool) config('services.tiktok_shop.app_key'),
+            'shopee'      => (bool) config('services.shopee.partner_id'),
+        ];
+
+        return view('channels.create', compact('channelTypes', 'platformAppSet'));
     }
 
     public function store(Request $request)
     {
+        $type = $request->input('channel_type');
+
         $validated = $request->validate([
             'channel_type' => 'required|string|in:' . implode(',', array_keys(ChannelManager::TYPES)),
-            'name' => 'required|string|max:255',
-            'credentials' => 'required|array',
+            'name'         => 'required|string|max:255',
+            'credentials'  => in_array($type, self::OAUTH_TYPES) ? 'sometimes|array' : 'required|array',
         ]);
 
         $channel = ChannelIntegration::create([
-            'user_id' => $request->user()->id,
+            'user_id'      => $request->user()->id,
             'channel_type' => $validated['channel_type'],
-            'name' => $validated['name'],
-            'credentials' => $validated['credentials'],
-            'status' => 'inactive',
+            'name'         => $validated['name'],
+            'credentials'  => $validated['credentials'] ?? [],
+            'status'       => 'inactive',
         ]);
 
-        return redirect()->route('channels.show', $channel)->with('success', 'Channel added. Test the connection to activate it.');
+        // For OAuth channels redirect immediately to the authorization flow
+        if (in_array($channel->channel_type, self::OAUTH_TYPES)) {
+            return redirect()->route('channels.connect', $channel);
+        }
+
+        return redirect()->route('channels.show', $channel)
+            ->with('success', 'Channel added. Test the connection to activate it.');
     }
 
     public function show(Request $request, ChannelIntegration $channel)
@@ -71,9 +89,17 @@ class ChannelController extends Controller
     {
         abort_if($channel->user_id !== $request->user()->id, 403);
 
+        $platformAppSet = [
+            'shopify'     => (bool) config('services.shopify.client_id'),
+            'woocommerce' => (bool) config('services.woocommerce.app_name'),
+            'tiktok_shop' => (bool) config('services.tiktok_shop.app_key'),
+            'shopee'      => (bool) config('services.shopee.partner_id'),
+        ];
+
         return view('channels.edit', [
-            'channel' => $channel,
-            'channelTypes' => ChannelManager::TYPES,
+            'channel'        => $channel,
+            'channelTypes'   => ChannelManager::TYPES,
+            'platformAppSet' => $platformAppSet,
         ]);
     }
 
@@ -82,9 +108,9 @@ class ChannelController extends Controller
         abort_if($channel->user_id !== $request->user()->id, 403);
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name'        => 'required|string|max:255',
             'credentials' => 'sometimes|array',
-            'meta' => 'sometimes|array',
+            'meta'        => 'sometimes|array',
         ]);
 
         if (isset($validated['credentials'])) {
@@ -109,7 +135,7 @@ class ChannelController extends Controller
     {
         abort_if($channel->user_id !== $request->user()->id, 403);
 
-        $driver = $this->channelManager->driver($channel);
+        $driver  = $this->channelManager->driver($channel);
         $authUrl = $driver->getAuthUrl();
 
         if ($authUrl) {
@@ -130,10 +156,58 @@ class ChannelController extends Controller
     {
         abort_if($channel->user_id !== $request->user()->id, 403);
 
-        $driver = $this->channelManager->driver($channel);
-        $driver->handleOAuthCallback($request->all());
-        $channel->update(['status' => 'active', 'last_used_at' => now()]);
+        try {
+            $params = array_merge($request->all(), ['state' => $request->query('state')]);
+            $this->channelManager->driver($channel)->handleOAuthCallback($params);
+            $channel->update(['status' => 'active', 'last_used_at' => now()]);
+            return redirect()->route('channels.show', $channel)
+                ->with('success', 'Channel connected successfully.');
+        } catch (\Exception $e) {
+            $channel->update(['status' => 'error']);
+            return redirect()->route('channels.show', $channel)
+                ->with('error', 'Connection failed: ' . $e->getMessage());
+        }
+    }
 
-        return redirect()->route('channels.show', $channel)->with('success', 'Channel connected successfully.');
+    /**
+     * WooCommerce posts consumer_key + consumer_secret here server-to-server.
+     * No session/auth cookie — validated via HMAC state instead.
+     */
+    public function woocommerceCallback(Request $request)
+    {
+        $integrationId = $request->input('user_id');
+        $channel       = ChannelIntegration::findOrFail($integrationId);
+
+        try {
+            $params = array_merge($request->all(), ['state' => $request->query('state')]);
+            $this->channelManager->driver($channel)->handleOAuthCallback($params);
+            $channel->update(['status' => 'active', 'last_used_at' => now()]);
+        } catch (\Exception $e) {
+            $channel->update(['status' => 'error']);
+        }
+
+        return redirect()->route('channels.show', $channel);
+    }
+
+    /**
+     * TikTok Shop redirects here with ?code=&state= — cannot use {channel} param
+     * because TikTok requires a pre-registered static URI. Resolve via oauth_state.
+     */
+    public function tiktokShopCallback(Request $request)
+    {
+        $state   = $request->query('state', '');
+        $channel = ChannelIntegration::where('oauth_state', $state)->firstOrFail();
+        abort_if($channel->user_id !== $request->user()->id, 403);
+
+        try {
+            $this->channelManager->driver($channel)->handleOAuthCallback($request->all());
+            $channel->update(['status' => 'active', 'last_used_at' => now()]);
+            return redirect()->route('channels.show', $channel)
+                ->with('success', 'TikTok Shop connected successfully.');
+        } catch (\Exception $e) {
+            $channel->update(['status' => 'error']);
+            return redirect()->route('channels.show', $channel)
+                ->with('error', 'Connection failed: ' . $e->getMessage());
+        }
     }
 }

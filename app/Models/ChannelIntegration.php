@@ -8,7 +8,7 @@ class ChannelIntegration extends Model
 {
     protected $fillable = [
         'user_id', 'channel_type', 'name', 'credentials', 'meta',
-        'status', 'token_expires_at', 'last_used_at',
+        'status', 'oauth_state', 'token_expires_at', 'last_used_at',
     ];
 
     protected function casts(): array

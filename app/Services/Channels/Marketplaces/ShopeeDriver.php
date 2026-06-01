@@ -11,12 +11,12 @@ class ShopeeDriver extends AbstractDriver
 
     private function partnerId(): int
     {
-        return (int) $this->credentials()['partner_id'];
+        return (int) ($this->configOrCredential('services.shopee.partner_id', 'partner_id') ?? 0);
     }
 
     private function partnerKey(): string
     {
-        return $this->credentials()['partner_key'];
+        return $this->configOrCredential('services.shopee.partner_key', 'partner_key') ?? '';
     }
 
     private function shopId(): int
@@ -46,6 +46,58 @@ class ShopeeDriver extends AbstractDriver
             'shop_id'      => $shopId,
             'sign'         => $signature,
         ];
+    }
+
+    public function getAuthUrl(): ?string
+    {
+        $partnerId  = $this->partnerId();
+        $partnerKey = $this->partnerKey();
+        if (! $partnerId || ! $partnerKey) return null;
+
+        $timestamp   = time();
+        $callbackUrl = route('channels.callback', $this->integration);
+        $state       = $this->generateOAuthState();
+        $path        = '/api/v2/shop/auth_partner';
+        $base        = $partnerId . $path . $timestamp;
+        $sign        = hash_hmac('sha256', $base, $partnerKey);
+
+        return self::BASE_URL . $path . '?' . http_build_query([
+            'partner_id' => $partnerId,
+            'timestamp'  => $timestamp,
+            'sign'       => $sign,
+            'redirect'   => $callbackUrl . '?state=' . $state,
+        ]);
+    }
+
+    public function handleOAuthCallback(array $params): void
+    {
+        $this->verifyOAuthState($params['state'] ?? '');
+
+        $partnerId  = $this->partnerId();
+        $partnerKey = $this->partnerKey();
+        $timestamp  = time();
+        $path       = '/api/v2/auth/token/get';
+        $sign       = hash_hmac('sha256', $partnerId . $path . $timestamp, $partnerKey);
+
+        $response = Http::post(self::BASE_URL . $path, [
+            'code'       => $params['code'],
+            'shop_id'    => (int) ($params['shop_id'] ?? 0),
+            'partner_id' => $partnerId,
+            'timestamp'  => $timestamp,
+            'sign'       => $sign,
+        ]);
+
+        if (! $response->successful() || ! empty($response->json('error'))) {
+            throw new \RuntimeException('Shopee token exchange failed: ' . $response->body());
+        }
+
+        $creds = $this->credentials();
+        $creds['access_token']  = $response->json('access_token');
+        $creds['refresh_token'] = $response->json('refresh_token') ?? '';
+        $creds['shop_id']       = (int) ($params['shop_id'] ?? 0);
+        $this->integration->credentials    = $creds;
+        $this->integration->token_expires_at = now()->addSeconds($response->json('expire_in', 14400));
+        $this->integration->save();
     }
 
     public function testConnection(): void

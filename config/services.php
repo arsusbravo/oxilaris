@@ -45,4 +45,19 @@ return [
         'client_secret' => env('SHOPIFY_CLIENT_SECRET'),
     ],
 
+    'woocommerce' => [
+        'app_name'     => env('WOOCOMMERCE_APP_NAME'),
+        'callback_url' => env('WOOCOMMERCE_CALLBACK_URL'),
+    ],
+
+    'tiktok_shop' => [
+        'app_key'    => env('TIKTOK_SHOP_APP_KEY'),
+        'app_secret' => env('TIKTOK_SHOP_APP_SECRET'),
+    ],
+
+    'shopee' => [
+        'partner_id'  => env('SHOPEE_PARTNER_ID'),
+        'partner_key' => env('SHOPEE_PARTNER_KEY'),
+    ],
+
 ];

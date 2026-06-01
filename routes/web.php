@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => redirect()->route('dashboard'));
 
+// WooCommerce posts credentials here server-to-server — no session, no auth middleware
+Route::match(['get', 'post'], '/channels/woocommerce/callback', [ChannelController::class, 'woocommerceCallback'])
+    ->name('channels.woocommerce.callback');
+
 // ── JSON API routes (consumed by Vue components) ───────────────────────────
 Route::middleware(['auth'])->prefix('api')->name('api.')->group(function () {
     Route::get('/dashboard/stats', [DashboardController::class, 'stats'])->name('dashboard.stats');
@@ -44,10 +48,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('products/export', [ProductController::class, 'export'])->name('products.export');
     Route::resource('products', ProductController::class)->only(['index', 'show', 'create', 'store', 'edit', 'update', 'destroy']);
 
-    // Channel integrations
-    Route::resource('channels', ChannelController::class);
+    // Channel integrations — dedicated OAuth callbacks first (before resource routes)
+    Route::get('channels/tiktok_shop/callback', [ChannelController::class, 'tiktokShopCallback'])
+        ->name('channels.tiktok_shop.callback');
+    Route::match(['get', 'post'], 'channels/{channel}/callback', [ChannelController::class, 'callback'])
+        ->name('channels.callback');
     Route::get('channels/{channel}/connect', [ChannelController::class, 'connect'])->name('channels.connect');
-    Route::get('channels/{channel}/callback', [ChannelController::class, 'callback'])->name('channels.callback');
+    Route::resource('channels', ChannelController::class);
 
     // Marketplace listings
     Route::resource('listings', ListingController::class)->only(['index', 'store', 'destroy']);

@@ -71,13 +71,25 @@ class CsCartDriver extends AbstractDriver
                 $detail = $detailResponses[$i]->json();
                 $product['_product_url']      = $detail['product_url'] ?? null;
                 $product['_full_description'] = $detail['full_description'] ?? $detail['short_description'] ?? null;
+
+                // Detail endpoint returns reliable category_ids; list endpoint often omits them
+                $detailCatIds = $detail['category_ids'] ?? null;
+                if (! empty($detailCatIds)) {
+                    $product['category_ids'] = (array) $detailCatIds;
+                } elseif (! empty($detail['main_category'])) {
+                    $product['category_ids'] = [$detail['main_category']];
+                }
             }
         }
         unset($product);
 
         // Collect all unique category IDs across this page then resolve names concurrently
+        // Normalise every ID to a string to avoid int/string key mismatches
         $allCatIds = array_values(array_unique(array_merge(
-            ...array_map(fn ($p) => array_values(array_filter((array) ($p['category_ids'] ?? []))), $products)
+            ...array_map(
+                fn ($p) => array_values(array_filter(array_map('strval', (array) ($p['category_ids'] ?? [])))),
+                $products
+            )
         )));
 
         $categoryNames = [];
@@ -89,10 +101,16 @@ class CsCartDriver extends AbstractDriver
                 )
             );
             foreach ($allCatIds as $i => $catId) {
+                $key = (string) $catId;
                 if (isset($catResponses[$i]) && $catResponses[$i]->successful()) {
-                    $categoryNames[$catId] = $catResponses[$i]->json('category') ?? (string) $catId;
+                    $data = $catResponses[$i]->json();
+                    // CS-Cart may return the name under 'category' (string) or inside a keyed wrapper
+                    $name = is_string($data['category'] ?? null)
+                        ? $data['category']
+                        : ($data[$catId]['category'] ?? ($data[(int)$catId]['category'] ?? null));
+                    $categoryNames[$key] = $name ?? $key;
                 } else {
-                    $categoryNames[$catId] = (string) $catId;
+                    $categoryNames[$key] = $key;
                 }
             }
         }
@@ -102,6 +120,8 @@ class CsCartDriver extends AbstractDriver
 
     public function pushProduct(array $productData): string
     {
+        $images = array_values(array_filter($productData['images'] ?? []));
+
         $payload = [
             'product'          => $productData['title'],
             'full_description' => $productData['description'] ?? '',
@@ -111,6 +131,21 @@ class CsCartDriver extends AbstractDriver
             'status'           => 'A',
         ];
 
+        // Main image — CS-Cart fetches and stores the image from the URL
+        if (! empty($images)) {
+            $payload['main_pair'] = [
+                'detailed' => ['http_image_path' => $images[0]],
+                'icon'     => ['http_image_path' => $images[0]],
+            ];
+        }
+
+        // Resolve category names → IDs and attach
+        $catIds = $this->resolveCategoryIds($productData['categories'] ?? []);
+        if (! empty($catIds)) {
+            $payload['main_category'] = $catIds[0];
+            $payload['category_ids']  = $catIds;
+        }
+
         $response = Http::withBasicAuth(...$this->auth())
             ->post($this->baseUrl() . '/products', $payload);
 
@@ -118,7 +153,51 @@ class CsCartDriver extends AbstractDriver
             throw new \RuntimeException('CS-Cart pushProduct failed: ' . $response->status() . ' — ' . $response->body());
         }
 
-        return (string) $response->json('product_id');
+        $productId = (string) $response->json('product_id');
+
+        // Additional images (CS-Cart supports image pairs per product)
+        foreach (array_slice($images, 1) as $imageUrl) {
+            Http::withBasicAuth(...$this->auth())
+                ->post($this->baseUrl() . "/images/{$productId}", [
+                    'object'    => 'product',
+                    'object_id' => $productId,
+                    'detailed'  => ['http_image_path' => $imageUrl],
+                    'icon'      => ['http_image_path' => $imageUrl],
+                ]);
+        }
+
+        return $productId;
+    }
+
+    private function resolveCategoryIds(array $names): array
+    {
+        if (empty($names)) {
+            return [];
+        }
+
+        $response = Http::withBasicAuth(...$this->auth())
+            ->get($this->baseUrl() . '/categories', ['items_per_page' => 500]);
+
+        if (! $response->successful()) {
+            return [];
+        }
+
+        $nameToId = [];
+        foreach ($response->json('categories', []) as $cat) {
+            if (isset($cat['category'], $cat['category_id'])) {
+                $nameToId[strtolower((string) $cat['category'])] = (int) $cat['category_id'];
+            }
+        }
+
+        $ids = [];
+        foreach ($names as $name) {
+            $id = $nameToId[strtolower((string) $name)] ?? null;
+            if ($id !== null) {
+                $ids[] = $id;
+            }
+        }
+
+        return $ids;
     }
 
     private function buildProductUrl(array $item): string
@@ -185,8 +264,11 @@ class CsCartDriver extends AbstractDriver
             ?? $item['main_pair']['icon']['image_path']
             ?? null;
 
-        $rawCatIds = array_values(array_filter((array) ($item['category_ids'] ?? [])));
-        $categories = array_map(fn ($id) => $categoryNames[$id] ?? (string) $id, $rawCatIds);
+        $rawCatIds  = array_values(array_filter(array_map('strval', (array) ($item['category_ids'] ?? []))));
+        $categories = array_values(array_filter(array_map(
+            fn ($id) => isset($categoryNames[$id]) && $categoryNames[$id] !== $id ? $categoryNames[$id] : null,
+            $rawCatIds
+        )));
 
         return [
             'external_id'  => (string) $item['product_id'],

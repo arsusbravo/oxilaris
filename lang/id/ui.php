@@ -174,6 +174,124 @@ return [
     'save_changes'        => 'Simpan Perubahan',
     'edit_product'        => 'Edit Produk',
 
+    // Formulir saluran — umum
+    'ch_select_placeholder'  => '— Pilih jenis saluran —',
+    'ch_label_field'         => 'Label',
+    'ch_label_hint'          => 'Nama untuk mengidentifikasi koneksi ini (mis. "Toko WooCommerce Saya")',
+    'ch_optgroup_stores'     => 'Toko — impor produk',
+    'ch_optgroup_markets'    => 'Marketplace — jual produk',
+    'ch_optgroup_ads'        => 'Platform iklan',
+    'ch_how_to_title'        => 'Cara mendapatkan kredensial API Anda',
+    'ch_open_portal'         => 'Buka portal developer',
+    'ch_save'                => 'Simpan Saluran',
+    'ch_continue_connect'    => 'Lanjutkan ke Koneksi →',
+    'ch_quick_connect'       => 'Sambung Cepat',
+    'ch_quick_connect_sub'   => 'Sambungkan dengan satu klik — tidak perlu kunci API',
+    'ch_connect_btn'         => 'Sambungkan →',
+    'ch_reconnect'           => 'Otorisasi ulang',
+    'ch_oauth_redirect_notice' => 'Anda akan diarahkan ke :platform untuk memberi izin akses. Tidak perlu kunci API.',
+    'ch_platform_not_configured' => 'Aplikasi platform belum dikonfigurasi. Masukkan kredensial Anda sendiri di bawah.',
+
+    // WooCommerce
+    'ch_woo_guide_title'     => 'Dapatkan kunci REST API WooCommerce',
+    'ch_woo_step_1'          => 'Masuk ke panel admin WordPress Anda',
+    'ch_woo_step_2'          => 'Buka WooCommerce → Pengaturan → Lanjutan → REST API',
+    'ch_woo_step_3'          => 'Klik "Tambah kunci", masukkan deskripsi, dan atur Izin ke Baca/Tulis',
+    'ch_woo_step_4'          => 'Klik "Buat kunci API" — salin Consumer Key dan Consumer Secret segera (hanya ditampilkan sekali)',
+    'ch_woo_portal'          => 'Dokumentasi REST API WooCommerce',
+
+    // Shopify
+    'ch_shopify_guide_title' => 'Dapatkan kredensial API Shopify',
+    'ch_shopify_step_1'      => 'Di admin Shopify, buka Pengaturan → Aplikasi dan saluran penjualan',
+    'ch_shopify_step_2'      => 'Klik "Kembangkan aplikasi" di kanan atas, lalu "Buat aplikasi"',
+    'ch_shopify_step_3'      => 'Di tab "Konfigurasi", aktifkan cakupan Admin API yang diperlukan (Produk, Inventaris)',
+    'ch_shopify_step_4'      => 'Klik "Instal aplikasi" untuk menghasilkan kunci API (Client ID) dan secret Anda',
+    'ch_shopify_portal'      => 'Dashboard Shopify Partners',
+
+    // Magento
+    'ch_magento_guide_title' => 'Dapatkan token akses integrasi Magento 2',
+    'ch_magento_step_1'      => 'Masuk ke panel admin Magento Anda',
+    'ch_magento_step_2'      => 'Buka Sistem → Ekstensi → Integrasi',
+    'ch_magento_step_3'      => 'Klik "Tambah Integrasi Baru" dan beri nama',
+    'ch_magento_step_4'      => 'Di tab API, atur Akses Sumber Daya ke "Semua"',
+    'ch_magento_step_5'      => 'Klik Simpan, lalu Aktifkan dan konfirmasi — salin Access Token yang ditampilkan (hanya sekali)',
+    'ch_magento_portal'      => 'Dokumentasi Integrasi Magento',
+
+    // CS-Cart
+    'ch_cscart_guide_title'  => 'Aktifkan REST API CS-Cart',
+    'ch_cscart_step_1'       => 'Masuk ke panel admin CS-Cart Anda',
+    'ch_cscart_step_2'       => 'Buka Pengaturan → API dan aktifkan REST API',
+    'ch_cscart_step_3'       => 'Gulir ke "Pengguna API" dan klik "Tambah" untuk akun admin Anda',
+    'ch_cscart_step_4'       => 'Masukkan nama, klik Simpan — kunci API muncul di daftar. Salin kunci tersebut.',
+    'ch_cscart_portal'       => 'Dokumentasi REST API CS-Cart',
+
+    // BOL.com
+    'ch_bol_guide_title'     => 'Dapatkan kredensial API Retailer BOL.com',
+    'ch_bol_step_1'          => 'Masuk ke portal Retailer BOL.com di verkopen.bol.com',
+    'ch_bol_step_2'          => 'Buka pengaturan akun dan pilih "Pengaturan API"',
+    'ch_bol_step_3'          => 'Klik "Buat kredensial baru" — catat Client ID dan Client Secret',
+    'ch_bol_step_4'          => 'Pastikan akun Anda memiliki izin peran yang benar untuk API',
+    'ch_bol_portal'          => 'Portal API Retailer BOL.com',
+
+    // Amazon
+    'ch_amazon_guide_title'  => 'Dapatkan kredensial Amazon SP-API',
+    'ch_amazon_step_1'       => 'Masuk ke Amazon Seller Central',
+    'ch_amazon_step_2'       => 'Buka Apps & Services → Kembangkan Aplikasi → Tambah klien aplikasi baru',
+    'ch_amazon_step_3'       => 'Catat LWA Client ID dan Client Secret dari pengaturan aplikasi',
+    'ch_amazon_step_4'       => 'ID Penjual Anda ada di Info Akun → Merchant Token',
+    'ch_amazon_step_5'       => 'Pilih region marketplace yang sesuai dengan toko Anda (mis. ap-southeast-1 untuk Asia)',
+    'ch_amazon_portal'       => 'Amazon Seller Central',
+
+    // TikTok Shop
+    'ch_tiktok_shop_guide_title' => 'Dapatkan kredensial API TikTok Shop (termasuk Tokopedia)',
+    'ch_tiktok_shop_step_1'      => 'TikTok Shop dan Tokopedia telah bergabung di Indonesia — satu koneksi ini mencakup keduanya',
+    'ch_tiktok_shop_step_2'      => 'Buka TikTok Shop Partner Center di partner.tiktokshop.com dan buat akun developer',
+    'ch_tiktok_shop_step_3'      => 'Buat aplikasi — Anda akan mendapatkan App Key dan App Secret',
+    'ch_tiktok_shop_step_4'      => 'Otorisasi aplikasi di TikTok Shop Seller Center untuk mendapatkan Access Token. Produk yang didorong akan muncul di TikTok Shop dan Tokopedia.',
+    'ch_tiktok_shop_step_5'      => 'Shop Cipher Anda ada di Seller Center → Toko → Pengaturan',
+    'ch_tiktok_shop_portal'      => 'TikTok Shop Partner Center',
+
+    // TikTok Ads
+    'ch_tiktok_ads_guide_title'  => 'Dapatkan kredensial TikTok Ads (TikTok For Business)',
+    'ch_tiktok_ads_step_1'       => 'Buka ads.tiktok.com dan buat akun TikTok For Business',
+    'ch_tiktok_ads_step_2'       => 'Kunjungi business-api.tiktok.com, buat aplikasi dan dapatkan App ID dan App Secret',
+    'ch_tiktok_ads_step_3'       => 'Buat Access Token jangka panjang untuk aplikasi Anda dengan izin iklan yang diperlukan',
+    'ch_tiktok_ads_step_4'       => 'Advertiser ID ada di TikTok Ads Manager — menu akun kanan atas',
+    'ch_tiktok_ads_portal'       => 'TikTok For Business API',
+
+    // Shopee
+    'ch_shopee_guide_title'  => 'Dapatkan kredensial API Mitra Shopee',
+    'ch_shopee_step_1'       => 'Daftar di open.shopee.com (Shopee Open Platform)',
+    'ch_shopee_step_2'       => 'Buat aplikasi baru — Anda akan mendapatkan Partner ID dan Partner Key',
+    'ch_shopee_step_3'       => 'Shop ID Anda ada di Shopee Seller Centre → Pengaturan Akun',
+    'ch_shopee_step_4'       => 'Selesaikan alur otorisasi OAuth di Shopee untuk menghasilkan Access Token',
+    'ch_shopee_portal'       => 'Shopee Open Platform',
+
+    // OLX
+    'ch_olx_guide_title'     => 'Dapatkan akses API OLX',
+    'ch_olx_step_1'          => 'Ajukan permintaan akses API di portal developer OLX regional Anda',
+    'ch_olx_step_2'          => 'Setelah disetujui, buat aplikasi untuk mendapatkan Client ID dan Client Secret',
+    'ch_olx_step_3'          => 'Selesaikan alur otorisasi OAuth 2.0 untuk mendapatkan Bearer Access Token',
+    'ch_olx_step_4'          => 'Opsional: masukkan ID Kategori default untuk listing Anda',
+    'ch_olx_portal'          => 'Portal developer OLX',
+
+    // Google Ads
+    'ch_google_guide_title'  => 'Dapatkan kredensial Google Ads API',
+    'ch_google_step_1'       => 'Buka Google Cloud Console dan buat atau pilih project',
+    'ch_google_step_2'       => 'Aktifkan Google Ads API di APIs & Services → Library',
+    'ch_google_step_3'       => 'Buat kredensial OAuth 2.0 untuk mendapatkan Client ID dan Client Secret',
+    'ch_google_step_4'       => 'Minta Developer Token di Google Ads → Tools → API Center',
+    'ch_google_step_5'       => 'Customer ID Anda adalah angka 10 digit di kanan atas Google Ads (tanpa tanda hubung)',
+    'ch_google_portal'       => 'Google Cloud Console',
+
+    // Facebook / Meta Ads
+    'ch_fb_guide_title'      => 'Dapatkan kredensial Meta (Facebook) Ads API',
+    'ch_fb_step_1'           => 'Buka developers.facebook.com dan buat aplikasi (tipe: Bisnis)',
+    'ch_fb_step_2'           => 'Tambahkan produk "Marketing API" ke aplikasi Anda',
+    'ch_fb_step_3'           => 'Buat Access Token Pengguna Sistem jangka panjang dengan izin ads_management',
+    'ch_fb_step_4'           => 'ID Akun Iklan ada di Meta Business Suite → Akun Iklan — format: act_XXXXXXXX',
+    'ch_fb_portal'           => 'Meta untuk Developer',
+
     // Formulir produk
     'basic_information'   => 'Informasi Dasar',
     'price_eur'           => 'Harga (€)',

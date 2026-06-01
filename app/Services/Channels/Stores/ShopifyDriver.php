@@ -25,24 +25,27 @@ class ShopifyDriver extends AbstractDriver
 
     public function getAuthUrl(): ?string
     {
-        $creds = $this->credentials();
+        $clientId    = $this->configOrCredential('services.shopify.client_id', 'client_id');
         $callbackUrl = route('channels.callback', $this->integration);
 
         return "https://{$this->shopDomain()}/admin/oauth/authorize?" . http_build_query([
-            'client_id'    => $creds['client_id'],
-            'scope'        => 'read_products',
+            'client_id'    => $clientId,
+            'scope'        => 'read_products,write_products,read_inventory,write_inventory',
             'redirect_uri' => $callbackUrl,
-            'state'        => $this->integration->id,
+            'state'        => $this->generateOAuthState(),
         ]);
     }
 
     public function handleOAuthCallback(array $params): void
     {
-        $creds = $this->credentials();
+        $this->verifyOAuthState($params['state'] ?? '');
+
+        $clientId     = $this->configOrCredential('services.shopify.client_id', 'client_id');
+        $clientSecret = $this->configOrCredential('services.shopify.client_secret', 'client_secret');
 
         $response = Http::post("https://{$this->shopDomain()}/admin/oauth/access_token", [
-            'client_id'     => $creds['client_id'],
-            'client_secret' => $creds['client_secret'],
+            'client_id'     => $clientId,
+            'client_secret' => $clientSecret,
             'code'          => $params['code'],
         ]);
 
@@ -50,6 +53,7 @@ class ShopifyDriver extends AbstractDriver
             throw new \RuntimeException('Shopify OAuth token exchange failed: ' . $response->body());
         }
 
+        $creds = $this->credentials();
         $creds['access_token'] = $response->json('access_token');
         $this->integration->credentials = $creds;
         $this->integration->save();
@@ -82,22 +86,26 @@ class ShopifyDriver extends AbstractDriver
 
     public function pushProduct(array $productData): string
     {
+        $categories = array_values(array_filter($productData['categories'] ?? []));
+
         $payload = [
             'product' => [
-                'title'     => $productData['title'],
-                'body_html' => $productData['description'] ?? '',
-                'status'    => 'active',
-                'variants'  => [[
-                    'price'              => (string) ($productData['price'] ?? '0'),
-                    'sku'                => $productData['sku'] ?? '',
-                    'inventory_quantity' => (int) ($productData['stock'] ?? 0),
+                'title'        => $productData['title'],
+                'body_html'    => $productData['description'] ?? '',
+                'product_type' => $categories[0] ?? '',
+                'tags'         => implode(', ', array_slice($categories, 1)), // extra categories as tags
+                'status'       => 'active',
+                'variants'     => [[
+                    'price'                => (string) ($productData['price'] ?? '0'),
+                    'sku'                  => $productData['sku'] ?? '',
+                    'inventory_quantity'   => (int) ($productData['stock'] ?? 0),
                     'inventory_management' => 'shopify',
                 ]],
-                'images'  => array_map(fn($url) => ['src' => $url], $productData['images'] ?? []),
+                'images'  => array_map(fn($url) => ['src' => $url], array_filter($productData['images'] ?? [])),
                 'options' => array_map(fn($attr) => [
                     'name'   => $attr['name'],
-                    'values' => $attr['values'] ?? [],
-                ], $productData['attributes'] ?? []),
+                    'values' => array_values(array_filter((array) ($attr['values'] ?? []))),
+                ], array_filter($productData['attributes'] ?? [], fn($a) => ! empty($a['name']))),
             ],
         ];
 
@@ -125,7 +133,7 @@ class ShopifyDriver extends AbstractDriver
             'sku'          => $firstVariant['sku'] ?? null,
             'product_url'  => isset($item['handle']) ? "https://{$this->shopDomain()}/products/{$item['handle']}" : null,
             'images'       => array_map(fn($img) => $img['src'], $item['images'] ?? []),
-            'categories'   => [], // Shopify uses collections, not product categories
+            'categories'   => array_values(array_filter([trim($item['product_type'] ?? '')])),
             'attributes'   => array_map(fn($opt) => [
                 'name' => $opt['name'],
                 'values' => $opt['values'],

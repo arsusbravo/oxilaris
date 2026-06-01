@@ -360,7 +360,7 @@ export default {
     async fetchChannels() {
       const data = await window.api('/api/channels');
       const active = data.filter(c => c.status === 'active');
-      this.marketplaceChannels = active.filter(c => ['bol', 'amazon', 'tokopedia', 'shopee', 'olx'].includes(c.channel_type));
+      this.marketplaceChannels = active.filter(c => ['bol', 'amazon', 'tiktok_shop', 'shopee', 'olx'].includes(c.channel_type));
       this.storeChannels = active.filter(c => ['woocommerce', 'shopify', 'magento', 'cs_cart'].includes(c.channel_type));
     },
 

@@ -174,6 +174,124 @@ return [
     'save_changes'        => 'Save Changes',
     'edit_product'        => 'Edit Product',
 
+    // Channel form — general
+    'ch_select_placeholder'  => '— Select a channel type —',
+    'ch_label_field'         => 'Label',
+    'ch_label_hint'          => 'A name to identify this connection (e.g. "My WooCommerce Store")',
+    'ch_optgroup_stores'     => 'Stores — import products',
+    'ch_optgroup_markets'    => 'Marketplaces — sell products',
+    'ch_optgroup_ads'        => 'Advertising platforms',
+    'ch_how_to_title'        => 'How to get your API credentials',
+    'ch_open_portal'         => 'Open developer portal',
+    'ch_save'                => 'Save Channel',
+    'ch_continue_connect'    => 'Continue to Connect →',
+    'ch_quick_connect'       => 'Quick Connect',
+    'ch_quick_connect_sub'   => 'Connect in one click — no API keys needed',
+    'ch_connect_btn'         => 'Connect →',
+    'ch_reconnect'           => 'Re-authorize',
+    'ch_oauth_redirect_notice' => 'You\'ll be redirected to :platform to authorize access. No API keys needed.',
+    'ch_platform_not_configured' => 'Platform app not configured. Enter your own credentials below.',
+
+    // WooCommerce
+    'ch_woo_guide_title'     => 'Get your WooCommerce REST API keys',
+    'ch_woo_step_1'          => 'Log in to your WordPress admin panel',
+    'ch_woo_step_2'          => 'Go to WooCommerce → Settings → Advanced → REST API',
+    'ch_woo_step_3'          => 'Click "Add key", enter a description and set Permissions to Read/Write',
+    'ch_woo_step_4'          => 'Click "Generate API key" — copy the Consumer Key and Consumer Secret immediately (shown only once)',
+    'ch_woo_portal'          => 'WooCommerce REST API documentation',
+
+    // Shopify
+    'ch_shopify_guide_title' => 'Get your Shopify API credentials',
+    'ch_shopify_step_1'      => 'In your Shopify admin, go to Settings → Apps and sales channels',
+    'ch_shopify_step_2'      => 'Click "Develop apps" in the top right, then "Create an app"',
+    'ch_shopify_step_3'      => 'Under the "Configuration" tab, enable Admin API scopes (Products, Inventory)',
+    'ch_shopify_step_4'      => 'Click "Install app" to generate your API key (Client ID) and secret key (Client Secret)',
+    'ch_shopify_portal'      => 'Shopify Partners dashboard',
+
+    // Magento
+    'ch_magento_guide_title' => 'Get your Magento 2 integration access token',
+    'ch_magento_step_1'      => 'Log in to your Magento admin panel',
+    'ch_magento_step_2'      => 'Go to System → Extensions → Integrations',
+    'ch_magento_step_3'      => 'Click "Add New Integration" and give it a name',
+    'ch_magento_step_4'      => 'Under the API tab, set Resource Access to "All"',
+    'ch_magento_step_5'      => 'Click Save, then Activate and confirm — copy the Access Token (shown only once)',
+    'ch_magento_portal'      => 'Magento Integrations documentation',
+
+    // CS-Cart
+    'ch_cscart_guide_title'  => 'Enable the CS-Cart REST API',
+    'ch_cscart_step_1'       => 'Log in to your CS-Cart admin panel',
+    'ch_cscart_step_2'       => 'Go to Settings → API and enable the REST API',
+    'ch_cscart_step_3'       => 'Scroll down to "API users" and click "Add" for your admin account',
+    'ch_cscart_step_4'       => 'Enter a name, click Save — the API key appears in the list. Copy it.',
+    'ch_cscart_portal'       => 'CS-Cart REST API documentation',
+
+    // BOL.com
+    'ch_bol_guide_title'     => 'Get your BOL.com Retailer API credentials',
+    'ch_bol_step_1'          => 'Log in to the BOL.com Retailer portal at verkopen.bol.com',
+    'ch_bol_step_2'          => 'Go to your account settings and open "API settings"',
+    'ch_bol_step_3'          => 'Click "Create new credentials" — note the Client ID and Client Secret',
+    'ch_bol_step_4'          => 'Ensure your account has the correct role permissions for the API',
+    'ch_bol_portal'          => 'BOL.com Retailer API portal',
+
+    // Amazon
+    'ch_amazon_guide_title'  => 'Get your Amazon SP-API credentials',
+    'ch_amazon_step_1'       => 'Log in to Amazon Seller Central',
+    'ch_amazon_step_2'       => 'Go to Apps & Services → Develop Apps → Add new app client',
+    'ch_amazon_step_3'       => 'Note your LWA Client ID and Client Secret from the app settings',
+    'ch_amazon_step_4'       => 'Your Seller ID is found under Account Info → Merchant Token',
+    'ch_amazon_step_5'       => 'Pick the marketplace region that matches your store (e.g. eu-west-1 for Europe)',
+    'ch_amazon_portal'       => 'Amazon Seller Central',
+
+    // TikTok Shop
+    'ch_tiktok_shop_guide_title' => 'Get your TikTok Shop API credentials',
+    'ch_tiktok_shop_step_1'      => 'Go to TikTok Shop Partner Center at partner.tiktokshop.com and create a developer account',
+    'ch_tiktok_shop_step_2'      => 'Create an app — you will receive an App Key and App Secret',
+    'ch_tiktok_shop_step_3'      => 'Authorize the app in your TikTok Shop Seller Center to obtain an Access Token',
+    'ch_tiktok_shop_step_4'      => 'Your Shop Cipher is shown in Seller Center under Shop → Settings',
+    'ch_tiktok_shop_step_5'      => '',
+    'ch_tiktok_shop_portal'      => 'TikTok Shop Partner Center',
+
+    // TikTok Ads
+    'ch_tiktok_ads_guide_title'  => 'Get your TikTok Ads (TikTok For Business) credentials',
+    'ch_tiktok_ads_step_1'       => 'Go to ads.tiktok.com and create a TikTok For Business account',
+    'ch_tiktok_ads_step_2'       => 'Visit business-api.tiktok.com, create an app and get your App ID and App Secret',
+    'ch_tiktok_ads_step_3'       => 'Generate a long-lived Access Token for your app with the required ad permissions',
+    'ch_tiktok_ads_step_4'       => 'Your Advertiser ID is found in TikTok Ads Manager — top-right account menu',
+    'ch_tiktok_ads_portal'       => 'TikTok For Business API',
+
+    // Shopee
+    'ch_shopee_guide_title'  => 'Get your Shopee Partner API credentials',
+    'ch_shopee_step_1'       => 'Register at open.shopee.com (Shopee Open Platform)',
+    'ch_shopee_step_2'       => 'Create a new app — you will receive a Partner ID and Partner Key',
+    'ch_shopee_step_3'       => 'Your Shop ID is found in Shopee Seller Centre under Account Settings',
+    'ch_shopee_step_4'       => 'Complete the OAuth authorization flow in Shopee to generate an Access Token',
+    'ch_shopee_portal'       => 'Shopee Open Platform',
+
+    // OLX
+    'ch_olx_guide_title'     => 'Get your OLX API access',
+    'ch_olx_step_1'          => 'Apply for API access at your regional OLX developer portal',
+    'ch_olx_step_2'          => 'After approval, create an app to receive a Client ID and Client Secret',
+    'ch_olx_step_3'          => 'Complete the OAuth 2.0 authorization flow to obtain a Bearer Access Token',
+    'ch_olx_step_4'          => 'Optionally enter a default Category ID for your listings',
+    'ch_olx_portal'          => 'OLX developer portal',
+
+    // Google Ads
+    'ch_google_guide_title'  => 'Get your Google Ads API credentials',
+    'ch_google_step_1'       => 'Go to Google Cloud Console and create or select a project',
+    'ch_google_step_2'       => 'Enable the Google Ads API under APIs & Services → Library',
+    'ch_google_step_3'       => 'Create OAuth 2.0 credentials to get a Client ID and Client Secret',
+    'ch_google_step_4'       => 'Request a Developer Token in Google Ads → Tools → API Center',
+    'ch_google_step_5'       => 'Your Customer ID is the 10-digit number in the top-right of Google Ads (without dashes)',
+    'ch_google_portal'       => 'Google Cloud Console',
+
+    // Facebook / Meta Ads
+    'ch_fb_guide_title'      => 'Get your Meta (Facebook) Ads API credentials',
+    'ch_fb_step_1'           => 'Go to developers.facebook.com and create an app (type: Business)',
+    'ch_fb_step_2'           => 'Add the "Marketing API" product to your app',
+    'ch_fb_step_3'           => 'Generate a long-lived System User Access Token with ads_management permissions',
+    'ch_fb_step_4'           => 'Your Ad Account ID is in Meta Business Suite → Ad Accounts — format: act_XXXXXXXX',
+    'ch_fb_portal'           => 'Meta for Developers',
+
     // Product form
     'basic_information'   => 'Basic Information',
     'price_eur'           => 'Price (€)',

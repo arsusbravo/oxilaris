@@ -174,6 +174,124 @@ return [
     'save_changes'        => 'Wijzigingen opslaan',
     'edit_product'        => 'Product bewerken',
 
+    // Kanaalformulier — algemeen
+    'ch_select_placeholder'  => '— Selecteer een kanaaltype —',
+    'ch_label_field'         => 'Label',
+    'ch_label_hint'          => 'Een naam om deze verbinding te herkennen (bijv. "Mijn WooCommerce Winkel")',
+    'ch_optgroup_stores'     => 'Winkels — producten importeren',
+    'ch_optgroup_markets'    => 'Marktplaatsen — producten verkopen',
+    'ch_optgroup_ads'        => 'Advertentieplatforms',
+    'ch_how_to_title'        => 'Hoe u uw API-inloggegevens verkrijgt',
+    'ch_open_portal'         => 'Ontwikkelaarsportaal openen',
+    'ch_save'                => 'Kanaal opslaan',
+    'ch_continue_connect'    => 'Doorgaan naar verbinden →',
+    'ch_quick_connect'       => 'Snel verbinden',
+    'ch_quick_connect_sub'   => 'Verbind met één klik — geen API-sleutels nodig',
+    'ch_connect_btn'         => 'Verbinden →',
+    'ch_reconnect'           => 'Opnieuw autoriseren',
+    'ch_oauth_redirect_notice' => 'U wordt doorgestuurd naar :platform om toegang te verlenen. Geen API-sleutels nodig.',
+    'ch_platform_not_configured' => 'Platform-app niet geconfigureerd. Voer uw eigen inloggegevens hieronder in.',
+
+    // WooCommerce
+    'ch_woo_guide_title'     => 'WooCommerce REST API-sleutels ophalen',
+    'ch_woo_step_1'          => 'Log in op uw WordPress-beheerderspaneel',
+    'ch_woo_step_2'          => 'Ga naar WooCommerce → Instellingen → Geavanceerd → REST API',
+    'ch_woo_step_3'          => 'Klik op "Sleutel toevoegen", voer een beschrijving in en stel Rechten in op Lezen/Schrijven',
+    'ch_woo_step_4'          => 'Klik op "API-sleutel genereren" — kopieer de Consumer Key en Consumer Secret direct (slechts eenmalig zichtbaar)',
+    'ch_woo_portal'          => 'WooCommerce REST API-documentatie',
+
+    // Shopify
+    'ch_shopify_guide_title' => 'Shopify API-inloggegevens ophalen',
+    'ch_shopify_step_1'      => 'Ga in uw Shopify-beheer naar Instellingen → Apps en verkoopkanalen',
+    'ch_shopify_step_2'      => 'Klik rechtsboven op "Apps ontwikkelen" en dan op "Een app maken"',
+    'ch_shopify_step_3'      => 'Schakel op het tabblad "Configuratie" de Admin API-scopes in (Producten, Voorraad)',
+    'ch_shopify_step_4'      => 'Klik op "App installeren" om uw API-sleutel (Client ID) en geheim (Client Secret) te genereren',
+    'ch_shopify_portal'      => 'Shopify Partners-dashboard',
+
+    // Magento
+    'ch_magento_guide_title' => 'Magento 2 integratie-toegangstoken ophalen',
+    'ch_magento_step_1'      => 'Log in op uw Magento-beheerderspaneel',
+    'ch_magento_step_2'      => 'Ga naar Systeem → Extensies → Integraties',
+    'ch_magento_step_3'      => 'Klik op "Nieuwe integratie toevoegen" en geef het een naam',
+    'ch_magento_step_4'      => 'Stel op het API-tabblad Resourcetoegang in op "Alles"',
+    'ch_magento_step_5'      => 'Klik op Opslaan, dan Activeren en bevestigen — kopieer het weergegeven Access Token (slechts eenmalig zichtbaar)',
+    'ch_magento_portal'      => 'Magento Integraties-documentatie',
+
+    // CS-Cart
+    'ch_cscart_guide_title'  => 'CS-Cart REST API inschakelen',
+    'ch_cscart_step_1'       => 'Log in op uw CS-Cart beheerderspaneel',
+    'ch_cscart_step_2'       => 'Ga naar Instellingen → API en schakel de REST API in',
+    'ch_cscart_step_3'       => 'Scroll naar "API-gebruikers" en klik op "Toevoegen" voor uw beheerdersaccount',
+    'ch_cscart_step_4'       => 'Voer een naam in, klik op Opslaan — de API-sleutel verschijnt in de lijst. Kopieer deze.',
+    'ch_cscart_portal'       => 'CS-Cart REST API-documentatie',
+
+    // BOL.com
+    'ch_bol_guide_title'     => 'BOL.com Retailer API-inloggegevens ophalen',
+    'ch_bol_step_1'          => 'Log in op het BOL.com Retailerportaal via verkopen.bol.com',
+    'ch_bol_step_2'          => 'Ga naar uw accountinstellingen en open "API-instellingen"',
+    'ch_bol_step_3'          => 'Klik op "Nieuwe inloggegevens aanmaken" — noteer de Client ID en Client Secret',
+    'ch_bol_step_4'          => 'Zorg dat uw account de juiste rolmachtigingen heeft voor de API',
+    'ch_bol_portal'          => 'BOL.com Retailer API-portaal',
+
+    // Amazon
+    'ch_amazon_guide_title'  => 'Amazon SP-API-inloggegevens ophalen',
+    'ch_amazon_step_1'       => 'Log in op Amazon Seller Central',
+    'ch_amazon_step_2'       => 'Ga naar Apps & Services → Apps ontwikkelen → Nieuwe app-client toevoegen',
+    'ch_amazon_step_3'       => 'Noteer uw LWA Client ID en Client Secret vanuit de app-instellingen',
+    'ch_amazon_step_4'       => 'Uw Verkoper-ID vindt u onder Accountgegevens → Merchant Token',
+    'ch_amazon_step_5'       => 'Kies de marketplace-regio die bij uw winkel past (bijv. eu-west-1 voor Europa)',
+    'ch_amazon_portal'       => 'Amazon Seller Central',
+
+    // TikTok Shop
+    'ch_tiktok_shop_guide_title' => 'TikTok Shop API-inloggegevens ophalen',
+    'ch_tiktok_shop_step_1'      => 'Ga naar TikTok Shop Partner Center op partner.tiktokshop.com en maak een ontwikkelaarsaccount aan',
+    'ch_tiktok_shop_step_2'      => 'Maak een app aan — u ontvangt een App Key en App Secret',
+    'ch_tiktok_shop_step_3'      => 'Autoriseer de app in uw TikTok Shop Seller Center voor een Access Token',
+    'ch_tiktok_shop_step_4'      => 'Uw Shop Cipher staat in Seller Center onder Winkel → Instellingen',
+    'ch_tiktok_shop_step_5'      => '',
+    'ch_tiktok_shop_portal'      => 'TikTok Shop Partner Center',
+
+    // TikTok Ads
+    'ch_tiktok_ads_guide_title'  => 'TikTok Ads (TikTok For Business) inloggegevens ophalen',
+    'ch_tiktok_ads_step_1'       => 'Ga naar ads.tiktok.com en maak een TikTok For Business-account aan',
+    'ch_tiktok_ads_step_2'       => 'Bezoek business-api.tiktok.com, maak een app aan en ontvang uw App ID en App Secret',
+    'ch_tiktok_ads_step_3'       => 'Genereer een langdurige Access Token voor uw app met de vereiste advertentierechten',
+    'ch_tiktok_ads_step_4'       => 'Uw Advertiser ID staat in TikTok Ads Manager — rechtsboven in het accountmenu',
+    'ch_tiktok_ads_portal'       => 'TikTok For Business API',
+
+    // Shopee
+    'ch_shopee_guide_title'  => 'Shopee Partner API-inloggegevens ophalen',
+    'ch_shopee_step_1'       => 'Registreer u op open.shopee.com (Shopee Open Platform)',
+    'ch_shopee_step_2'       => 'Maak een nieuwe app aan — u ontvangt een Partner ID en Partner Key',
+    'ch_shopee_step_3'       => 'Uw Shop ID vindt u in Shopee Seller Centre onder Accountinstellingen',
+    'ch_shopee_step_4'       => 'Voltooi de OAuth-autorisatiestroom in Shopee om een Access Token te genereren',
+    'ch_shopee_portal'       => 'Shopee Open Platform',
+
+    // OLX
+    'ch_olx_guide_title'     => 'OLX API-toegang verkrijgen',
+    'ch_olx_step_1'          => 'Dien een aanvraag in voor API-toegang via het OLX-ontwikkelaarsportaal van uw regio',
+    'ch_olx_step_2'          => 'Maak na goedkeuring een app aan voor Client ID en Client Secret',
+    'ch_olx_step_3'          => 'Voltooi de OAuth 2.0-autorisatiestroom voor een Bearer Access Token',
+    'ch_olx_step_4'          => 'Vul optioneel een standaard Categorie-ID in voor uw advertenties',
+    'ch_olx_portal'          => 'OLX-ontwikkelaarsportaal',
+
+    // Google Ads
+    'ch_google_guide_title'  => 'Google Ads API-inloggegevens ophalen',
+    'ch_google_step_1'       => 'Ga naar Google Cloud Console en maak een project aan of selecteer er een',
+    'ch_google_step_2'       => 'Schakel de Google Ads API in via APIs & Services → Bibliotheek',
+    'ch_google_step_3'       => 'Maak OAuth 2.0-inloggegevens aan voor Client ID en Client Secret',
+    'ch_google_step_4'       => 'Vraag een Developer Token aan in Google Ads → Tools → API Center',
+    'ch_google_step_5'       => 'Uw Customer ID is het 10-cijferige getal rechtsboven in Google Ads (zonder koppeltekens)',
+    'ch_google_portal'       => 'Google Cloud Console',
+
+    // Facebook / Meta Ads
+    'ch_fb_guide_title'      => 'Meta (Facebook) Ads API-inloggegevens ophalen',
+    'ch_fb_step_1'           => 'Ga naar developers.facebook.com en maak een app aan (type: Zakelijk)',
+    'ch_fb_step_2'           => 'Voeg het product "Marketing API" toe aan uw app',
+    'ch_fb_step_3'           => 'Genereer een langdurige Systeem Gebruiker Access Token met ads_management-rechten',
+    'ch_fb_step_4'           => 'Uw Advertentie-account-ID vindt u in Meta Business Suite → Advertentieaccounts — formaat: act_XXXXXXXX',
+    'ch_fb_portal'           => 'Meta voor Ontwikkelaars',
+
     // Productformulier
     'basic_information'   => 'Basisinformatie',
     'price_eur'           => 'Prijs (€)',

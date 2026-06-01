@@ -21,6 +21,37 @@ class WooCommerceDriver extends AbstractDriver
         ];
     }
 
+    public function getAuthUrl(): ?string
+    {
+        $appName = config('services.woocommerce.app_name') ?: config('app.name');
+        if (! $appName) return null;
+
+        $siteUrl     = rtrim($this->credentials()['site_url'] ?? '', '/');
+        if (! $siteUrl) return null;
+
+        $callbackUrl = config('services.woocommerce.callback_url')
+            ?: route('channels.callback', $this->integration);
+
+        return $siteUrl . '/wc-auth/v1/authorize?' . http_build_query([
+            'app_name'     => $appName,
+            'scope'        => 'read_write',
+            'user_id'      => $this->integration->id,
+            'return_url'   => route('channels.show', $this->integration),
+            'callback_url' => $callbackUrl . '?state=' . $this->generateOAuthState(),
+        ]);
+    }
+
+    public function handleOAuthCallback(array $params): void
+    {
+        $this->verifyOAuthState($params['state'] ?? '');
+
+        $creds = $this->credentials();
+        $creds['consumer_key']    = $params['consumer_key']    ?? '';
+        $creds['consumer_secret'] = $params['consumer_secret'] ?? '';
+        $this->integration->credentials = $creds;
+        $this->integration->save();
+    }
+
     public function testConnection(): void
     {
         $response = Http::withBasicAuth(...$this->auth())
@@ -39,11 +70,13 @@ class WooCommerceDriver extends AbstractDriver
 
     public function fetchProducts(int $page = 1, int $perPage = 100): array
     {
+        $categoryMap = $this->fetchCategoryMap();
+
         $response = Http::withBasicAuth(...$this->auth())
             ->get($this->baseUrl() . '/products', [
                 'per_page' => $perPage,
-                'page' => $page,
-                'status' => 'publish',
+                'page'     => $page,
+                'status'   => 'publish',
             ]);
 
         if (! $response->successful()) {
@@ -72,7 +105,39 @@ class WooCommerceDriver extends AbstractDriver
         }
         unset($product);
 
-        return array_map([$this, 'normalizeProduct'], $products);
+        return array_map(fn($p) => $this->normalizeProduct($p, $categoryMap), $products);
+    }
+
+    private function fetchCategoryMap(): array
+    {
+        $map  = [];
+        $page = 1;
+
+        do {
+            $response = Http::withBasicAuth(...$this->auth())
+                ->get($this->baseUrl() . '/products/categories', [
+                    'per_page' => 100,
+                    'page'     => $page,
+                    'orderby'  => 'id',
+                    'order'    => 'asc',
+                ]);
+
+            if (! $response->successful()) {
+                break;
+            }
+
+            $batch = $response->json() ?? [];
+            foreach ($batch as $cat) {
+                if (isset($cat['id'], $cat['name'])) {
+                    $map[(int) $cat['id']] = $cat['name'];
+                }
+            }
+
+            $totalPages = (int) ($response->header('X-WP-TotalPages') ?: 1);
+            $page++;
+        } while ($page <= $totalPages && ! empty($batch));
+
+        return $map;
     }
 
     public function pushProduct(array $productData): string
@@ -86,7 +151,13 @@ class WooCommerceDriver extends AbstractDriver
             'sku'            => $productData['sku'] ?? '',
             'status'         => 'publish',
             'images'         => array_map(fn($url) => ['src' => $url], $productData['images'] ?? []),
-            'categories'     => array_map(fn($cat) => ['name' => $cat], $productData['categories'] ?? []),
+            'categories'     => array_map(
+                fn($cat) => ['name' => $cat],
+                array_filter(
+                    $productData['categories'] ?? [],
+                    fn($cat) => is_string($cat) && $cat !== '' && ! filter_var($cat, FILTER_VALIDATE_URL)
+                )
+            ),
             'attributes'     => array_map(fn($attr) => [
                 'name'    => $attr['name'],
                 'options' => $attr['values'] ?? [],
@@ -104,7 +175,7 @@ class WooCommerceDriver extends AbstractDriver
         return (string) $response->json('id');
     }
 
-    private function normalizeProduct(array $item): array
+    private function normalizeProduct(array $item, array $categoryMap = []): array
     {
         return [
             'external_id'  => (string) $item['id'],
@@ -114,8 +185,15 @@ class WooCommerceDriver extends AbstractDriver
             'stock'        => (int) ($item['stock_quantity'] ?? 0),
             'sku'          => $item['sku'] ?? null,
             'product_url'  => $item['permalink'] ?? null,
-            'images'       => array_map(fn($img) => $img['src'], $item['images'] ?? []),
-            'categories'   => array_map(fn($cat) => $cat['name'], $item['categories'] ?? []),
+            'images'       => array_values(array_filter(
+                array_map(fn($img) => $img['src'] ?? '', $item['images'] ?? []),
+                fn($src) => $src !== '' && ! str_contains(strtolower($src), 'placeholder')
+            )),
+            'categories'   => array_values(array_filter(array_map(
+                fn($cat) => $categoryMap[(int)($cat['id'] ?? 0)]
+                    ?? (! filter_var($cat['name'] ?? '', FILTER_VALIDATE_URL) ? ($cat['name'] ?? null) : null),
+                $item['categories'] ?? []
+            ))),
             'attributes'   => array_map(fn($attr) => [
                 'name' => $attr['name'],
                 'values' => $attr['options'] ?? [],
