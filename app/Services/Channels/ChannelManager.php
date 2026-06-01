@@ -10,6 +10,9 @@ use App\Services\Channels\Stores\MagentoDriver;
 use App\Services\Channels\Stores\CsCartDriver;
 use App\Services\Channels\Marketplaces\BolDriver;
 use App\Services\Channels\Marketplaces\AmazonDriver;
+use App\Services\Channels\Marketplaces\TokopediaDriver;
+use App\Services\Channels\Marketplaces\ShopeeDriver;
+use App\Services\Channels\Marketplaces\OlxDriver;
 use App\Services\Channels\Advertising\GoogleAdsDriver;
 use App\Services\Channels\Advertising\FacebookAdsDriver;
 use InvalidArgumentException;
@@ -24,6 +27,9 @@ class ChannelManager
         'cs_cart'      => 'CS-Cart',
         'bol'          => 'BOL.com',
         'amazon'       => 'Amazon',
+        'tokopedia'    => 'Tokopedia',
+        'shopee'       => 'Shopee',
+        'olx'          => 'OLX',
         'google_ads'   => 'Google Ads',
         'facebook_ads' => 'Facebook Ads',
     ];
@@ -35,6 +41,9 @@ class ChannelManager
         'cs_cart'      => CsCartDriver::class,
         'bol'          => BolDriver::class,
         'amazon'       => AmazonDriver::class,
+        'tokopedia'    => TokopediaDriver::class,
+        'shopee'       => ShopeeDriver::class,
+        'olx'          => OlxDriver::class,
         'google_ads'   => GoogleAdsDriver::class,
         'facebook_ads' => FacebookAdsDriver::class,
     ];

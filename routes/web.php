@@ -51,6 +51,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Marketplace listings
     Route::resource('listings', ListingController::class)->only(['index', 'store', 'destroy']);
     Route::post('listings/{listing}/push', [ListingController::class, 'push'])->name('listings.push');
+    Route::post('listings/bulk-push',   [ListingController::class, 'bulkPush'])->name('listings.bulk-push');
+    Route::post('listings/bulk-delete', [ListingController::class, 'bulkDelete'])->name('listings.bulk-delete');
 
     // Ad campaigns
     Route::resource('campaigns', CampaignController::class);

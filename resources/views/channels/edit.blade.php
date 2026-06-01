@@ -35,6 +35,9 @@
                                 'amazon'       => ['client_id' => 'Client ID', 'client_secret' => 'Client Secret', 'seller_id' => 'Seller ID', 'region' => 'Region'],
                                 'google_ads'   => ['client_id' => 'Client ID', 'client_secret' => 'Client Secret', 'developer_token' => 'Developer Token', 'customer_id' => 'Customer ID'],
                                 'facebook_ads' => ['access_token' => 'Access Token', 'ad_account_id' => 'Ad Account ID'],
+                                'tokopedia'    => ['client_id' => 'Client ID', 'client_secret' => 'Client Secret', 'fs_id' => 'Fulfillment Service ID', 'shop_id' => 'Shop ID'],
+                                'shopee'       => ['partner_id' => 'Partner ID', 'partner_key' => 'Partner Key', 'shop_id' => 'Shop ID', 'access_token' => 'Access Token'],
+                                'olx'          => ['client_id' => 'Client ID', 'client_secret' => 'Client Secret', 'access_token' => 'Access Token', 'category_id' => 'Default Category ID'],
                                 default        => [],
                             };
                         @endphp

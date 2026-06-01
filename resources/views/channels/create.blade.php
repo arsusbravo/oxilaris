@@ -29,6 +29,9 @@
                             <optgroup label="Marketplaces (sell products)">
                                 <option value="bol">BOL.com</option>
                                 <option value="amazon">Amazon</option>
+                                <option value="tokopedia">Tokopedia</option>
+                                <option value="shopee">Shopee</option>
+                                <option value="olx">OLX</option>
                             </optgroup>
                             <optgroup label="Advertising">
                                 <option value="google_ads">Google Ads</option>
@@ -145,6 +148,76 @@
                         <div>
                             <x-input-label value="Marketplace Region (e.g. eu-west-1)" />
                             <x-text-input type="text" name="credentials[region]" class="mt-1 block w-full" placeholder="eu-west-1" />
+                        </div>
+                    </div>
+
+                    {{-- Tokopedia --}}
+                    <div x-show="type === 'tokopedia'" class="space-y-4 mb-5">
+                        <p class="text-sm text-gray-500">Register as a Fulfillment Service (FS) partner at <strong>developer.tokopedia.com</strong> to obtain these credentials.</p>
+                        <div>
+                            <x-input-label value="Client ID" />
+                            <x-text-input type="text" name="credentials[client_id]" class="mt-1 block w-full"
+                                value="{{ old('credentials.client_id') }}" />
+                        </div>
+                        <div>
+                            <x-input-label value="Client Secret" />
+                            <x-text-input type="password" name="credentials[client_secret]" class="mt-1 block w-full" />
+                        </div>
+                        <div>
+                            <x-input-label value="Fulfillment Service ID (fs_id)" />
+                            <x-text-input type="text" name="credentials[fs_id]" class="mt-1 block w-full"
+                                value="{{ old('credentials.fs_id') }}" />
+                        </div>
+                        <div>
+                            <x-input-label value="Shop ID" />
+                            <x-text-input type="text" name="credentials[shop_id]" class="mt-1 block w-full"
+                                value="{{ old('credentials.shop_id') }}" />
+                        </div>
+                    </div>
+
+                    {{-- Shopee --}}
+                    <div x-show="type === 'shopee'" class="space-y-4 mb-5">
+                        <p class="text-sm text-gray-500">Register at the <strong>Shopee Partner Portal</strong> (open.shopee.com) to get Partner ID and Partner Key. The Access Token is obtained after OAuth authorization.</p>
+                        <div>
+                            <x-input-label value="Partner ID" />
+                            <x-text-input type="text" name="credentials[partner_id]" class="mt-1 block w-full"
+                                value="{{ old('credentials.partner_id') }}" />
+                        </div>
+                        <div>
+                            <x-input-label value="Partner Key" />
+                            <x-text-input type="password" name="credentials[partner_key]" class="mt-1 block w-full" />
+                        </div>
+                        <div>
+                            <x-input-label value="Shop ID" />
+                            <x-text-input type="text" name="credentials[shop_id]" class="mt-1 block w-full"
+                                value="{{ old('credentials.shop_id') }}" />
+                        </div>
+                        <div>
+                            <x-input-label value="Access Token" />
+                            <x-text-input type="password" name="credentials[access_token]" class="mt-1 block w-full" />
+                        </div>
+                    </div>
+
+                    {{-- OLX --}}
+                    <div x-show="type === 'olx'" class="space-y-4 mb-5">
+                        <p class="text-sm text-gray-500">Apply for API access at your regional OLX developer portal. Provide a pre-obtained Bearer Access Token.</p>
+                        <div>
+                            <x-input-label value="Client ID" />
+                            <x-text-input type="text" name="credentials[client_id]" class="mt-1 block w-full"
+                                value="{{ old('credentials.client_id') }}" />
+                        </div>
+                        <div>
+                            <x-input-label value="Client Secret" />
+                            <x-text-input type="password" name="credentials[client_secret]" class="mt-1 block w-full" />
+                        </div>
+                        <div>
+                            <x-input-label value="Access Token" />
+                            <x-text-input type="password" name="credentials[access_token]" class="mt-1 block w-full" />
+                        </div>
+                        <div>
+                            <x-input-label value="Default Category ID (optional)" />
+                            <x-text-input type="text" name="credentials[category_id]" class="mt-1 block w-full"
+                                value="{{ old('credentials.category_id') }}" placeholder="3" />
                         </div>
                     </div>
 

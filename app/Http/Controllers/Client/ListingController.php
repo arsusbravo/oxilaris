@@ -23,12 +23,44 @@ class ListingController extends Controller
 
     public function apiIndex(Request $request)
     {
-        $listings = ChannelListing::where('user_id', $request->user()->id)
-            ->with(['product', 'channelIntegration'])
-            ->latest()
-            ->paginate(50);
+        $query = ChannelListing::where('user_id', $request->user()->id)
+            ->with(['product', 'channelIntegration']);
 
-        return response()->json($listings);
+        if ($request->filled('channel_integration_id')) {
+            $query->where('channel_integration_id', $request->channel_integration_id);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        return response()->json($query->latest()->paginate(50));
+    }
+
+    public function bulkPush(Request $request)
+    {
+        $ids = $request->validate(['ids' => 'required|array', 'ids.*' => 'integer'])['ids'];
+
+        ChannelListing::whereIn('id', $ids)
+            ->where('user_id', $request->user()->id)
+            ->get()
+            ->each(function ($listing) {
+                \App\Jobs\ExportProductToMarketplaceJob::dispatch($listing);
+                $listing->update(['status' => 'pending']);
+            });
+
+        return response()->json(['success' => true]);
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->validate(['ids' => 'required|array', 'ids.*' => 'integer'])['ids'];
+
+        ChannelListing::whereIn('id', $ids)
+            ->where('user_id', $request->user()->id)
+            ->delete();
+
+        return response()->json(['success' => true]);
     }
 
     public function store(Request $request)
