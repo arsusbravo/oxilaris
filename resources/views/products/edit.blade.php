@@ -65,8 +65,8 @@
                     if (!r.ok) throw new Error('Analysis failed');
                     const d = await r.json();
                     if (d.error) { this.analyzeError = d.error; return; }
-                    if (d.title)       document.getElementById('title').value = d.title;
-                    if (d.description) document.getElementById('description').value = d.description;
+                    if (d.title)       document.getElementById('title').value       = d.title;
+                    if (d.description) document.getElementById('description').value = d.description.replace(/\\n/g, '\n');
                   } catch(e) { this.analyzeError = e.message; }
                   finally { this.analyzing = false; }
                 }

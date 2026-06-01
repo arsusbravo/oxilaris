@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\ChannelIntegration;
+use App\Models\ChannelTypeSetting;
 use App\Services\Channels\ChannelManager;
 use Illuminate\Http\Request;
 
@@ -29,9 +30,15 @@ class ChannelController extends Controller
 
     public function create()
     {
-        return view('channels.create', [
-            'channelTypes' => ChannelManager::TYPES,
-        ]);
+        $disabled = ChannelTypeSetting::where('is_active', false)->pluck('channel_type')->toArray();
+
+        $channelTypes = array_filter(
+            ChannelManager::TYPES,
+            fn($type) => ! in_array($type, $disabled),
+            ARRAY_FILTER_USE_KEY
+        );
+
+        return view('channels.create', compact('channelTypes'));
     }
 
     public function store(Request $request)

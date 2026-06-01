@@ -62,8 +62,8 @@
 
         <div>
             <x-input-label for="description" value="Description" />
-            <textarea id="description" name="description" rows="4"
-                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">{{ old('description', $p?->description) }}</textarea>
+            <textarea id="description" name="description" rows="8"
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm leading-relaxed">{{ old('description', $p?->description) }}</textarea>
         </div>
 
         <div>

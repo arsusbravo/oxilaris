@@ -20,23 +20,35 @@
                         <select id="channel_type" name="channel_type" x-model="type" required
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="">— Select a channel —</option>
+                            @php
+                                $storeTypes     = ['woocommerce', 'shopify', 'magento', 'cs_cart'];
+                                $marketTypes    = ['bol', 'amazon', 'tokopedia', 'shopee', 'olx'];
+                                $adTypes        = ['google_ads', 'facebook_ads'];
+                                $activeStores   = array_intersect_key($channelTypes, array_flip($storeTypes));
+                                $activeMarkets  = array_intersect_key($channelTypes, array_flip($marketTypes));
+                                $activeAds      = array_intersect_key($channelTypes, array_flip($adTypes));
+                            @endphp
+                            @if($activeStores)
                             <optgroup label="Stores (import products)">
-                                <option value="woocommerce">WooCommerce</option>
-                                <option value="shopify">Shopify</option>
-                                <option value="magento">Magento 2</option>
-                                <option value="cs_cart">CS-Cart</option>
+                                @foreach($activeStores as $value => $label)
+                                    <option value="{{ $value }}">{{ $label }}</option>
+                                @endforeach
                             </optgroup>
+                            @endif
+                            @if($activeMarkets)
                             <optgroup label="Marketplaces (sell products)">
-                                <option value="bol">BOL.com</option>
-                                <option value="amazon">Amazon</option>
-                                <option value="tokopedia">Tokopedia</option>
-                                <option value="shopee">Shopee</option>
-                                <option value="olx">OLX</option>
+                                @foreach($activeMarkets as $value => $label)
+                                    <option value="{{ $value }}">{{ $label }}</option>
+                                @endforeach
                             </optgroup>
+                            @endif
+                            @if($activeAds)
                             <optgroup label="Advertising">
-                                <option value="google_ads">Google Ads</option>
-                                <option value="facebook_ads">Facebook Ads</option>
+                                @foreach($activeAds as $value => $label)
+                                    <option value="{{ $value }}">{{ $label }}</option>
+                                @endforeach
                             </optgroup>
+                            @endif
                         </select>
                         <x-input-error :messages="$errors->get('channel_type')" class="mt-1" />
                     </div>

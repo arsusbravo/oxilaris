@@ -40,15 +40,18 @@ class AiContentService
                     ['type' => 'image_url', 'image_url' => ['url' => $imageDataUrl]],
                     [
                         'type' => 'text',
-                        'text' => 'Look at this product image and identify the product. '
-                            . 'Respond with ONLY a valid JSON object, no extra text: '
-                            . '{"title": "...", "description": "..."}. '
-                            . 'title = concise product name max 100 characters. '
-                            . 'description = 150-300 words suitable for an online store, no markdown.',
+                        'text' => 'You are a professional e-commerce copywriter. Analyze this product image and write compelling retail copy. '
+                            . 'Respond with ONLY a valid JSON object, no extra text: {"title": "...", "description": "..."}. '
+                            . 'title: concise, specific product name (max 100 characters). '
+                            . 'description: 3 short paragraphs separated by \n\n. '
+                            . 'Paragraph 1 (2-3 sentences): powerful opening that highlights the key benefit and who it is for. '
+                            . 'Paragraph 2 (2-3 sentences): key features and specifications in natural language, not bullet points. '
+                            . 'Paragraph 3 (1-2 sentences): closing call to action or brand statement. '
+                            . 'Tone: confident, professional, concise. No markdown, no bullet points, no hype words like "amazing" or "incredible".',
                     ],
                 ],
             ],
-        ], 600);
+        ], 800);
 
         // Strip markdown code fences some models add around JSON
         $clean   = trim(preg_replace('/^```(?:json)?\s*/i', '', preg_replace('/\s*```$/m', '', trim($raw))));

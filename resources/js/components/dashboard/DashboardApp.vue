@@ -125,10 +125,10 @@
           </div>
 
           <!-- Phase 2: Two paths -->
-          <div class="grid grid-cols-2 gap-3">
+          <div :class="marketplaces.length && adChannels.length ? 'grid-cols-2' : 'grid-cols-1 max-w-sm mx-auto'" class="grid gap-3">
 
             <!-- Path A: Marketplace -->
-            <div class="space-y-2">
+            <div v-if="marketplaces.length" class="space-y-2">
               <div class="rounded-lg bg-violet-50 border border-violet-100 p-3">
                 <div class="flex items-center gap-2 mb-1.5">
                   <div class="w-5 h-5 rounded-full bg-violet-500 text-white text-[10px] font-bold flex items-center justify-center shrink-0">5</div>
@@ -149,7 +149,7 @@
             </div>
 
             <!-- Path B: Advertising -->
-            <div class="space-y-2">
+            <div v-if="adChannels.length" class="space-y-2">
               <div class="rounded-lg bg-amber-50 border border-amber-100 p-3">
                 <div class="flex items-center gap-2 mb-1.5">
                   <div class="w-5 h-5 rounded-full bg-amber-500 text-white text-[10px] font-bold flex items-center justify-center shrink-0">6</div>
@@ -241,8 +241,8 @@ export default {
         },
       ],
 
-      marketplaces: ['BOL.com', 'Amazon', 'Tokopedia', 'Shopee', 'OLX'],
-      adChannels:   ['Google Ads', 'Facebook Ads'],
+      marketplaces: JSON.parse(document.getElementById('dashboard-app')?.dataset.marketplaces || '[]'),
+      adChannels:   JSON.parse(document.getElementById('dashboard-app')?.dataset.adChannels   || '[]'),
     };
   },
 

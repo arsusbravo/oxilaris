@@ -9,6 +9,7 @@ use App\Http\Controllers\Client\ListingController;
 use App\Http\Controllers\Client\CampaignController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ChannelSettingsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => redirect()->route('dashboard'));
@@ -65,6 +66,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
     Route::post('users/{user}/toggle', [UserController::class, 'toggle'])->name('users.toggle');
+    Route::get('channel-settings', [ChannelSettingsController::class, 'index'])->name('channel-settings.index');
+    Route::post('channel-settings/{type}/toggle', [ChannelSettingsController::class, 'toggle'])->name('channel-settings.toggle');
 });
 
 require __DIR__.'/auth.php';
