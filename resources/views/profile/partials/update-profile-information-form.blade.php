@@ -48,15 +48,16 @@
         </div>
 
         <div class="border-t pt-4">
-            <x-input-label for="ai_locale" :value="__('ui.ai_language')" />
-            <p class="text-xs text-gray-500 mb-2">{{ __('ui.ai_language_desc') }}</p>
-            <select id="ai_locale" name="ai_locale"
+            <x-input-label for="ui_locale" :value="__('ui.ui_language')" />
+            <p class="text-xs text-gray-500 mb-2">{{ __('ui.ui_language_desc') }}</p>
+            <select id="ui_locale" name="ui_locale"
                 class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
-                <option value="en" {{ old('ai_locale', $user->ai_locale ?? 'en') === 'en' ? 'selected' : '' }}>{{ __('ui.lang_en') }}</option>
-                <option value="nl" {{ old('ai_locale', $user->ai_locale ?? 'en') === 'nl' ? 'selected' : '' }}>{{ __('ui.lang_nl') }}</option>
-                <option value="id" {{ old('ai_locale', $user->ai_locale ?? 'en') === 'id' ? 'selected' : '' }}>{{ __('ui.lang_id') }}</option>
+                <option value="" {{ old('ui_locale', $user->ui_locale) === null ? 'selected' : '' }}>{{ __('ui.lang_browser') }}</option>
+                <option value="en" {{ old('ui_locale', $user->ui_locale) === 'en' ? 'selected' : '' }}>{{ __('ui.lang_en') }}</option>
+                <option value="nl" {{ old('ui_locale', $user->ui_locale) === 'nl' ? 'selected' : '' }}>{{ __('ui.lang_nl') }}</option>
+                <option value="id" {{ old('ui_locale', $user->ui_locale) === 'id' ? 'selected' : '' }}>{{ __('ui.lang_id') }}</option>
             </select>
-            <x-input-error class="mt-2" :messages="$errors->get('ai_locale')" />
+            <x-input-error class="mt-2" :messages="$errors->get('ui_locale')" />
         </div>
 
         <div class="flex items-center gap-4">

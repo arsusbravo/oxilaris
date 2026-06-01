@@ -4,10 +4,10 @@
 
     {{-- Title --}}
     <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-5 space-y-4">
-        <h3 class="font-semibold text-slate-700 text-sm">Basic Information</h3>
+        <h3 class="font-semibold text-slate-700 text-sm">{{ __('ui.basic_information') }}</h3>
 
         <div>
-            <x-input-label for="title" value="Title *" />
+            <x-input-label for="title" :value="__('ui.title') . ' *'" />
             <x-text-input id="title" name="title" type="text" class="mt-1 block w-full"
                 value="{{ old('title', $p?->title) }}" required />
             <x-input-error :messages="$errors->get('title')" class="mt-1" />
@@ -15,13 +15,13 @@
 
         <div class="grid sm:grid-cols-3 gap-4">
             <div>
-                <x-input-label for="price" value="Price (€)" />
+                <x-input-label for="price" :value="__('ui.price_eur')" />
                 <x-text-input id="price" name="price" type="number" step="0.01" min="0" class="mt-1 block w-full"
                     value="{{ old('price', $p?->price) }}" placeholder="0.00" />
                 <x-input-error :messages="$errors->get('price')" class="mt-1" />
             </div>
             <div>
-                <x-input-label for="stock" value="Stock" />
+                <x-input-label for="stock" :value="__('ui.stock')" />
                 <x-text-input id="stock" name="stock" type="number" min="0" class="mt-1 block w-full"
                     value="{{ old('stock', $p?->stock ?? 0) }}" />
                 <x-input-error :messages="$errors->get('stock')" class="mt-1" />
@@ -36,21 +36,19 @@
 
         <div class="grid sm:grid-cols-2 gap-4">
             <div>
-                <x-input-label for="status" value="Status" />
+                <x-input-label for="status" :value="__('ui.status')" />
                 <select id="status" name="status"
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
-                    @foreach(['active' => 'Active', 'inactive' => 'Inactive', 'draft' => 'Draft'] as $val => $label)
-                        <option value="{{ $val }}" {{ old('status', $p?->status ?? 'active') === $val ? 'selected' : '' }}>
-                            {{ $label }}
-                        </option>
-                    @endforeach
+                    <option value="active"   {{ old('status', $p?->status ?? 'active') === 'active'   ? 'selected' : '' }}>{{ __('ui.status_active') }}</option>
+                    <option value="inactive" {{ old('status', $p?->status ?? 'active') === 'inactive' ? 'selected' : '' }}>{{ __('ui.status_inactive') }}</option>
+                    <option value="draft"    {{ old('status', $p?->status ?? 'active') === 'draft'    ? 'selected' : '' }}>{{ __('ui.status_draft') }}</option>
                 </select>
             </div>
             <div>
-                <x-input-label for="store_id" value="Store (optional)" />
+                <x-input-label for="store_id" :value="__('ui.store_optional')" />
                 <select id="store_id" name="store_id"
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
-                    <option value="">— No store —</option>
+                    <option value="">{{ __('ui.no_store_option') }}</option>
                     @foreach($stores as $store)
                         <option value="{{ $store->id }}" {{ old('store_id', $p?->store_id) == $store->id ? 'selected' : '' }}>
                             {{ $store->name }}
@@ -61,13 +59,13 @@
         </div>
 
         <div>
-            <x-input-label for="description" value="Description" />
+            <x-input-label for="description" :value="__('ui.description')" />
             <textarea id="description" name="description" rows="8"
                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm leading-relaxed">{{ old('description', $p?->description) }}</textarea>
         </div>
 
         <div>
-            <x-input-label for="categories" value="Categories (comma-separated)" />
+            <x-input-label for="categories" :value="__('ui.categories_input')" />
             <x-text-input id="categories" name="categories" type="text" class="mt-1 block w-full"
                 value="{{ old('categories', implode(', ', $p?->categories ?? [])) }}"
                 placeholder="Electronics, Audio, Speakers" />
@@ -79,7 +77,7 @@
 
         {{-- Header: title + action buttons --}}
         <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
-            <h3 class="font-semibold text-slate-700 text-sm">Images</h3>
+            <h3 class="font-semibold text-slate-700 text-sm">{{ __('ui.images') }}</h3>
             <div class="flex items-center gap-2 flex-wrap">
                 {{-- Hidden multi-file input --}}
                 <input type="file" accept="image/*" multiple x-ref="fileInput"
@@ -90,29 +88,37 @@
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                     </svg>
-                    <span x-text="uploading ? 'Uploading…' : 'Upload Images'"></span>
+                    <span x-text="uploading ? (window.trans?.uploading || 'Uploading...') : (window.trans?.upload_images || 'Upload Images')"></span>
                 </button>
 
-                <button type="button" @click="analyzeSelected()"
-                    :disabled="!selectedForAnalysis || analyzing"
-                    class="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-40 transition-colors">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                    </svg>
-                    <span x-text="analyzing ? 'Analyzing…' : '✦ Analyze with AI'"></span>
-                </button>
+                <div class="inline-flex rounded-lg overflow-hidden border border-indigo-600">
+                    <button type="button" @click="analyzeSelected()"
+                        :disabled="!selectedForAnalysis || analyzing"
+                        class="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-40 transition-colors">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                        </svg>
+                        <span x-text="analyzing ? (window.trans?.analyzing || 'Analyzing...') : (window.trans?.analyze_with_ai || '✦ Analyze with AI')"></span>
+                    </button>
+                    <select x-model="aiLocale"
+                        class="text-xs bg-indigo-700 text-white border-l border-indigo-500 pl-1.5 pr-5 py-1.5 focus:outline-none cursor-pointer">
+                        <option value="en">EN</option>
+                        <option value="nl">NL</option>
+                        <option value="id">ID</option>
+                    </select>
+                </div>
 
                 <button type="button" @click="addImage()"
                     class="text-xs text-slate-500 hover:text-slate-700 font-medium px-2 py-1.5 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors">
-                    + Add URL
+                    {{ __('ui.add_url') }}
                 </button>
             </div>
         </div>
 
         {{-- Hint when images exist --}}
         <p x-show="images.some(i => i.url)" class="text-xs text-slate-400 mb-2">
-            Select an image with the radio button, then click "Analyze with AI" to generate title &amp; description.
+            {{ __('ui.select_image_hint') }}
         </p>
 
         {{-- Upload error --}}
@@ -163,9 +169,9 @@
     {{-- Specifications / Attributes --}}
     <div class="bg-white rounded-xl border border-slate-100 shadow-sm p-5">
         <div class="flex items-center justify-between mb-3">
-            <h3 class="font-semibold text-slate-700 text-sm">Specifications</h3>
+            <h3 class="font-semibold text-slate-700 text-sm">{{ __('ui.specifications') }}</h3>
             <button type="button" @click="addAttr()"
-                class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">+ Add specification</button>
+                class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">{{ __('ui.add_specification') }}</button>
         </div>
         <div class="space-y-2">
             <template x-for="(attr, i) in attributes" :key="i">
@@ -185,7 +191,7 @@
                 </div>
             </template>
         </div>
-        <p class="text-xs text-slate-400 mt-2">Values are comma-separated. Leave blank to skip.</p>
+        <p class="text-xs text-slate-400 mt-2">{{ __('ui.spec_values_hint') }}</p>
     </div>
 
 </div>

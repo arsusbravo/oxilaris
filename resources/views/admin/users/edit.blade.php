@@ -23,11 +23,12 @@
             <div class="mb-4">
                 <x-input-label for="ui_locale" value="Dashboard Language" />
                 <select id="ui_locale" name="ui_locale" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                    <option value="" {{ old('ui_locale', $user->ui_locale) === null ? 'selected' : '' }}>— Browser default</option>
                     <option value="en" {{ old('ui_locale', $user->ui_locale) === 'en' ? 'selected' : '' }}>English</option>
                     <option value="nl" {{ old('ui_locale', $user->ui_locale) === 'nl' ? 'selected' : '' }}>Nederlands (Dutch)</option>
                     <option value="id" {{ old('ui_locale', $user->ui_locale) === 'id' ? 'selected' : '' }}>Bahasa Indonesia</option>
                 </select>
-                <p class="text-xs text-gray-400 mt-1">Language used for the dashboard interface.</p>
+                <p class="text-xs text-gray-400 mt-1">Language used for the dashboard interface. Leave on "Browser default" to follow the user's browser language.</p>
             </div>
             <div class="mb-4">
                 <x-input-label for="password" value="New Password (leave blank to keep current)" />

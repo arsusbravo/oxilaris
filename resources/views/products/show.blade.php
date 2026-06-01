@@ -10,7 +10,7 @@
                 </a>
                 <div class="min-w-0">
                     <h2 class="font-semibold text-gray-800 leading-tight truncate">{{ $product->title }}</h2>
-                    <p class="text-xs text-gray-400 mt-0.5">{{ $product->store?->name ?? 'Manual product' }}</p>
+                    <p class="text-xs text-gray-400 mt-0.5">{{ $product->store?->name ?? __('ui.manual_product') }}</p>
                 </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
@@ -19,17 +19,17 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
-                    Edit
+                    {{ __('ui.edit') }}
                 </a>
                 <form method="POST" action="{{ route('products.destroy', $product) }}"
-                      onsubmit="return confirm('Delete this product? This cannot be undone.')">
+                      onsubmit="return confirm('{{ __('ui.delete_confirm') }}')">
                     @csrf @method('DELETE')
                     <button type="submit"
                         class="flex items-center gap-1.5 text-sm text-red-500 hover:text-red-700 font-medium px-3 py-1.5 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
-                        Delete
+                        {{ __('ui.delete') }}
                     </button>
                 </form>
             </div>
@@ -74,7 +74,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                     d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            <span class="text-sm text-slate-400">No image available</span>
+                            <span class="text-sm text-slate-400">{{ __('ui.no_image') }}</span>
                         </div>
                     @endif
                 </div>
@@ -86,7 +86,7 @@
                     <div>
                         <div class="flex items-center gap-2 mb-2">
                             <span class="text-xs font-semibold text-indigo-600 uppercase tracking-widest">
-                                {{ $product->store?->name ?? 'Manual Product' }}
+                                {{ $product->store?->name ?? __('ui.manual_product') }}
                             </span>
                             @if(!empty($product->raw_data['product_url']))
                                 <a href="{{ $product->raw_data['product_url'] }}" target="_blank" rel="noopener"
@@ -95,7 +95,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                     </svg>
-                                    View in store
+                                    {{ __('ui.view_in_store') }}
                                 </a>
                             @endif
                         </div>
@@ -110,12 +110,12 @@
                         @if((int) $product->stock > 0)
                             <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-semibold rounded-full border border-emerald-100">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                {{ $product->stock }} in stock
+                                {{ str_replace(':n', $product->stock, __('ui.in_stock')) }}
                             </span>
                         @else
                             <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-red-50 text-red-600 text-xs font-semibold rounded-full border border-red-100">
                                 <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                                Out of stock
+                                {{ __('ui.out_of_stock') }}
                             </span>
                         @endif
                     </div>
@@ -124,14 +124,14 @@
                     <div class="flex items-center gap-5 py-3.5 border-y border-slate-100">
                         @if($product->sku)
                             <div>
-                                <p class="text-xs font-medium text-slate-400 uppercase tracking-wide">SKU</p>
+                                <p class="text-xs font-medium text-slate-400 uppercase tracking-wide">{{ __('ui.sku') }}</p>
                                 <p class="font-mono text-sm font-semibold text-slate-700 mt-0.5">{{ $product->sku }}</p>
                             </div>
                             <div class="w-px h-8 bg-slate-100"></div>
                         @endif
                         @if($product->status)
                             <div>
-                                <p class="text-xs font-medium text-slate-400 uppercase tracking-wide">Status</p>
+                                <p class="text-xs font-medium text-slate-400 uppercase tracking-wide">{{ __('ui.status') }}</p>
                                 <span class="mt-0.5 inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700 capitalize">
                                     {{ $product->status }}
                                 </span>
@@ -139,7 +139,7 @@
                             <div class="w-px h-8 bg-slate-100"></div>
                         @endif
                         <div>
-                            <p class="text-xs font-medium text-slate-400 uppercase tracking-wide">Variants</p>
+                            <p class="text-xs font-medium text-slate-400 uppercase tracking-wide">{{ __('ui.variants') }}</p>
                             <p class="text-sm font-semibold text-slate-700 mt-0.5">{{ $product->variants->count() ?: '—' }}</p>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                     {{-- Categories --}}
                     @if(!empty($product->categories))
                         <div>
-                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Categories</p>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">{{ __('ui.categories') }}</p>
                             <div class="flex flex-wrap gap-1.5">
                                 @foreach((array) $product->categories as $cat)
                                     @if($cat)
@@ -163,7 +163,7 @@
                     {{-- Product-level attributes (Color: [Red][Blue], Size: [S][M][L]) --}}
                     @if(!empty($product->attributes))
                         <div>
-                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Specifications</p>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">{{ __('ui.specifications') }}</p>
                             <div class="space-y-2.5">
                                 @foreach((array) $product->attributes as $attr)
                                     @php
@@ -197,7 +197,7 @@
             {{-- Description --}}
             @if($product->description)
                 <div class="px-6 py-5 border-t border-slate-100">
-                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Description</p>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">{{ __('ui.description') }}</p>
                     <div class="text-sm text-slate-600 leading-relaxed max-w-3xl whitespace-pre-line">{{ $product->description }}</div>
                 </div>
             @endif
@@ -207,8 +207,8 @@
         @if($product->variants->isNotEmpty())
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
                 <div class="px-6 py-4 border-b border-slate-100">
-                    <h3 class="font-semibold text-slate-800">Variants</h3>
-                    <p class="text-xs text-slate-400 mt-0.5">{{ $product->variants->count() }} variant{{ $product->variants->count() !== 1 ? 's' : '' }}</p>
+                    <h3 class="font-semibold text-slate-800">{{ __('ui.variants') }}</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">{{ $product->variants->count() }} {{ __('ui.variants') }}</p>
                 </div>
                 <div class="divide-y divide-slate-100">
                     @foreach($product->variants as $variant)
@@ -231,7 +231,7 @@
                                         <span>{{ $value }}</span>
                                     </span>
                                 @empty
-                                    <span class="text-sm text-slate-400 italic">Default variant</span>
+                                    <span class="text-sm text-slate-400 italic">{{ __('ui.default_variant') }}</span>
                                 @endforelse
                             </div>
                             {{-- SKU --}}
@@ -245,7 +245,7 @@
                             {{-- Stock --}}
                             <span class="text-xs font-semibold shrink-0 w-24 text-right
                                 {{ (int) $variant->stock > 0 ? 'text-emerald-600' : 'text-red-400' }}">
-                                {{ (int) $variant->stock > 0 ? $variant->stock . ' in stock' : 'Out of stock' }}
+                                {{ (int) $variant->stock > 0 ? str_replace(':n', $variant->stock, __('ui.in_stock')) : __('ui.out_of_stock') }}
                             </span>
                         </div>
                     @endforeach
@@ -257,12 +257,12 @@
         <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
             <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
                 <div>
-                    <h3 class="font-semibold text-slate-800">Marketplace Listings</h3>
-                    <p class="text-xs text-slate-400 mt-0.5">Channels this product is listed on</p>
+                    <h3 class="font-semibold text-slate-800">{{ __('ui.marketplace_listings') }}</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">{{ __('ui.channels_listed_on') }}</p>
                 </div>
                 <a href="{{ route('listings.index') }}"
                    class="text-xs text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
-                    Manage →
+                    {{ __('ui.manage') }}
                 </a>
             </div>
 
@@ -272,9 +272,9 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                             d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                     </svg>
-                    <p class="text-sm text-slate-400">Not listed on any marketplace yet.</p>
+                    <p class="text-sm text-slate-400">{{ __('ui.not_listed_yet') }}</p>
                     <a href="{{ route('listings.index') }}" class="mt-1 inline-block text-xs text-indigo-600 hover:underline">
-                        Create a listing →
+                        {{ __('ui.create_listing') }}
                     </a>
                 </div>
             @else
@@ -299,7 +299,7 @@
                                 {{ $listing->status }}
                             </span>
                             <span class="text-xs text-slate-400 shrink-0 w-28 text-right">
-                                {{ $listing->last_pushed_at ? $listing->last_pushed_at->diffForHumans() : 'Never pushed' }}
+                                {{ $listing->last_pushed_at ? $listing->last_pushed_at->diffForHumans() : __('ui.never_pushed') }}
                             </span>
                         </div>
                     @endforeach

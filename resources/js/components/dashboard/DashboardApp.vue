@@ -10,7 +10,7 @@
           <p class="text-xs font-semibold uppercase tracking-wider" :class="stat.labelColor">{{ stat.label }}</p>
           <p class="text-3xl font-bold text-slate-800 mt-1 leading-none">{{ stat.value }}</p>
           <a :href="stat.href" class="inline-flex items-center gap-1 text-xs font-medium mt-2 transition-colors" :class="stat.linkColor">
-            View all
+            {{ $t.view_all || 'View all' }}
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
@@ -30,8 +30,8 @@
       <!-- Quick Actions -->
       <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
         <div class="px-5 py-4 border-b border-slate-100">
-          <h3 class="font-semibold text-slate-800 text-sm">Quick Actions</h3>
-          <p class="text-xs text-slate-400 mt-0.5">Jump right in</p>
+          <h3 class="font-semibold text-slate-800 text-sm">{{ $t.quick_actions || 'Quick Actions' }}</h3>
+          <p class="text-xs text-slate-400 mt-0.5">{{ $t.quick_actions_sub || 'Jump right in' }}</p>
         </div>
         <div class="p-3 space-y-2">
           <a v-for="action in quickActions" :key="action.href" :href="action.href"
@@ -54,8 +54,8 @@
       <!-- Workflow Flowchart (spans 2 columns) -->
       <div class="md:col-span-2 bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
         <div class="px-5 py-4 border-b border-slate-100">
-          <h3 class="font-semibold text-slate-800 text-sm">How it works</h3>
-          <p class="text-xs text-slate-400 mt-0.5">Your complete product distribution workflow</p>
+          <h3 class="font-semibold text-slate-800 text-sm">{{ $t.how_it_works || 'How it works' }}</h3>
+          <p class="text-xs text-slate-400 mt-0.5">{{ $t.how_it_works_sub || 'Your complete product distribution workflow' }}</p>
         </div>
         <div class="p-5 space-y-3">
 
@@ -64,13 +64,13 @@
             <div class="flex items-center gap-2 mb-2">
               <div class="w-6 h-6 rounded-full bg-rose-500 text-white text-xs font-bold flex items-center justify-center shrink-0">1</div>
               <div>
-                <p class="text-xs font-bold text-rose-700">Create your channels</p>
-                <p class="text-[10px] text-rose-400">Go to <strong>Channels → Add Channel</strong> and add credentials for each platform you want to use</p>
+                <p class="text-xs font-bold text-rose-700">{{ $t.flow_create_channels || 'Create your channels' }}</p>
+                <p class="text-[10px] text-rose-400">{{ $t.flow_create_channels_sub || 'Go to Channels → Add Channel and add credentials for each platform you want to use' }}</p>
               </div>
             </div>
             <div class="grid grid-cols-2 gap-2">
               <div class="bg-white rounded-md p-2 border border-rose-100">
-                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1">Store channels</p>
+                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1">{{ $t.flow_store_channels || 'Store channels' }}</p>
                 <div class="flex flex-wrap gap-1">
                   <span class="text-[10px] bg-indigo-100 text-indigo-600 px-1.5 py-0.5 rounded font-medium">WooCommerce</span>
                   <span class="text-[10px] bg-indigo-100 text-indigo-600 px-1.5 py-0.5 rounded font-medium">Shopify</span>
@@ -79,7 +79,7 @@
                 </div>
               </div>
               <div class="bg-white rounded-md p-2 border border-rose-100">
-                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1">Marketplace &amp; Ad channels</p>
+                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1">{{ $t.flow_market_ad_channels || 'Marketplace & Ad channels' }}</p>
                 <div class="flex flex-wrap gap-1">
                   <span v-for="m in [...marketplaces, ...adChannels]" :key="m"
                     class="text-[10px] bg-violet-100 text-violet-600 px-1.5 py-0.5 rounded font-medium">{{ m }}</span>
@@ -95,24 +95,24 @@
           <div class="flex items-center gap-1.5">
             <div class="flex-1 rounded-lg bg-indigo-50 border border-indigo-100 p-3 text-center">
               <div class="w-6 h-6 rounded-full bg-indigo-500 text-white text-xs font-bold flex items-center justify-center mx-auto mb-1">2</div>
-              <p class="text-xs font-semibold text-indigo-700">Connect a Store</p>
-              <p class="text-[10px] text-indigo-400 mt-0.5">Add store → test connection</p>
+              <p class="text-xs font-semibold text-indigo-700">{{ $t.flow_connect_store || 'Connect a Store' }}</p>
+              <p class="text-[10px] text-indigo-400 mt-0.5">{{ $t.flow_connect_store_sub || 'Add store → test connection' }}</p>
             </div>
             <svg class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>
             <div class="flex-1 rounded-lg bg-emerald-50 border border-emerald-100 p-3 text-center">
               <div class="w-6 h-6 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center mx-auto mb-1">3</div>
-              <p class="text-xs font-semibold text-emerald-700">Import Products</p>
-              <p class="text-[10px] text-emerald-400 mt-0.5">Sync or add manually</p>
+              <p class="text-xs font-semibold text-emerald-700">{{ $t.flow_import_products || 'Import Products' }}</p>
+              <p class="text-[10px] text-emerald-400 mt-0.5">{{ $t.flow_import_products_sub || 'Sync or add manually' }}</p>
             </div>
             <svg class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>
             <div class="flex-1 rounded-lg bg-sky-50 border border-sky-100 p-3 text-center">
               <div class="w-6 h-6 rounded-full bg-sky-500 text-white text-xs font-bold flex items-center justify-center mx-auto mb-1">4</div>
-              <p class="text-xs font-semibold text-sky-700">Product Catalog</p>
-              <p class="text-[10px] text-sky-400 mt-0.5">Ready to distribute</p>
+              <p class="text-xs font-semibold text-sky-700">{{ $t.flow_product_catalog || 'Product Catalog' }}</p>
+              <p class="text-[10px] text-sky-400 mt-0.5">{{ $t.flow_product_catalog_sub || 'Ready to distribute' }}</p>
             </div>
           </div>
 
@@ -132,7 +132,7 @@
               <div class="rounded-lg bg-violet-50 border border-violet-100 p-3">
                 <div class="flex items-center gap-2 mb-1.5">
                   <div class="w-5 h-5 rounded-full bg-violet-500 text-white text-[10px] font-bold flex items-center justify-center shrink-0">5</div>
-                  <p class="text-xs font-semibold text-violet-700">Push to Marketplace</p>
+                  <p class="text-xs font-semibold text-violet-700">{{ $t.flow_push_marketplace || 'Push to Marketplace' }}</p>
                 </div>
                 <div class="flex flex-wrap gap-1">
                   <span v-for="m in marketplaces" :key="m" class="text-[10px] bg-violet-100 text-violet-600 px-1.5 py-0.5 rounded font-medium">{{ m }}</span>
@@ -143,8 +143,8 @@
                 <svg class="w-4 h-4 text-violet-200 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
-                <p class="text-xs font-bold text-white">Live Listings</p>
-                <p class="text-[10px] text-violet-200 mt-0.5">Products visible to buyers</p>
+                <p class="text-xs font-bold text-white">{{ $t.flow_live_listings || 'Live Listings' }}</p>
+                <p class="text-[10px] text-violet-200 mt-0.5">{{ $t.flow_live_listings_sub || 'Products visible to buyers' }}</p>
               </div>
             </div>
 
@@ -153,7 +153,7 @@
               <div class="rounded-lg bg-amber-50 border border-amber-100 p-3">
                 <div class="flex items-center gap-2 mb-1.5">
                   <div class="w-5 h-5 rounded-full bg-amber-500 text-white text-[10px] font-bold flex items-center justify-center shrink-0">6</div>
-                  <p class="text-xs font-semibold text-amber-700">AI Ad Campaign</p>
+                  <p class="text-xs font-semibold text-amber-700">{{ $t.flow_ai_campaign || 'AI Ad Campaign' }}</p>
                 </div>
                 <div class="flex flex-wrap gap-1">
                   <span v-for="a in adChannels" :key="a" class="text-[10px] bg-amber-100 text-amber-600 px-1.5 py-0.5 rounded font-medium">{{ a }}</span>
@@ -164,8 +164,8 @@
                 <svg class="w-4 h-4 text-amber-100 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                 </svg>
-                <p class="text-xs font-bold text-white">Running Ads</p>
-                <p class="text-[10px] text-amber-100 mt-0.5">AI-generated copy live</p>
+                <p class="text-xs font-bold text-white">{{ $t.flow_running_ads || 'Running Ads' }}</p>
+                <p class="text-[10px] text-amber-100 mt-0.5">{{ $t.flow_running_ads_sub || 'AI-generated copy live' }}</p>
               </div>
             </div>
 
@@ -246,7 +246,21 @@ export default {
     };
   },
 
+  computed: {
+    $t() { return window.trans || {}; },
+  },
+
   async created() {
+    const t = window.trans || {};
+    this.stats[0].label = t.stat_stores    || 'Stores';
+    this.stats[1].label = t.stat_products  || 'Products';
+    this.stats[2].label = t.stat_listings  || 'Active Listings';
+    this.stats[3].label = t.stat_campaigns || 'Active Campaigns';
+    this.quickActions[0].label = t.qa_connect_channel  || 'Connect a channel';
+    this.quickActions[1].label = t.qa_add_store        || 'Add a store & import';
+    this.quickActions[2].label = t.qa_push_products    || 'Push products to market';
+    this.quickActions[3].label = t.qa_create_campaign  || 'Create an AI ad campaign';
+
     try {
       const data = await window.api('/api/dashboard/stats');
       this.stats[0].value = data.stores;

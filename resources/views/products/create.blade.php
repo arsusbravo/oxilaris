@@ -7,7 +7,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
             </a>
-            <h2 class="font-semibold text-gray-800">Add Product</h2>
+            <h2 class="font-semibold text-gray-800">{{ __('ui.add_product') }}</h2>
         </div>
     </x-slot>
 
@@ -21,6 +21,7 @@
                 uploadError: null,
                 analyzeError: null,
                 selectedForAnalysis: null,
+                aiLocale: '{{ auth()->user()->ui_locale ?? 'en' }}',
                 addImage() { this.images.push({ url: '' }) },
                 removeImage(i) { this.images.splice(i, 1) },
                 addAttr() { this.attributes.push({ name: '', values: '' }) },
@@ -57,7 +58,7 @@
                     const r = await fetch('/api/products/analyze-image', {
                       method: 'POST',
                       headers: { Accept: 'application/json', 'X-XSRF-TOKEN': this.getCsrf(), 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ url: this.selectedForAnalysis }),
+                      body: JSON.stringify({ url: this.selectedForAnalysis, locale: this.aiLocale }),
                     });
                     if (!r.ok) throw new Error('Analysis failed');
                     const d = await r.json();
@@ -71,8 +72,8 @@
             @csrf
             @include('products._form', ['stores' => $stores])
             <div class="flex items-center gap-3 pt-4 border-t mt-6">
-                <x-primary-button>Save Product</x-primary-button>
-                <a href="{{ route('products.index') }}" class="text-sm text-gray-500 hover:text-gray-700">Cancel</a>
+                <x-primary-button>{{ __('ui.save') }}</x-primary-button>
+                <a href="{{ route('products.index') }}" class="text-sm text-gray-500 hover:text-gray-700">{{ __('ui.cancel') }}</a>
             </div>
         </form>
     </div>

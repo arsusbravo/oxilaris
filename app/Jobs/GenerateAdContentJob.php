@@ -40,7 +40,7 @@ class GenerateAdContentJob implements ShouldQueue
         try {
             $campaign = $this->campaign->load(['channelIntegration', 'user']);
             $channelType = $campaign->channelIntegration->channel_type;
-            $locale = $campaign->user->ai_locale ?? 'en';
+            $locale = $campaign->user->ui_locale ?? 'en';
 
             $products = empty($this->productIds)
                 ? Product::where('user_id', $campaign->user_id)->limit(5)->get()
