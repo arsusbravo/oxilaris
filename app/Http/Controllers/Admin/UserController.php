@@ -55,13 +55,19 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'role' => 'required|in:admin,client',
-            'password' => 'nullable|string|min:8|confirmed',
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|email|unique:users,email,' . $user->id,
+            'role'      => 'required|in:admin,client',
+            'ui_locale' => 'required|in:en,nl,id',
+            'password'  => 'nullable|string|min:8|confirmed',
         ]);
 
-        $user->fill(['name' => $validated['name'], 'email' => $validated['email'], 'role' => $validated['role']]);
+        $user->fill([
+            'name'      => $validated['name'],
+            'email'     => $validated['email'],
+            'role'      => $validated['role'],
+            'ui_locale' => $validated['ui_locale'],
+        ]);
 
         if (! empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);

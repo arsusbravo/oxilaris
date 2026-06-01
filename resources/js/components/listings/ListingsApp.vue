@@ -11,8 +11,8 @@
       <!-- Left: product selector -->
       <div class="lg:col-span-2 bg-white rounded-lg shadow overflow-hidden">
         <div class="px-4 py-3 border-b flex items-center justify-between">
-          <h3 class="font-semibold text-gray-700">Select Products</h3>
-          <span class="text-sm text-gray-400">{{ selectedProducts.length }} selected</span>
+          <h3 class="font-semibold text-gray-700">{{ $t.select_products || 'Select Products' }}</h3>
+          <span class="text-sm text-gray-400">{{ ($t.selected || ':count selected').replace(':count', selectedProducts.length) }}</span>
         </div>
         <div class="px-4 py-2 border-b flex gap-2">
           <input v-model="search" @input="debouncedSearch" type="text" placeholder="Search products…"
@@ -67,7 +67,7 @@
       <!-- Right: channels + action -->
       <div class="space-y-4">
         <div class="bg-white rounded-lg shadow p-4">
-          <h3 class="font-semibold text-gray-700 mb-3">Push to Channels</h3>
+          <h3 class="font-semibold text-gray-700 mb-3">{{ $t.push_to_channels || 'Push to Channels' }}</h3>
 
           <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">Marketplaces</p>
           <div v-if="marketplaceChannels.length === 0" class="text-sm text-gray-400 mb-3">No active marketplace channels.</div>
@@ -109,14 +109,14 @@
       <div class="px-4 py-3 border-b space-y-2">
         <div class="flex items-center justify-between gap-3 flex-wrap">
           <h3 class="font-semibold text-gray-700">
-            Existing Listings
+            {{ $t.existing_listings || 'Existing Listings' }}
             <span class="text-gray-400 font-normal text-sm ml-1">({{ listingsTotal }})</span>
           </h3>
           <div class="flex items-center gap-2 flex-wrap">
             <!-- Channel/store filter -->
             <select v-model="listingsChannelFilter" @change="fetchListings(1, true)"
               class="border border-gray-300 rounded px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
-              <option value="">All channels</option>
+              <option value="">{{ $t.all_channels || 'All channels' }}</option>
               <optgroup v-if="marketplaceChannels.length" label="Marketplaces">
                 <option v-for="c in marketplaceChannels" :key="c.id" :value="c.id">{{ c.name }}</option>
               </optgroup>
@@ -128,7 +128,7 @@
             <!-- Status filter -->
             <select v-model="listingsStatusFilter" @change="fetchListings(1, true)"
               class="border border-gray-300 rounded px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
-              <option value="">All statuses</option>
+              <option value="">{{ $t.all_statuses || 'All statuses' }}</option>
               <option value="pending">Pending</option>
               <option value="active">Active</option>
               <option value="error">Error</option>
@@ -144,7 +144,7 @@
           <span class="text-sm text-gray-600 font-medium">{{ selectedListings.length }} selected</span>
           <button @click="bulkPush" :disabled="bulkActing"
             class="text-xs bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded font-medium disabled:opacity-50">
-            {{ bulkActing ? '…' : 'Re-push selected' }}
+            {{ bulkActing ? '…' : ($t.repush_selected || 'Re-push selected') }}
           </button>
           <button @click="bulkDelete" :disabled="bulkActing"
             class="text-xs bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded font-medium disabled:opacity-50">
@@ -154,8 +154,8 @@
         </div>
       </div>
 
-      <div v-if="loadingListings" class="text-center py-8 text-gray-400 text-sm">Loading…</div>
-      <div v-else-if="listings.length === 0" class="text-center py-8 text-gray-400 text-sm">No listings found.</div>
+      <div v-if="loadingListings" class="text-center py-8 text-gray-400 text-sm">{{ $t.loading || 'Loading…' }}</div>
+      <div v-else-if="listings.length === 0" class="text-center py-8 text-gray-400 text-sm">{{ $t.no_listings || 'No listings found.' }}</div>
       <template v-else>
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
@@ -185,7 +185,7 @@
               </td>
               <td class="px-4 py-3 text-sm text-gray-400">{{ listing.last_pushed_at || 'Never' }}</td>
               <td class="px-4 py-3 text-right space-x-2">
-                <button @click="push(listing)" class="text-xs text-green-600 hover:text-green-800 font-medium">Re-push</button>
+                <button @click="push(listing)" class="text-xs text-green-600 hover:text-green-800 font-medium">{{ $t.repush || 'Re-push' }}</button>
                 <button @click="remove(listing)" class="text-xs text-red-500 hover:text-red-700">Delete</button>
               </td>
             </tr>
@@ -243,6 +243,7 @@ export default {
     allSelected() {
       return this.products.length > 0 && this.products.every(p => this.selectedProducts.includes(p.id));
     },
+    $t() { return window.trans || {}; },
     allListingsSelected() {
       return this.listings.length > 0 && this.listings.every(l => this.selectedListings.includes(l.id));
     },

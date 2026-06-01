@@ -15,24 +15,27 @@ class AiContentService
         $this->model  = config('services.openrouter.model', 'google/gemini-flash-1.5');
     }
 
-    public function generateAdCopy(array $product, string $channelType, string $extraContext = ''): string
+    public function generateAdCopy(array $product, string $channelType, string $extraContext = '', string $locale = 'en'): string
     {
         $prompt = $this->buildAdPrompt($product, $channelType, $extraContext);
+        $prompt .= "\n" . $this->getLanguageInstruction($locale);
 
         return $this->chat([['role' => 'user', 'content' => $prompt]]);
     }
 
-    public function improveDescription(array $product, string $channelType): string
+    public function improveDescription(array $product, string $channelType, string $locale = 'en'): string
     {
         $prompt = "Rewrite the following product description to be compelling and optimised for {$channelType}. "
             . "Keep it factual. Product: {$product['title']}. "
-            . "Current description: {$product['description']}";
+            . "Current description: {$product['description']}\n"
+            . $this->getLanguageInstruction($locale);
 
         return $this->chat([['role' => 'user', 'content' => $prompt]]);
     }
 
-    public function analyzeProductImage(string $imageDataUrl): array
+    public function analyzeProductImage(string $imageDataUrl, string $locale = 'en'): array
     {
+        $langInstruction = $this->getLanguageInstruction($locale);
         $raw = $this->chat([
             [
                 'role'    => 'user',
@@ -47,7 +50,8 @@ class AiContentService
                             . 'Paragraph 1 (2-3 sentences): powerful opening that highlights the key benefit and who it is for. '
                             . 'Paragraph 2 (2-3 sentences): key features and specifications in natural language, not bullet points. '
                             . 'Paragraph 3 (1-2 sentences): closing call to action or brand statement. '
-                            . 'Tone: confident, professional, concise. No markdown, no bullet points, no hype words like "amazing" or "incredible".',
+                            . 'Tone: confident, professional, concise. No markdown, no bullet points, no hype words like "amazing" or "incredible". '
+                            . $langInstruction,
                     ],
                 ],
             ],
@@ -103,5 +107,14 @@ class AiContentService
         $lines[] = "The ad should be concise (2-3 sentences), highlight the key benefit, and include a call to action.";
 
         return implode("\n", $lines);
+    }
+
+    private function getLanguageInstruction(string $locale): string
+    {
+        return match($locale) {
+            'nl' => 'Write your response in Dutch (Nederlands).',
+            'id' => 'Write your response in Bahasa Indonesia.',
+            default => 'Write your response in English.',
+        };
     }
 }

@@ -47,6 +47,18 @@
             @endif
         </div>
 
+        <div class="border-t pt-4">
+            <x-input-label for="ai_locale" :value="__('ui.ai_language')" />
+            <p class="text-xs text-gray-500 mb-2">{{ __('ui.ai_language_desc') }}</p>
+            <select id="ai_locale" name="ai_locale"
+                class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                <option value="en" {{ old('ai_locale', $user->ai_locale ?? 'en') === 'en' ? 'selected' : '' }}>{{ __('ui.lang_en') }}</option>
+                <option value="nl" {{ old('ai_locale', $user->ai_locale ?? 'en') === 'nl' ? 'selected' : '' }}>{{ __('ui.lang_nl') }}</option>
+                <option value="id" {{ old('ai_locale', $user->ai_locale ?? 'en') === 'id' ? 'selected' : '' }}>{{ __('ui.lang_id') }}</option>
+            </select>
+            <x-input-error class="mt-2" :messages="$errors->get('ai_locale')" />
+        </div>
+
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 

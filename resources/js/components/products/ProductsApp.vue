@@ -2,40 +2,40 @@
   <div>
     <div class="flex items-center justify-between mb-4">
       <div>
-        <h3 class="text-lg font-semibold text-gray-700">Products</h3>
-        <p v-if="total > 0" class="text-sm text-gray-400 mt-0.5">{{ total }} products total</p>
+        <h3 class="text-lg font-semibold text-gray-700">{{ $t.products || 'Products' }}</h3>
+        <p v-if="total > 0" class="text-sm text-gray-400 mt-0.5">{{ total }} {{ $t.products || 'products' }}</p>
       </div>
       <div class="flex gap-2">
-        <input v-model="search" @input="debouncedSearch" type="text" placeholder="Search…"
+        <input v-model="search" @input="debouncedSearch" type="text" :placeholder="$t.search || 'Search…'"
           class="border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
         <select v-model="storeFilter" @change="fetchProducts(1, true)" class="border border-gray-300 rounded px-3 py-1.5 text-sm">
-          <option value="">All products</option>
-          <option value="none">— No store</option>
+          <option value="">{{ $t.all_products || 'All products' }}</option>
+          <option value="none">{{ $t.no_store || '— No store' }}</option>
           <option v-for="s in stores" :key="s.id" :value="String(s.id)">{{ s.name }}</option>
         </select>
       </div>
     </div>
 
-    <div v-if="loading" class="text-center py-12 text-gray-400">Loading…</div>
+    <div v-if="loading" class="text-center py-12 text-gray-400">{{ $t.loading || 'Loading…' }}</div>
 
     <div v-else-if="products.length === 0" class="bg-white rounded-lg shadow p-8 text-center text-gray-400">
-      No products yet. Sync a store to import products.
+      {{ $t.no_products_yet || 'No products yet. Sync a store to import products.' }}
     </div>
 
     <div v-else class="bg-white rounded-lg shadow overflow-hidden">
       <div class="px-4 py-2 border-b bg-gray-50 flex items-center justify-between text-xs text-gray-500">
-        <span>Showing {{ products.length }} of {{ total }}</span>
-        <span v-if="hasMore" class="text-indigo-500">Scroll down to load more</span>
+        <span>{{ $t.showing_x_of_y?.replace(':shown', products.length).replace(':total', total) || `Showing ${products.length} of ${total}` }}</span>
+        <span v-if="hasMore" class="text-indigo-500">{{ $t.scroll_load_more || 'Scroll down to load more' }}</span>
       </div>
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-16"></th>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">SKU</th>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
-            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Store</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ $t.products || 'Product' }}</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ $t.sku || 'SKU' }}</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ $t.price || 'Price' }}</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ $t.stock || 'Stock' }}</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ $t.store || 'Store' }}</th>
             <th class="px-4 py-3"></th>
           </tr>
         </thead>
@@ -51,7 +51,7 @@
             <td class="px-4 py-3 text-sm text-gray-700">{{ product.stock }}</td>
             <td class="px-4 py-3 text-sm text-gray-400">{{ product.store?.name }}</td>
             <td class="px-4 py-3 text-right">
-              <a :href="`/products/${product.id}${storeFilter ? '?back=' + storeFilter : ''}`" class="text-sm text-indigo-600 hover:underline">View</a>
+              <a :href="`/products/${product.id}${storeFilter ? '?back=' + storeFilter : ''}`" class="text-sm text-indigo-600 hover:underline">{{ $t.view || 'View' }}</a>
             </td>
           </tr>
         </tbody>
@@ -91,6 +91,7 @@ export default {
     hasMore() {
       return this.currentPage < this.lastPage;
     },
+    $t() { return window.trans || {}; },
   },
 
   async created() {

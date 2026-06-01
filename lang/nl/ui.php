@@ -1,0 +1,113 @@
+<?php
+
+return [
+    // Navigatie
+    'nav_dashboard'  => 'Dashboard',
+    'nav_stores'     => 'Winkels',
+    'nav_products'   => 'Producten',
+    'nav_channels'   => 'Kanalen',
+    'nav_listings'   => 'Listings',
+    'nav_campaigns'  => 'Campagnes',
+    'nav_profile'    => 'Profiel',
+    'nav_logout'     => 'Uitloggen',
+    'nav_admin'      => 'Beheer',
+
+    // Algemene acties
+    'save'           => 'Opslaan',
+    'cancel'         => 'Annuleren',
+    'delete'         => 'Verwijderen',
+    'edit'           => 'Bewerken',
+    'create'         => 'Aanmaken',
+    'search'         => 'Zoeken…',
+    'loading'        => 'Laden…',
+    'refresh'        => 'Vernieuwen',
+    'export_csv'     => 'CSV exporteren',
+    'back'           => 'Terug',
+    'view'           => 'Bekijken',
+    'connect'        => 'Verbinden',
+    'never'          => 'Nooit',
+    'yes'            => 'Ja',
+    'no'             => 'Nee',
+
+    // Winkels
+    'stores'              => 'Winkels',
+    'add_store'           => '+ Winkel toevoegen',
+    'sync_now'            => 'Producten synchroniseren',
+    'no_stores_yet'       => 'Nog geen winkels. Verbind een winkel om te beginnen.',
+    'manual_store'        => 'Handmatige winkel',
+    'connected_store'     => 'Verbonden winkel',
+    'store_type'          => 'Winkeltype',
+    'store_name'          => 'Winkelnaam',
+    'store_url'           => 'Winkel-URL',
+    'last_synced'         => 'Laatste synchronisatie',
+    'view_products'       => 'Producten bekijken →',
+    'no_channel_connect'  => 'Geen externe verbinding',
+
+    // Producten
+    'products'            => 'Producten',
+    'add_product'         => '+ Product toevoegen',
+    'all_products'        => 'Alle producten',
+    'no_store'            => '— Geen winkel',
+    'no_products_yet'     => 'Nog geen producten. Synchroniseer een winkel om producten te importeren.',
+    'showing_x_of_y'      => ':shown van :total weergegeven',
+    'all_loaded'          => 'Alle :total producten geladen',
+    'scroll_load_more'    => 'Scroll omlaag voor meer',
+    'sku'                 => 'SKU',
+    'price'               => 'Prijs',
+    'stock'               => 'Voorraad',
+    'status'              => 'Status',
+    'store'               => 'Winkel',
+    'manual_product'      => 'Handmatig product',
+    'status_active'       => 'Actief',
+    'status_inactive'     => 'Inactief',
+    'status_draft'        => 'Concept',
+    'categories'          => 'Categorieën (kommagescheiden)',
+    'description'         => 'Omschrijving',
+    'title'               => 'Titel',
+
+    // Afbeeldingen / AI
+    'images'              => 'Afbeeldingen',
+    'upload_images'       => 'Afbeeldingen uploaden',
+    'uploading'           => 'Uploaden…',
+    'analyze_with_ai'     => '✦ Analyseren met AI',
+    'analyzing'           => 'Analyseren…',
+    'add_url'             => '+ URL toevoegen',
+    'select_image_hint'   => 'Selecteer een afbeelding met het keuzerondje en klik op "Analyseren met AI" om titel & beschrijving te genereren.',
+
+    // Kanalen
+    'channels'            => 'Kanalen',
+    'add_channel'         => '+ Kanaal toevoegen',
+    'channel_type'        => 'Kanaaltype',
+    'test_connection'     => 'Verbinding testen',
+    'no_channels'         => 'Nog geen kanalen verbonden.',
+
+    // Listings
+    'listings'            => 'Listings',
+    'existing_listings'   => 'Bestaande listings',
+    'select_products'     => 'Producten selecteren',
+    'push_to_channels'    => 'Naar kanalen pushen',
+    'marketplaces'        => 'Marktplaatsen',
+    'all_channels'        => 'Alle kanalen',
+    'all_statuses'        => 'Alle statussen',
+    'repush'              => 'Opnieuw pushen',
+    'repush_selected'     => 'Geselecteerde opnieuw pushen',
+    'delete_selected'     => 'Geselecteerde verwijderen',
+    'no_listings'         => 'Geen listings gevonden.',
+    'last_pushed'         => 'Laatst gepusht',
+    'selected'            => ':count geselecteerd',
+
+    // Campagnes
+    'campaigns'           => 'Campagnes',
+    'add_campaign'        => '+ Nieuwe campagne',
+    'generate_content'    => 'AI-inhoud genereren',
+    'no_campaigns'        => 'Nog geen campagnes.',
+
+    // Taalinstellingen
+    'ui_language'         => 'Dashboardtaal',
+    'ui_language_desc'    => 'Taal die wordt gebruikt voor de dashboardinterface.',
+    'ai_language'         => 'AI-responstaal',
+    'ai_language_desc'    => 'Taal voor door AI gegenereerde titels en beschrijvingen.',
+    'lang_en'             => 'English',
+    'lang_nl'             => 'Nederlands',
+    'lang_id'             => 'Bahasa Indonesia',
+];

@@ -1,0 +1,113 @@
+<?php
+
+return [
+    // Navigasi
+    'nav_dashboard'  => 'Dasbor',
+    'nav_stores'     => 'Toko',
+    'nav_products'   => 'Produk',
+    'nav_channels'   => 'Saluran',
+    'nav_listings'   => 'Listing',
+    'nav_campaigns'  => 'Kampanye',
+    'nav_profile'    => 'Profil',
+    'nav_logout'     => 'Keluar',
+    'nav_admin'      => 'Admin',
+
+    // Tindakan umum
+    'save'           => 'Simpan',
+    'cancel'         => 'Batal',
+    'delete'         => 'Hapus',
+    'edit'           => 'Edit',
+    'create'         => 'Buat',
+    'search'         => 'Cari…',
+    'loading'        => 'Memuat…',
+    'refresh'        => 'Segarkan',
+    'export_csv'     => 'Ekspor CSV',
+    'back'           => 'Kembali',
+    'view'           => 'Lihat',
+    'connect'        => 'Hubungkan',
+    'never'          => 'Belum pernah',
+    'yes'            => 'Ya',
+    'no'             => 'Tidak',
+
+    // Toko
+    'stores'              => 'Toko',
+    'add_store'           => '+ Tambah Toko',
+    'sync_now'            => 'Sinkronkan Produk Sekarang',
+    'no_stores_yet'       => 'Belum ada toko. Hubungkan toko untuk memulai.',
+    'manual_store'        => 'Toko manual',
+    'connected_store'     => 'Toko terhubung',
+    'store_type'          => 'Jenis toko',
+    'store_name'          => 'Nama toko',
+    'store_url'           => 'URL toko',
+    'last_synced'         => 'Terakhir disinkronkan',
+    'view_products'       => 'Lihat Produk →',
+    'no_channel_connect'  => 'Tanpa koneksi eksternal',
+
+    // Produk
+    'products'            => 'Produk',
+    'add_product'         => '+ Tambah Produk',
+    'all_products'        => 'Semua produk',
+    'no_store'            => '— Tanpa toko',
+    'no_products_yet'     => 'Belum ada produk. Sinkronkan toko untuk mengimpor produk.',
+    'showing_x_of_y'      => 'Menampilkan :shown dari :total',
+    'all_loaded'          => 'Semua :total produk dimuat',
+    'scroll_load_more'    => 'Gulir ke bawah untuk memuat lebih',
+    'sku'                 => 'SKU',
+    'price'               => 'Harga',
+    'stock'               => 'Stok',
+    'status'              => 'Status',
+    'store'               => 'Toko',
+    'manual_product'      => 'Produk manual',
+    'status_active'       => 'Aktif',
+    'status_inactive'     => 'Tidak aktif',
+    'status_draft'        => 'Draf',
+    'categories'          => 'Kategori (pisahkan dengan koma)',
+    'description'         => 'Deskripsi',
+    'title'               => 'Judul',
+
+    // Gambar / AI
+    'images'              => 'Gambar',
+    'upload_images'       => 'Unggah Gambar',
+    'uploading'           => 'Mengunggah…',
+    'analyze_with_ai'     => '✦ Analisis dengan AI',
+    'analyzing'           => 'Menganalisis…',
+    'add_url'             => '+ Tambah URL',
+    'select_image_hint'   => 'Pilih gambar dengan tombol radio, lalu klik "Analisis dengan AI" untuk menghasilkan judul & deskripsi.',
+
+    // Saluran
+    'channels'            => 'Saluran',
+    'add_channel'         => '+ Tambah Saluran',
+    'channel_type'        => 'Jenis saluran',
+    'test_connection'     => 'Uji Koneksi',
+    'no_channels'         => 'Belum ada saluran yang terhubung.',
+
+    // Listing
+    'listings'            => 'Listing',
+    'existing_listings'   => 'Listing yang Ada',
+    'select_products'     => 'Pilih Produk',
+    'push_to_channels'    => 'Dorong ke Saluran',
+    'marketplaces'        => 'Marketplace',
+    'all_channels'        => 'Semua saluran',
+    'all_statuses'        => 'Semua status',
+    'repush'              => 'Dorong ulang',
+    'repush_selected'     => 'Dorong ulang yang dipilih',
+    'delete_selected'     => 'Hapus yang dipilih',
+    'no_listings'         => 'Tidak ada listing ditemukan.',
+    'last_pushed'         => 'Terakhir Didorong',
+    'selected'            => ':count dipilih',
+
+    // Kampanye
+    'campaigns'           => 'Kampanye',
+    'add_campaign'        => '+ Kampanye Baru',
+    'generate_content'    => 'Hasilkan Konten AI',
+    'no_campaigns'        => 'Belum ada kampanye.',
+
+    // Pengaturan bahasa
+    'ui_language'         => 'Bahasa Dasbor',
+    'ui_language_desc'    => 'Bahasa yang digunakan untuk antarmuka dasbor.',
+    'ai_language'         => 'Bahasa Respons AI',
+    'ai_language_desc'    => 'Bahasa untuk judul dan deskripsi yang dihasilkan AI.',
+    'lang_en'             => 'English',
+    'lang_nl'             => 'Nederlands (Dutch)',
+    'lang_id'             => 'Bahasa Indonesia',
+];

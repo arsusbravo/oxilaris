@@ -195,7 +195,8 @@ class ProductController extends Controller
             $mime         = Storage::disk('public')->mimeType($relativePath) ?: 'image/jpeg';
             $b64          = base64_encode($contents);
 
-            $result = app(AiContentService::class)->analyzeProductImage("data:{$mime};base64,{$b64}");
+            $locale = $request->user()->ai_locale ?? 'en';
+            $result = app(AiContentService::class)->analyzeProductImage("data:{$mime};base64,{$b64}", $locale);
 
             return response()->json([
                 'title'       => $result['title'] ?? '',

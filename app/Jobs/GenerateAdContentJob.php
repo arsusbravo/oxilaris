@@ -38,8 +38,9 @@ class GenerateAdContentJob implements ShouldQueue
         $logger->info('AI content generation started', ['campaign_id' => $this->campaign->id]);
 
         try {
-            $campaign = $this->campaign->load('channelIntegration');
+            $campaign = $this->campaign->load(['channelIntegration', 'user']);
             $channelType = $campaign->channelIntegration->channel_type;
+            $locale = $campaign->user->ai_locale ?? 'en';
 
             $products = empty($this->productIds)
                 ? Product::where('user_id', $campaign->user_id)->limit(5)->get()
@@ -48,7 +49,7 @@ class GenerateAdContentJob implements ShouldQueue
             $generatedContent = [];
 
             foreach ($products as $product) {
-                $copy = $aiService->generateAdCopy($product->toArray(), $channelType, $this->context);
+                $copy = $aiService->generateAdCopy($product->toArray(), $channelType, $this->context, $locale);
                 $generatedContent[] = [
                     'product_id'    => $product->id,
                     'product_title' => $product->title,

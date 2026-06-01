@@ -1,0 +1,113 @@
+<?php
+
+return [
+    // Navigation
+    'nav_dashboard'  => 'Dashboard',
+    'nav_stores'     => 'Stores',
+    'nav_products'   => 'Products',
+    'nav_channels'   => 'Channels',
+    'nav_listings'   => 'Listings',
+    'nav_campaigns'  => 'Campaigns',
+    'nav_profile'    => 'Profile',
+    'nav_logout'     => 'Log Out',
+    'nav_admin'      => 'Admin',
+
+    // Common actions
+    'save'           => 'Save',
+    'cancel'         => 'Cancel',
+    'delete'         => 'Delete',
+    'edit'           => 'Edit',
+    'create'         => 'Create',
+    'search'         => 'Search…',
+    'loading'        => 'Loading…',
+    'refresh'        => 'Refresh',
+    'export_csv'     => 'Export CSV',
+    'back'           => 'Back',
+    'view'           => 'View',
+    'connect'        => 'Connect',
+    'never'          => 'Never',
+    'yes'            => 'Yes',
+    'no'             => 'No',
+
+    // Stores
+    'stores'              => 'Stores',
+    'add_store'           => '+ Add Store',
+    'sync_now'            => 'Sync Products Now',
+    'no_stores_yet'       => 'No stores yet. Connect a store to get started.',
+    'manual_store'        => 'Manual store',
+    'connected_store'     => 'Connected store',
+    'store_type'          => 'Store type',
+    'store_name'          => 'Store name',
+    'store_url'           => 'Store URL',
+    'last_synced'         => 'Last synced',
+    'view_products'       => 'View Products →',
+    'no_channel_connect'  => 'No external connection',
+
+    // Products
+    'products'            => 'Products',
+    'add_product'         => '+ Add Product',
+    'all_products'        => 'All products',
+    'no_store'            => '— No store',
+    'no_products_yet'     => 'No products yet. Sync a store to import products.',
+    'showing_x_of_y'      => 'Showing :shown of :total',
+    'all_loaded'          => 'All :total products loaded',
+    'scroll_load_more'    => 'Scroll down to load more',
+    'sku'                 => 'SKU',
+    'price'               => 'Price',
+    'stock'               => 'Stock',
+    'status'              => 'Status',
+    'store'               => 'Store',
+    'manual_product'      => 'Manual product',
+    'status_active'       => 'Active',
+    'status_inactive'     => 'Inactive',
+    'status_draft'        => 'Draft',
+    'categories'          => 'Categories (comma-separated)',
+    'description'         => 'Description',
+    'title'               => 'Title',
+
+    // Images / AI
+    'images'              => 'Images',
+    'upload_images'       => 'Upload Images',
+    'uploading'           => 'Uploading…',
+    'analyze_with_ai'     => '✦ Analyze with AI',
+    'analyzing'           => 'Analyzing…',
+    'add_url'             => '+ Add URL',
+    'select_image_hint'   => 'Select an image with the radio button, then click "Analyze with AI" to generate title & description.',
+
+    // Channels
+    'channels'            => 'Channels',
+    'add_channel'         => '+ Add Channel',
+    'channel_type'        => 'Channel type',
+    'test_connection'     => 'Test Connection',
+    'no_channels'         => 'No channels connected yet.',
+
+    // Listings
+    'listings'            => 'Listings',
+    'existing_listings'   => 'Existing Listings',
+    'select_products'     => 'Select Products',
+    'push_to_channels'    => 'Push to Channels',
+    'marketplaces'        => 'Marketplaces',
+    'all_channels'        => 'All channels',
+    'all_statuses'        => 'All statuses',
+    'repush'              => 'Re-push',
+    'repush_selected'     => 'Re-push selected',
+    'delete_selected'     => 'Delete selected',
+    'no_listings'         => 'No listings found.',
+    'last_pushed'         => 'Last Pushed',
+    'selected'            => ':count selected',
+
+    // Campaigns
+    'campaigns'           => 'Campaigns',
+    'add_campaign'        => '+ New Campaign',
+    'generate_content'    => 'Generate AI Content',
+    'no_campaigns'        => 'No campaigns yet.',
+
+    // Language settings
+    'ui_language'         => 'Dashboard Language',
+    'ui_language_desc'    => 'Language used for the dashboard interface.',
+    'ai_language'         => 'AI Response Language',
+    'ai_language_desc'    => 'Language used for AI-generated titles and descriptions.',
+    'lang_en'             => 'English',
+    'lang_nl'             => 'Nederlands (Dutch)',
+    'lang_id'             => 'Bahasa Indonesia',
+];
