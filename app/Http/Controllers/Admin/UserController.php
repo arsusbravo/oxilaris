@@ -72,8 +72,24 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'User updated.');
     }
 
+    public function toggle(User $user)
+    {
+        if ($user->id === auth()->id()) {
+            return back()->with('error', 'You cannot deactivate your own account.');
+        }
+
+        $user->update(['is_active' => ! $user->is_active]);
+        $status = $user->is_active ? 'activated' : 'deactivated';
+
+        return back()->with('success', "User {$user->name} has been {$status}.");
+    }
+
     public function destroy(User $user)
     {
+        if ($user->id === auth()->id()) {
+            return back()->with('error', 'You cannot delete your own account.');
+        }
+
         $user->delete();
 
         return redirect()->route('admin.users.index')->with('success', 'User deleted.');

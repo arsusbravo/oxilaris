@@ -64,6 +64,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
+    Route::post('users/{user}/toggle', [UserController::class, 'toggle'])->name('users.toggle');
 });
 
 require __DIR__.'/auth.php';
