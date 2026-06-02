@@ -2,7 +2,22 @@
   <div class="min-h-screen bg-slate-50 pb-16">
 
     <!-- Step 1: Scan -->
-    <div v-if="step === 1" class="max-w-xl mx-auto px-4 pt-10">
+    <div v-if="step === 1 && scansLeft === 0" class="max-w-xl mx-auto px-4 pt-10">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center">
+        <p class="text-lg font-bold text-slate-900 mb-2">Scan gratis sudah digunakan</p>
+        <p class="text-slate-500 text-sm mb-6">Daftar gratis untuk scan tanpa batas dan akses semua fitur OXILaris.</p>
+        <a href="/register"
+           class="block w-full py-3.5 rounded-xl font-bold text-white text-sm mb-3 transition-all hover:opacity-90"
+           style="background-color:#C0391A;">
+          Daftar Gratis →
+        </a>
+        <a href="/login" class="text-xs text-slate-400 hover:text-slate-600 transition-colors">
+          Sudah punya akun? Masuk
+        </a>
+      </div>
+    </div>
+
+    <div v-else-if="step === 1" class="max-w-xl mx-auto px-4 pt-10">
 
       <!-- Header -->
       <div class="text-center mb-8">
@@ -429,6 +444,7 @@ export default {
           values: Array.isArray(s.values) ? s.values.join(', ') : s.values,
         }))
 
+        this.scansLeft = Math.max(0, this.scansLeft - 1)
         this.step = 2
       } catch {
         this.error = 'Koneksi gagal. Periksa internet Anda dan coba lagi.'
