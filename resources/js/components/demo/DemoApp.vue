@@ -390,6 +390,13 @@ export default {
       this.error   = null
       this.scanning = true
 
+      // Warn if base64 image is too large (> 10MB)
+      if (this.imageBase64 && this.imageBase64.length > 10 * 1024 * 1024) {
+        this.error = 'Foto terlalu besar. Gunakan foto yang lebih kecil (maks 8MB).'
+        this.scanning = false
+        return
+      }
+
       const body = { image_data: this.imageBase64 }
 
       try {

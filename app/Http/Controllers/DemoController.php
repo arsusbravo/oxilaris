@@ -30,6 +30,10 @@ class DemoController extends Controller
             ], 429);
         }
 
+        if (empty($request->getContent()) && empty($request->all())) {
+            return response()->json(['error' => 'Foto terlalu besar dan ditolak server. Gunakan foto yang lebih kecil.'], 413);
+        }
+
         $request->validate([
             'image_data' => 'required_without:url|nullable|string',
             'url'        => 'required_without:image_data|nullable|url',
@@ -45,8 +49,13 @@ class DemoController extends Controller
             $result = app(AiContentService::class)->analyzeProductImage($imageData, 'id');
             $request->session()->put('demo_scans', 1);
             return response()->json($result);
-        } catch (\Exception) {
-            return response()->json(['error' => 'Gagal menganalisis gambar. Coba lagi.'], 500);
+        } catch (\Exception $e) {
+            \Log::error('Demo scan failed', [
+                'message' => $e->getMessage(),
+                'file'    => $e->getFile(),
+                'line'    => $e->getLine(),
+            ]);
+            return response()->json(['error' => 'Gagal menganalisis gambar: ' . $e->getMessage()], 500);
         }
     }
 }
