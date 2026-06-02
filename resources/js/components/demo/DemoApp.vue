@@ -336,7 +336,7 @@
 
 <script>
 const PLATFORM_META = {
-  tiktok_shop: { emoji: '🎵', label: 'TikTok Shop' },
+  tiktok_shop: { emoji: '🟢', label: 'Tokopedia' },
   shopee:      { emoji: '🟠', label: 'Shopee' },
   shopify:     { emoji: '🛍️', label: 'Shopify' },
   woocommerce: { emoji: '🔌', label: 'WooCommerce' },
@@ -379,11 +379,19 @@ export default {
     onFileChange(e) {
       const file = e.target.files[0]
       if (!file) return
+
+      const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+      if (!allowed.includes(file.type)) {
+        this.error = `Format file tidak didukung (${file.type || 'tidak diketahui'}). Gunakan JPG, PNG, WebP, atau GIF.`
+        if (this.$refs.fileInput) this.$refs.fileInput.value = ''
+        return
+      }
+
+      this.error = null
       const reader = new FileReader()
       reader.onload = (ev) => {
         this.imageBase64 = ev.target.result
         this.previewUrl  = ev.target.result
-        this.imageUrl    = ''
       }
       reader.readAsDataURL(file)
     },
@@ -429,7 +437,11 @@ export default {
 
         if (!r.ok) {
           if (r.status === 429) {
-            this.step = 3
+            if (this.scansLeft === 0) {
+              this.step = 3
+            } else {
+              this.error = 'Terlalu banyak percobaan. Tunggu beberapa saat lalu coba lagi.'
+            }
           } else {
             this.error = data.error || 'Terjadi kesalahan. Coba lagi.'
           }

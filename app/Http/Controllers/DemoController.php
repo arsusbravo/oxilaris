@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\AiContentService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class DemoController extends Controller
 {
@@ -50,11 +51,16 @@ class DemoController extends Controller
             $request->session()->put('demo_scans', 1);
             return response()->json($result);
         } catch (\Exception $e) {
-            \Log::error('Demo scan failed', [
+            Log::error('Demo scan failed', [
                 'message' => $e->getMessage(),
                 'file'    => $e->getFile(),
                 'line'    => $e->getLine(),
             ]);
+
+            if (str_contains($e->getMessage(), 'unsupported image') || str_contains($e->getMessage(), 'invalid_image_format')) {
+                return response()->json(['error' => 'Format gambar tidak didukung. Gunakan JPG, PNG, WebP, atau GIF.'], 422);
+            }
+
             return response()->json(['error' => 'Gagal menganalisis gambar: ' . $e->getMessage()], 500);
         }
     }

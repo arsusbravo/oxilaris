@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', fn() => view('welcome'));
 
 Route::get('/demo', [DemoController::class, 'index'])->name('demo');
-Route::post('/demo/scan', [DemoController::class, 'scan'])->middleware('throttle:5,1440')->name('demo.scan');
+Route::post('/demo/scan', [DemoController::class, 'scan'])->middleware('throttle:30,1440')->name('demo.scan');
 
 // WooCommerce posts credentials here server-to-server — no session, no auth middleware
 Route::match(['get', 'post'], '/channels/woocommerce/callback', [ChannelController::class, 'woocommerceCallback'])
