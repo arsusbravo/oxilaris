@@ -77,7 +77,7 @@ return [
 
     // Saluran
     'channels'            => 'Saluran',
-    'add_channel'         => '+ Tambah Saluran (Developer)',
+    'add_channel'         => '+ Tambah Channel',
     'channel_type'        => 'Jenis saluran',
     'test_connection'     => 'Uji Koneksi',
     'no_channels'         => 'Belum ada saluran yang terhubung.',

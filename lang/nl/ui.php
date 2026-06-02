@@ -77,7 +77,7 @@ return [
 
     // Kanalen
     'channels'            => 'Kanalen',
-    'add_channel'         => '+ Kanaal toevoegen (Developer)',
+    'add_channel'         => '+ Kanaal toevoegen',
     'channel_type'        => 'Kanaaltype',
     'test_connection'     => 'Verbinding testen',
     'no_channels'         => 'Nog geen kanalen verbonden.',

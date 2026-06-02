@@ -22,7 +22,7 @@
                             <option value="">{{ __('ui.ch_select_placeholder') }}</option>
                             @php
                                 $storeTypes    = ['woocommerce', 'shopify', 'magento', 'cs_cart'];
-                                $marketTypes   = ['bol', 'amazon', 'tiktok_shop', 'shopee', 'olx'];
+                                $marketTypes   = ['bol', 'amazon', 'tiktok_shop', 'shopee', 'olx', 'gofood', 'grabfood'];
                                 $adTypes       = ['google_ads', 'facebook_ads', 'tiktok_ads'];
                                 $activeStores  = array_intersect_key($channelTypes, array_flip($storeTypes));
                                 $activeMarkets = array_intersect_key($channelTypes, array_flip($marketTypes));
@@ -269,6 +269,36 @@
                             'url' => 'https://developers.facebook.com', 'urlLabel' => __('ui.ch_fb_portal')])
                         <div><x-input-label value="Access Token" /><x-text-input type="password" name="credentials[access_token]" class="mt-1 block w-full" /></div>
                         <div><x-input-label value="Ad Account ID (act_XXXXXXXX)" /><x-text-input type="text" name="credentials[ad_account_id]" class="mt-1 block w-full" placeholder="act_123456789" /></div>
+                    </div>
+
+                    {{-- GoFood --}}
+                    <div x-show="type === 'gofood'" class="mb-5">
+                        @if($platformAppSet['gofood'])
+                            <div class="rounded-xl bg-slate-900 border border-slate-700 p-4 flex items-start gap-3">
+                                <svg class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <p class="text-sm text-slate-300">{{ __('ui.ch_oauth_redirect_notice', [':platform' => 'GoFood']) }}</p>
+                            </div>
+                        @else
+                            <div class="rounded-xl bg-amber-50 border border-amber-200 p-4 text-sm text-amber-800">
+                                <p class="font-semibold mb-1">🟢 GoFood — Segera Hadir</p>
+                                <p>OXILaris sedang dalam proses pendaftaran sebagai mitra resmi Gojek. Setelah disetujui, Anda bisa menghubungkan akun GoFood dengan satu klik tanpa perlu memasukkan kode apapun.</p>
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- GrabFood --}}
+                    <div x-show="type === 'grabfood'" class="mb-5">
+                        @if($platformAppSet['grabfood'])
+                            <div class="rounded-xl bg-slate-900 border border-slate-700 p-4 flex items-start gap-3">
+                                <svg class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <p class="text-sm text-slate-300">{{ __('ui.ch_oauth_redirect_notice', [':platform' => 'GrabFood']) }}</p>
+                            </div>
+                        @else
+                            <div class="rounded-xl bg-amber-50 border border-amber-200 p-4 text-sm text-amber-800">
+                                <p class="font-semibold mb-1">🟩 GrabFood — Segera Hadir</p>
+                                <p>OXILaris sedang dalam proses pendaftaran sebagai mitra resmi Grab. Setelah disetujui, Anda bisa menghubungkan akun GrabFood dengan satu klik tanpa perlu memasukkan kode apapun.</p>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="flex items-center gap-3 pt-4 border-t">

@@ -66,6 +66,11 @@ class ChannelIntegration extends Model
         return in_array($this->channel_type, ['google_ads', 'facebook_ads']);
     }
 
+    public function isFoodDelivery(): bool
+    {
+        return in_array($this->channel_type, ['gofood', 'grabfood']);
+    }
+
     public function isTokenExpired(): bool
     {
         return $this->token_expires_at && $this->token_expires_at->isPast();

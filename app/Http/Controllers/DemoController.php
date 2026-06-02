@@ -10,7 +10,7 @@ class DemoController extends Controller
     public function index(Request $request)
     {
         $used      = $request->session()->get('demo_scans', 0);
-        $scansLeft = max(0, 1 - $used);
+        $scansLeft = max(0, 2 - $used);
 
         $platforms = array_keys(array_filter([
             'tiktok_shop' => (bool) config('services.tiktok_shop.app_key'),
@@ -24,7 +24,7 @@ class DemoController extends Controller
 
     public function scan(Request $request)
     {
-        if ($request->session()->get('demo_scans', 0) >= 1) {
+        if ($request->session()->get('demo_scans', 0) >= 2) {
             return response()->json([
                 'error' => 'Scan gratis Anda sudah digunakan. Daftar untuk mendapatkan akses penuh.',
             ], 429);
@@ -45,7 +45,7 @@ class DemoController extends Controller
             $result = app(AiContentService::class)->analyzeProductImage($imageData, 'id');
             $request->session()->put('demo_scans', 1);
             return response()->json($result);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return response()->json(['error' => 'Gagal menganalisis gambar. Coba lagi.'], 500);
         }
     }

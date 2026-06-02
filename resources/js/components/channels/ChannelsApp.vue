@@ -60,6 +60,8 @@ const PLATFORM_META = {
   woocommerce: { emoji: '🔌', label: 'WooCommerce' },
   tiktok_shop: { emoji: '🎵', label: 'TikTok Shop/Tokopedia' },
   shopee:      { emoji: '🟠', label: 'Shopee' },
+  gofood:      { emoji: '🟢', label: 'GoFood' },
+  grabfood:    { emoji: '🟩', label: 'GrabFood' },
 };
 
 export default {

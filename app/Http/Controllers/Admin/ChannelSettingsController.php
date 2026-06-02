@@ -22,7 +22,7 @@ class ChannelSettingsController extends Controller
 
         $groups = [
             'Stores'       => ['woocommerce', 'shopify', 'magento', 'cs_cart'],
-            'Marketplaces' => ['bol', 'amazon', 'tokopedia', 'shopee', 'olx'],
+            'Marketplaces' => ['bol', 'amazon', 'tokopedia', 'shopee', 'olx', 'gofood', 'grabfood'],
             'Advertising'  => ['google_ads', 'facebook_ads'],
         ];
 

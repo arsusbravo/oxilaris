@@ -46,6 +46,8 @@ class ChannelController extends Controller
             'woocommerce' => (bool) config('services.woocommerce.app_name'),
             'tiktok_shop' => (bool) config('services.tiktok_shop.app_key'),
             'shopee'      => (bool) config('services.shopee.partner_id'),
+            'gofood'      => (bool) config('services.gofood.api_key'),
+            'grabfood'    => (bool) config('services.grabfood.client_id'),
         ];
 
         return view('channels.create', compact('channelTypes', 'platformAppSet'));

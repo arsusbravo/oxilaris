@@ -4,7 +4,9 @@
       "Bash(composer require *)",
       "Bash(php artisan *)",
       "Bash(npm install *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "WebFetch(domain:developer.grab.com)",
+      "WebFetch(domain:developer.gobiz.com)"
     ]
   }
 }

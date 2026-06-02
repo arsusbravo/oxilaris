@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>OXILaris — Jual di Mana Saja, Kelola Semuanya</title>
+    <title>OXILaris — Jual di Semua Lapak, Kelola Semuanya</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -31,13 +31,11 @@
                        class="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors px-3 py-2">
                         Masuk
                     </a>
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}"
-                           class="px-5 py-2 rounded-lg text-sm font-semibold text-white transition-all hover:opacity-90"
-                           style="background-color:#C0391A;">
-                            Mulai Gratis
-                        </a>
-                    @endif
+                    <a href="{{ route('demo') }}"
+                       class="px-5 py-2 rounded-lg text-sm font-semibold text-white transition-all hover:opacity-90"
+                       style="background-color:#C0391A;">
+                        Coba Demo Gratis
+                    </a>
                 @endauth
             </div>
         </div>
@@ -51,13 +49,12 @@
             </div>
 
             <h1 class="text-5xl sm:text-6xl font-extrabold tracking-tight leading-tight text-slate-900 mb-6">
-                Jual di semua platforms.<br>
+                Jual di semua lapak.<br>
                 <span style="color:#C0391A;">Tanpa ribet.</span>
             </h1>
 
             <p class="text-lg sm:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-                OXILaris menghubungkan toko, produk, dan saluran penjualan Anda dalam satu tempat — sehingga Anda lebih sedikit
-                mengurus spreadsheet dan lebih banyak fokus mengembangkan bisnis.
+                OXILaris menghubungkan produk Anda ke Tokopedia, Shopee, TikTok Shop, dan lainnya — dari satu dashboard. Tidak perlu buka banyak tab lagi.
             </p>
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -68,19 +65,56 @@
                         Ke Dashboard →
                     </a>
                 @else
-                    <a href="{{ route('register') }}"
+                    <a href="{{ route('demo') }}"
                        class="w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold text-white transition-all hover:opacity-90"
                        style="background-color:#C0391A;">
-                        Mulai gratis →
-                    </a>
-                    <a href="{{ route('login') }}"
-                       class="w-full sm:w-auto px-8 py-4 rounded-xl text-base font-semibold text-slate-600 bg-white border border-slate-300 hover:border-slate-400 hover:text-slate-900 transition-all">
-                        Masuk ke akun Anda
+                        Coba Demo Gratis →
                     </a>
                 @endauth
             </div>
 
             <p class="mt-5 text-sm text-slate-400">Tanpa kartu kredit &bull; Siap dalam hitungan menit</p>
+        </div>
+    </section>
+
+    {{-- HOW IT WORKS --}}
+    <section class="py-20 px-6 border-b border-slate-100">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mb-3">
+                    Cara kerjanya
+                </h2>
+                <p class="text-slate-500 text-lg">Dari foto produk ke semua lapak dalam 3 langkah.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div class="text-center p-6">
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg" style="background-color:#C0391A;">1</div>
+                    <h3 class="font-bold text-slate-900 mb-2">Upload foto produk</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">Foto produk Anda langsung dianalisis AI — judul, deskripsi, dan spesifikasi terisi otomatis.</p>
+                </div>
+                <div class="text-center p-6">
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg" style="background-color:#C0391A;">2</div>
+                    <h3 class="font-bold text-slate-900 mb-2">Hubungkan lapak</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">Sambungkan Tokopedia, Shopee, TikTok Shop, dan lainnya dengan satu klik — tanpa perlu kode API.</p>
+                </div>
+                <div class="text-center p-6">
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg" style="background-color:#C0391A;">3</div>
+                    <h3 class="font-bold text-slate-900 mb-2">Push & jualan</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">Pilih produk, pilih lapak, klik Push. Produk Anda langsung tayang di semua tempat sekaligus.</p>
+                </div>
+            </div>
+
+            @guest
+            <div class="text-center mt-8">
+                <a href="{{ route('demo') }}"
+                   class="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm border-2 transition-all hover:text-white"
+                   style="border-color:#C0391A; color:#C0391A;"
+                   onmouseover="this.style.backgroundColor='#C0391A'" onmouseout="this.style.backgroundColor='transparent'">
+                    ✦ Coba sekarang — gratis, tanpa daftar
+                </a>
+            </div>
+            @endguest
         </div>
     </section>
 
@@ -92,7 +126,7 @@
                     Semua yang Anda butuhkan untuk <span style="color:#C0391A;">berkembang</span>
                 </h2>
                 <p class="text-slate-500 text-lg max-w-xl mx-auto">
-                    Dari impor produk pertama hingga menjalankan kampanye multi-saluran — OXILaris siap membantu Anda.
+                    Dari produk pertama hingga ribuan listing di banyak lapak — OXILaris siap membantu.
                 </p>
             </div>
 
@@ -118,9 +152,9 @@
                                 d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                         </svg>
                     </div>
-                    <h3 class="font-bold text-lg text-slate-900 mb-2">Sinkronisasi Saluran Penjualan</h3>
+                    <h3 class="font-bold text-lg text-slate-900 mb-2">Sinkronisasi Lapak</h3>
                     <p class="text-slate-500 text-sm leading-relaxed">
-                        Kirim listing ke Tokopedia, Shopee, Lazada, dan saluran lain secara otomatis. Satu perubahan, langsung tersebar ke mana-mana.
+                        Kirim listing ke Tokopedia, Shopee, Lazada, dan lapak lain secara otomatis. Satu perubahan, langsung tersebar ke mana-mana.
                     </p>
                 </div>
 
@@ -133,7 +167,7 @@
                     </div>
                     <h3 class="font-bold text-lg text-slate-900 mb-2">Katalog Produk Cerdas</h3>
                     <p class="text-slate-500 text-sm leading-relaxed">
-                        Impor produk dari sumber mana pun dan biarkan AI menulis judul, deskripsi, serta atribut — dioptimalkan untuk setiap saluran.
+                        Impor produk dari sumber mana pun dan biarkan AI menulis judul, deskripsi, serta atribut — dioptimalkan untuk setiap lapak.
                     </p>
                 </div>
 
@@ -146,7 +180,7 @@
                     </div>
                     <h3 class="font-bold text-lg text-slate-900 mb-2">Otomatisasi Listing</h3>
                     <p class="text-slate-500 text-sm leading-relaxed">
-                        Berhenti copy-paste manual. OXILaris memetakan produk ke format setiap saluran secara otomatis dan menjaga listing tetap sinkron.
+                        Berhenti copy-paste manual. OXILaris memetakan produk ke format setiap lapak secara otomatis dan menjaga listing tetap sinkron.
                     </p>
                 </div>
 
@@ -159,7 +193,7 @@
                     </div>
                     <h3 class="font-bold text-lg text-slate-900 mb-2">Manajemen Kampanye</h3>
                     <p class="text-slate-500 text-sm leading-relaxed">
-                        Jalankan promosi di semua saluran sekaligus. Jadwalkan, pantau, dan optimalkan kampanye tanpa harus membuka banyak dashboard.
+                        Jalankan promosi di semua lapak sekaligus. Jadwalkan, pantau, dan optimalkan kampanye tanpa harus membuka banyak dashboard.
                     </p>
                 </div>
 
@@ -184,7 +218,7 @@
     <section class="py-24 px-6 bg-slate-50 border-t border-slate-200">
         <div class="max-w-3xl mx-auto text-center">
             <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mb-4">
-                Siap menguasai pasar?
+                Siap menguasai lapak?
             </h2>
             <p class="text-slate-500 text-lg mb-8 leading-relaxed">
                 Bergabunglah dengan penjual yang sudah berhenti berjuang melawan alatnya sendiri dan mulai tumbuh bersama OXILaris.
@@ -196,11 +230,12 @@
                     Buka Dashboard →
                 </a>
             @else
-                <a href="{{ route('register') }}"
+                <a href="{{ route('demo') }}"
                    class="inline-block px-10 py-4 rounded-xl text-base font-bold text-white transition-all hover:opacity-90"
                    style="background-color:#C0391A;">
-                    Daftar akun gratis →
+                    Coba Demo Gratis →
                 </a>
+                <p class="mt-4 text-sm text-slate-400">Sudah punya akun? <a href="{{ route('login') }}" class="text-slate-600 hover:text-slate-900 underline">Masuk</a></p>
             @endauth
         </div>
     </section>

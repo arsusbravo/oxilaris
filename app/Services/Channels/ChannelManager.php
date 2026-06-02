@@ -16,6 +16,8 @@ use App\Services\Channels\Marketplaces\OlxDriver;
 use App\Services\Channels\Advertising\GoogleAdsDriver;
 use App\Services\Channels\Advertising\FacebookAdsDriver;
 use App\Services\Channels\Advertising\TikTokAdsDriver;
+use App\Services\Channels\FoodDelivery\GoFoodDriver;
+use App\Services\Channels\FoodDelivery\GrabFoodDriver;
 use InvalidArgumentException;
 
 class ChannelManager
@@ -34,6 +36,8 @@ class ChannelManager
         'google_ads'   => 'Google Ads',
         'facebook_ads' => 'Facebook Ads',
         'tiktok_ads'   => 'TikTok Ads',
+        'gofood'       => 'GoFood',
+        'grabfood'     => 'GrabFood',
     ];
 
     private static array $drivers = [
@@ -49,6 +53,8 @@ class ChannelManager
         'google_ads'   => GoogleAdsDriver::class,
         'facebook_ads' => FacebookAdsDriver::class,
         'tiktok_ads'   => TikTokAdsDriver::class,
+        'gofood'       => GoFoodDriver::class,
+        'grabfood'     => GrabFoodDriver::class,
     ];
 
     public function driver(ChannelIntegration $integration): ChannelDriverInterface

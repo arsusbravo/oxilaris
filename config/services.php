@@ -60,4 +60,15 @@ return [
         'partner_key' => env('SHOPEE_PARTNER_KEY'),
     ],
 
+    'gofood' => [
+        'merchant_id' => env('GOFOOD_MERCHANT_ID'),
+        'api_key'     => env('GOFOOD_API_KEY'),
+        'api_secret'  => env('GOFOOD_API_SECRET'),
+    ],
+
+    'grabfood' => [
+        'client_id'     => env('GRABFOOD_CLIENT_ID'),
+        'client_secret' => env('GRABFOOD_CLIENT_SECRET'),
+    ],
+
 ];

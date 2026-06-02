@@ -77,7 +77,7 @@ return [
 
     // Channels
     'channels'            => 'Channels',
-    'add_channel'         => '+ Add Channel (Developer)',
+    'add_channel'         => '+ Add Channel',
     'channel_type'        => 'Channel type',
     'test_connection'     => 'Test Connection',
     'no_channels'         => 'No channels connected yet.',

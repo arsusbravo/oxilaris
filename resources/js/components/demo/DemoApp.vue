@@ -75,7 +75,7 @@
 
       <!-- Footer note -->
       <p class="text-center text-xs text-slate-400 mt-4">
-        1 scan gratis per sesi &bull; Tidak perlu daftar untuk mencoba
+        {{ scansLeft }} scan gratis tersisa &bull; Tidak perlu daftar untuk mencoba
       </p>
     </div>
 
@@ -339,7 +339,7 @@ export default {
       previewUrl:       null,
       imageBase64:      null,
       platforms:        JSON.parse(el?.dataset.platforms || '[]'),
-      scansLeft:        parseInt(el?.dataset.scansLeft || '1'),
+      scansLeft:        parseInt(el?.dataset.scansLeft || '2'),
       csrf:             el?.dataset.csrf || '',
       meta:             PLATFORM_META,
       selectedPlatform: null,
