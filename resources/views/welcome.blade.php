@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>OXILaris — Jual di Semua Lapak, Kelola Semuanya</title>
+    <title>OXIlaris — Jual di Semua Lapak, Kelola Semuanya</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -14,7 +14,7 @@
     <nav class="sticky top-0 z-50 bg-white border-b border-slate-200">
         <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
             <a href="/" class="flex items-center gap-2.5">
-                <img src="/images/oxilaris-icon.png" alt="OXILaris" class="h-8 w-8 object-contain">
+                <img src="/images/oxilaris-icon.png" alt="OXIlaris" class="h-8 w-8 object-contain">
                 <span class="font-extrabold text-lg tracking-tight leading-none select-none">
                     <span style="color:#C0391A;">OXI</span><span class="text-slate-900">Laris</span>
                 </span>
@@ -45,7 +45,7 @@
     <section class="bg-slate-50 border-b border-slate-200">
         <div class="max-w-5xl mx-auto px-6 py-24 text-center">
             <div class="flex justify-center mb-10">
-                <img src="/images/oxilaris-full.png" alt="OXILaris" class="h-24 w-auto object-contain">
+                <img src="/images/oxilaris-full.png" alt="OXIlaris" class="h-24 w-auto object-contain">
             </div>
 
             <h1 class="text-5xl sm:text-6xl font-extrabold tracking-tight leading-tight text-slate-900 mb-6">
@@ -54,7 +54,7 @@
             </h1>
 
             <p class="text-lg sm:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-                OXILaris menghubungkan produk Anda ke Tokopedia, Shopee, TikTok Shop, dan lainnya — dari satu dashboard. Tidak perlu buka banyak tab lagi.
+                OXIlaris menghubungkan produk Anda ke Tokopedia, Shopee, TikTok Shop, dan lainnya — dari satu dashboard. Tidak perlu buka banyak tab lagi.
             </p>
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -126,7 +126,7 @@
                     Semua yang Anda butuhkan untuk <span style="color:#C0391A;">berkembang</span>
                 </h2>
                 <p class="text-slate-500 text-lg max-w-xl mx-auto">
-                    Dari produk pertama hingga ribuan listing di banyak lapak — OXILaris siap membantu.
+                    Dari produk pertama hingga ribuan listing di banyak lapak — OXIlaris siap membantu.
                 </p>
             </div>
 
@@ -180,7 +180,7 @@
                     </div>
                     <h3 class="font-bold text-lg text-slate-900 mb-2">Otomatisasi Listing</h3>
                     <p class="text-slate-500 text-sm leading-relaxed">
-                        Berhenti copy-paste manual. OXILaris memetakan produk ke format setiap lapak secara otomatis dan menjaga listing tetap sinkron.
+                        Berhenti copy-paste manual. OXIlaris memetakan produk ke format setiap lapak secara otomatis dan menjaga listing tetap sinkron.
                     </p>
                 </div>
 
@@ -221,7 +221,7 @@
                 Siap menguasai lapak?
             </h2>
             <p class="text-slate-500 text-lg mb-8 leading-relaxed">
-                Bergabunglah dengan penjual yang sudah berhenti berjuang melawan alatnya sendiri dan mulai tumbuh bersama OXILaris.
+                Bergabunglah dengan penjual yang sudah berhenti berjuang melawan alatnya sendiri dan mulai tumbuh bersama OXIlaris.
             </p>
             @auth
                 <a href="{{ url('/dashboard') }}"
@@ -244,13 +244,13 @@
     <footer class="border-t border-slate-200 py-8 px-6 bg-white">
         <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-2">
-                <img src="/images/oxilaris-icon.png" alt="OXILaris" class="h-6 w-6 object-contain">
+                <img src="/images/oxilaris-icon.png" alt="OXIlaris" class="h-6 w-6 object-contain">
                 <span class="font-extrabold text-sm tracking-tight">
                     <span style="color:#C0391A;">OXI</span><span class="text-slate-900">Laris</span>
                 </span>
             </div>
             <p class="text-slate-400 text-sm">
-                &copy; {{ date('Y') }} OXILaris. Hak cipta dilindungi.
+                &copy; {{ date('Y') }} OXIlaris. Hak cipta dilindungi.
             </p>
         </div>
     </footer>

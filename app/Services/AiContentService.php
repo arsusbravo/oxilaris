@@ -43,17 +43,16 @@ class AiContentService
                     ['type' => 'image_url', 'image_url' => ['url' => $imageDataUrl]],
                     [
                         'type' => 'text',
-                        'text' => 'You are a professional e-commerce copywriter. Analyze this product image and write compelling retail copy. '
+                        'text' => 'You are a professional e-commerce copywriter. Analyze this product image and write concise retail copy. '
                             . 'Respond with ONLY a valid JSON object, no extra text, with exactly these keys: '
                             . '{"title": "...", "description": "...", "categories": ["...", "..."], "specifications": [{"name": "...", "values": ["..."]}]}. '
-                            . 'title: concise, specific product name (max 100 characters). '
-                            . 'description: 3 short paragraphs separated by \n\n. '
-                            . 'Paragraph 1 (2-3 sentences): powerful opening that highlights the key benefit and who it is for. '
-                            . 'Paragraph 2 (2-3 sentences): key features and specifications in natural language, not bullet points. '
-                            . 'Paragraph 3 (1-2 sentences): closing call to action or brand statement. '
-                            . 'categories: array of 1-3 broad e-commerce category strings (e.g. "Electronics", "Audio", "Headphones"). '
-                            . 'specifications: array of up to 6 relevant spec objects, each with a "name" (e.g. "Color", "Material", "Size") and "values" array. Only include specs clearly visible or strongly implied by the image. '
-                            . 'Tone: confident, professional, concise. No markdown, no bullet points, no hype words like "amazing" or "incredible". '
+                            . 'title: concise, specific product name (max 80 characters). '
+                            . 'description: exactly 2 short paragraphs separated by \n\n. Max 60 words total. '
+                            . 'Paragraph 1 (1-2 sentences): what the product is and its key benefit. '
+                            . 'Paragraph 2 (1-2 sentences): who it is for or when to use it. '
+                            . 'categories: array of 1-3 broad e-commerce category strings (e.g. "Electronics", "Audio"). '
+                            . 'specifications: array of up to 5 relevant spec objects with "name" and "values" array. Only include specs clearly visible in the image. '
+                            . 'Tone: direct, professional. No hype words, no markdown, no bullet points. '
                             . $langInstruction,
                     ],
                 ],

@@ -2,7 +2,7 @@
   <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
 
     <!-- Stats grid -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+    <div v-if="!allStatsZero" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       <div v-for="stat in stats" :key="stat.label"
            class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 sm:p-5 flex items-start justify-between hover:shadow-md transition-shadow"
            :class="`border-l-4 ${stat.borderColor}`">
@@ -195,6 +195,9 @@ export default {
 
   computed: {
     $t() { return window.trans || {}; },
+    allStatsZero() {
+      return this.stats.every(stat => Number(stat.value) === 0);
+    },
   },
 
   async created() {

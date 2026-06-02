@@ -281,7 +281,7 @@
                         @else
                             <div class="rounded-xl bg-amber-50 border border-amber-200 p-4 text-sm text-amber-800">
                                 <p class="font-semibold mb-1">🟢 GoFood — Segera Hadir</p>
-                                <p>OXILaris sedang dalam proses pendaftaran sebagai mitra resmi Gojek. Setelah disetujui, Anda bisa menghubungkan akun GoFood dengan satu klik tanpa perlu memasukkan kode apapun.</p>
+                                <p>OXIlaris sedang dalam proses pendaftaran sebagai mitra resmi Gojek. Setelah disetujui, Anda bisa menghubungkan akun GoFood dengan satu klik tanpa perlu memasukkan kode apapun.</p>
                             </div>
                         @endif
                     </div>
@@ -296,7 +296,7 @@
                         @else
                             <div class="rounded-xl bg-amber-50 border border-amber-200 p-4 text-sm text-amber-800">
                                 <p class="font-semibold mb-1">🟩 GrabFood — Segera Hadir</p>
-                                <p>OXILaris sedang dalam proses pendaftaran sebagai mitra resmi Grab. Setelah disetujui, Anda bisa menghubungkan akun GrabFood dengan satu klik tanpa perlu memasukkan kode apapun.</p>
+                                <p>OXIlaris sedang dalam proses pendaftaran sebagai mitra resmi Grab. Setelah disetujui, Anda bisa menghubungkan akun GrabFood dengan satu klik tanpa perlu memasukkan kode apapun.</p>
                             </div>
                         @endif
                     </div>

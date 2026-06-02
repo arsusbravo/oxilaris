@@ -18,7 +18,44 @@
       <a href="/channels/create" class="text-indigo-600 hover:underline">{{ $t.connect || 'Connect a channel' }}</a>
     </div>
 
-    <div v-else class="bg-white rounded-lg shadow overflow-hidden">
+    <!-- Mobile: Card layout -->
+    <div v-if="!loading && stores.length > 0" class="sm:hidden space-y-3 px-2">
+      <div v-for="store in stores" :key="store.id" class="bg-white rounded-lg shadow p-4 space-y-3">
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <h4 class="font-medium text-gray-900">{{ store.name }}</h4>
+            <p class="text-xs text-gray-400 capitalize mt-1">{{ store.channel_integration?.channel_type }}</p>
+          </div>
+          <span :class="syncBadge(store.sync_status)" class="px-2 py-1 rounded text-xs font-medium shrink-0">
+            {{ store.syncing ? ($t.loading || 'syncing...') : store.sync_status }}
+          </span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-xs border-t border-gray-100 pt-3">
+          <div>
+            <p class="text-gray-400">{{ $t.products || 'Products' }}</p>
+            <p class="font-medium text-gray-900">{{ store.products_count ?? '—' }}</p>
+          </div>
+          <div>
+            <p class="text-gray-400">{{ $t.last_sync || 'Last Sync' }}</p>
+            <p class="font-medium text-gray-900">{{ store.last_synced_at || ($t.never || 'Never') }}</p>
+          </div>
+        </div>
+        <div class="flex gap-2 border-t border-gray-100 pt-3">
+          <button @click="sync(store)" :disabled="store.syncing"
+            class="flex-1 text-xs text-green-600 hover:text-green-700 disabled:opacity-40 font-medium py-1 rounded hover:bg-green-50">
+            {{ store.syncing ? ($t.importing || 'Importing...') : ($t.import_products || 'Import') }}
+          </button>
+          <a :href="`/stores/${store.id}`" class="flex-1 text-xs text-indigo-600 hover:text-indigo-700 font-medium py-1 rounded text-center hover:bg-indigo-50">{{ $t.view || 'View' }}</a>
+        </div>
+      </div>
+      <div v-if="loadingMore" class="text-center py-4 text-gray-400 text-sm">{{ $t.loading || 'Loading...' }}</div>
+      <div v-else-if="!hasMore" class="text-center py-3 text-gray-400 text-xs">
+        {{ ($t.all_stores_loaded || 'All :total stores loaded').replace(':total', total) }}
+      </div>
+    </div>
+
+    <!-- Desktop: Table layout -->
+    <div v-if="!loading && stores.length > 0" class="bg-white rounded-lg shadow overflow-hidden hidden sm:block">
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>

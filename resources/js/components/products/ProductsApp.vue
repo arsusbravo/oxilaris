@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <div class="flex items-center justify-between mb-4">
-      <div>
+  <div class="space-y-4">
+    <div class="px-2 sm:px-0">
+      <div class="flex flex-col gap-2 mb-3 sm:hidden">
         <h3 class="text-lg font-semibold text-gray-700">{{ $t.products || 'Products' }}</h3>
-        <p v-if="total > 0" class="text-sm text-gray-400 mt-0.5">{{ total }} {{ $t.products || 'products' }}</p>
+        <p v-if="total > 0" class="text-sm text-gray-400">{{ total }} {{ $t.products || 'products' }}</p>
       </div>
-      <div class="flex gap-2">
+      <div class="flex flex-col sm:flex-row gap-2">
         <input v-model="search" @input="debouncedSearch" type="text" :placeholder="$t.search || 'Search…'"
-          class="border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
-        <select v-model="storeFilter" @change="fetchProducts(1, true)" class="border border-gray-300 rounded px-3 py-1.5 text-sm">
+          class="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+        <select v-model="storeFilter" @change="fetchProducts(1, true)" class="border border-gray-300 rounded px-3 py-2 text-sm">
           <option value="">{{ $t.all_products || 'All products' }}</option>
           <option value="none">{{ $t.no_store || '— No store' }}</option>
           <option v-for="s in stores" :key="s.id" :value="String(s.id)">{{ s.name }}</option>
@@ -16,13 +16,32 @@
       </div>
     </div>
 
-    <div v-if="loading" class="text-center py-12 text-gray-400">{{ $t.loading || 'Loading…' }}</div>
+    <div v-if="loading" class="text-center py-12 text-gray-400 px-2">{{ $t.loading || 'Loading…' }}</div>
 
-    <div v-else-if="products.length === 0" class="bg-white rounded-lg shadow p-8 text-center text-gray-400">
+    <div v-else-if="products.length === 0" class="bg-white rounded-lg shadow p-6 sm:p-8 text-center text-gray-400 mx-2 sm:mx-0">
       {{ $t.no_products_yet || 'No products yet. Sync a store to import products.' }}
     </div>
 
-    <div v-else class="bg-white rounded-lg shadow overflow-hidden">
+    <!-- Mobile: Card layout -->
+    <div v-if="!loading && products.length > 0" class="sm:hidden space-y-3 px-2">
+      <div v-for="product in products" :key="product.id" class="bg-white rounded-lg shadow p-4 flex items-center gap-3 active:bg-slate-50">
+        <a :href="`/products/${product.id}${storeFilter ? '?back=' + storeFilter : ''}`" class="shrink-0">
+          <img v-if="product.images?.[0]" :src="product.images[0]" class="w-12 h-12 object-cover rounded" />
+          <div v-else class="w-12 h-12 bg-gray-100 rounded"></div>
+        </a>
+        <div class="flex-1 min-w-0">
+          <a :href="`/products/${product.id}${storeFilter ? '?back=' + storeFilter : ''}`" class="text-sm font-medium text-gray-900 hover:text-indigo-600 line-clamp-2">{{ product.title }}</a>
+          <p class="text-xs text-gray-400 mt-0.5">€{{ product.price }}</p>
+        </div>
+      </div>
+      <div v-if="loadingMore" class="text-center py-4 text-gray-400 text-sm">Loading more…</div>
+      <div v-else-if="!hasMore" class="text-center py-3 text-gray-400 text-xs">
+        All {{ total }} products loaded
+      </div>
+    </div>
+
+    <!-- Desktop: Table layout -->
+    <div v-if="!loading && products.length > 0" class="bg-white rounded-lg shadow overflow-hidden hidden sm:block">
       <div class="px-4 py-2 border-b bg-gray-50 flex items-center justify-between text-xs text-gray-500">
         <span>{{ $t.showing_x_of_y?.replace(':shown', products.length).replace(':total', total) || `Showing ${products.length} of ${total}` }}</span>
         <span v-if="hasMore" class="text-indigo-500">{{ $t.scroll_load_more || 'Scroll down to load more' }}</span>
@@ -58,6 +77,13 @@
       </table>
       <div v-if="loadingMore" class="text-center py-4 text-gray-400 text-sm">Loading more…</div>
       <div v-else-if="!hasMore" class="text-center py-3 text-gray-400 text-xs border-t">
+        All {{ total }} products loaded
+      </div>
+    </div>
+
+    <div v-if="!loading && products.length > 0" class="sm:hidden pb-4">
+      <div v-if="loadingMore" class="text-center py-4 text-gray-400 text-sm">Loading more…</div>
+      <div v-else-if="!hasMore" class="text-center py-3 text-gray-400 text-xs px-2">
         All {{ total }} products loaded
       </div>
     </div>

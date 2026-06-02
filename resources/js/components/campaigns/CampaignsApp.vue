@@ -11,7 +11,40 @@
       {{ $t.no_campaigns || 'No campaigns yet.' }}
     </div>
 
-    <div v-else class="bg-white rounded-lg shadow overflow-hidden">
+    <!-- Mobile: Card layout -->
+    <div v-if="!loading && campaigns.length > 0" class="sm:hidden space-y-3 px-2">
+      <div v-for="c in campaigns" :key="c.id" class="bg-white rounded-lg shadow p-4 space-y-3">
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <h4 class="font-medium text-gray-900">{{ c.name }}</h4>
+            <p class="text-xs text-gray-400 capitalize mt-1">{{ c.channel_integration?.channel_type?.replace('_', ' ') }}</p>
+          </div>
+          <span :class="statusBadge(c.status)" class="px-2 py-1 rounded text-xs font-medium shrink-0">{{ c.status }}</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-xs border-t border-gray-100 pt-3">
+          <div>
+            <p class="text-gray-400">{{ $t.budget || 'Budget' }}</p>
+            <p class="font-medium text-gray-900">{{ c.budget ? `€${c.budget}` : '—' }}</p>
+          </div>
+          <div>
+            <p class="text-gray-400">{{ $t.ai_content || 'AI Content' }}</p>
+            <p class="font-medium" :class="c.ai_content?.length ? 'text-green-600' : 'text-gray-400'">
+              {{ c.ai_content?.length ? c.ai_content.length + ' ads' : 'Not generated' }}
+            </p>
+          </div>
+        </div>
+        <div class="border-t border-gray-100 pt-3">
+          <a :href="`/campaigns/${c.id}`" class="w-full text-center text-xs text-indigo-600 hover:text-indigo-700 font-medium py-1.5 rounded hover:bg-indigo-50">{{ $t.view || 'View' }}</a>
+        </div>
+      </div>
+      <div v-if="loadingMore" class="text-center py-4 text-gray-400 text-sm">{{ $t.loading || 'Loading...' }}</div>
+      <div v-else-if="!hasMore" class="text-center py-3 text-gray-400 text-xs">
+        {{ ($t.all_loaded || 'All :total campaigns loaded').replace(':total', total) }}
+      </div>
+    </div>
+
+    <!-- Desktop: Table layout -->
+    <div v-if="!loading && campaigns.length > 0" class="bg-white rounded-lg shadow overflow-hidden hidden sm:block">
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>

@@ -21,7 +21,7 @@
                 uploadError: null,
                 analyzeError: null,
                 selectedForAnalysis: null,
-                aiLocale: '{{ auth()->user()->ui_locale ?? 'en' }}',
+                aiLocale: '{{ auth()->user()->ui_locale === 'en' ? 'en' : 'id' }}',
                 addImage() { this.images.push({ url: '' }) },
                 removeImage(i) { this.images.splice(i, 1) },
                 addAttr() { this.attributes.push({ name: '', values: '' }) },
@@ -67,14 +67,28 @@
                     if (d.description) document.getElementById('description').value = d.description.replace(/\\n/g, '\n');
                     if (d.categories?.length) document.getElementById('categories').value = d.categories.join(', ');
                     if (d.specifications?.length) this.attributes = d.specifications.map(s => ({ name: s.name, values: Array.isArray(s.values) ? s.values.join(', ') : s.values }));
+                    document.getElementById('title').scrollIntoView({ behavior: 'smooth', block: 'start' });
                   } catch(e) { this.analyzeError = e.message; }
                   finally { this.analyzing = false; }
                 }
               }">
             @csrf
-            @include('products._form', ['stores' => $stores])
+
+            {{-- AI analyzing banner --}}
+            <div x-show="analyzing" class="mb-4 flex items-center gap-3 bg-indigo-600 text-white text-sm font-medium px-4 py-3 rounded-xl">
+                <svg style="width:1rem;height:1rem;animation:spin 1s linear infinite;flex-shrink:0" fill="none" viewBox="0 0 24 24">
+                    <circle style="opacity:0.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                    <path style="opacity:0.75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                </svg>
+                AI sedang menganalisis gambar... harap tunggu
+            </div>
+
+            <fieldset :disabled="analyzing" class="space-y-6" :class="analyzing ? 'opacity-50 pointer-events-none' : ''">
+                @include('products._form', ['stores' => $stores])
+            </fieldset>
+
             <div class="flex items-center gap-3 pt-4 border-t mt-6">
-                <x-primary-button>{{ __('ui.save') }}</x-primary-button>
+                <x-primary-button :disabled="true" x-bind:disabled="analyzing">{{ __('ui.save') }}</x-primary-button>
                 <a href="{{ route('products.index') }}" class="text-sm text-gray-500 hover:text-gray-700">{{ __('ui.cancel') }}</a>
             </div>
         </form>

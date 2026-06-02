@@ -5,7 +5,7 @@
     <div v-if="step === 1 && scansLeft === 0" class="max-w-xl mx-auto px-4 pt-10">
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center">
         <p class="text-lg font-bold text-slate-900 mb-2">Scan gratis sudah digunakan</p>
-        <p class="text-slate-500 text-sm mb-6">Daftar gratis untuk scan tanpa batas dan akses semua fitur OXILaris.</p>
+        <p class="text-slate-500 text-sm mb-6">Daftar gratis untuk scan tanpa batas dan akses semua fitur OXIlaris.</p>
         <a href="/register"
            class="block w-full py-3.5 rounded-xl font-bold text-white text-sm mb-3 transition-all hover:opacity-90"
            style="background-color:#C0391A;">

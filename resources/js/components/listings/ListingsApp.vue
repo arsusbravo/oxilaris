@@ -6,10 +6,10 @@
       <button @click="message = null" class="ml-4 opacity-60 hover:opacity-100">✕</button>
     </div>
 
-    <div class="grid lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
 
       <!-- Left: product selector -->
-      <div class="lg:col-span-2 bg-white rounded-lg shadow overflow-hidden">
+      <div class="lg:col-span-2 bg-white rounded-lg shadow overflow-hidden order-2 lg:order-1">
         <div class="px-4 py-3 border-b flex items-center justify-between">
           <h3 class="font-semibold text-gray-700">{{ $t.select_products || 'Select Products' }}</h3>
           <span class="text-sm text-gray-400">{{ ($t.selected || ':count selected').replace(':count', selectedProducts.length) }}</span>
@@ -65,7 +65,7 @@
       </div>
 
       <!-- Right: channels + action -->
-      <div class="space-y-4">
+      <div class="space-y-4 order-1 lg:order-2">
         <div class="bg-white rounded-lg shadow p-4">
           <h3 class="font-semibold text-gray-700 mb-3">{{ $t.push_to_channels || 'Push to Channels' }}</h3>
 
@@ -173,7 +173,35 @@
 
       <div v-if="loadingListings" class="text-center py-8 text-gray-400 text-sm">{{ $t.loading || 'Loading…' }}</div>
       <div v-else-if="listings.length === 0" class="text-center py-8 text-gray-400 text-sm">{{ $t.no_listings || 'No listings found.' }}</div>
-      <template v-else>
+
+      <!-- Mobile: Card layout -->
+      <div v-if="!loadingListings && listings.length > 0" class="sm:hidden divide-y divide-gray-200">
+        <div v-for="listing in listings" :key="listing.id" class="px-4 py-3 flex gap-3">
+          <input type="checkbox" :value="listing.id" v-model="selectedListings" class="rounded mt-1 shrink-0" />
+          <div class="flex-1 min-w-0">
+            <div class="font-medium text-gray-900 text-sm truncate">{{ listing.product?.title }}</div>
+            <div class="text-xs text-gray-400 mt-0.5">{{ listing.channel_integration?.name }}</div>
+            <div class="mt-1.5">
+              <span :class="statusBadge(listing.status)" class="px-2 py-0.5 rounded text-xs font-medium">{{ listing.status }}</span>
+              <div v-if="listing.status === 'error' && listing.error_message" class="text-xs text-red-500 mt-1 truncate" :title="listing.error_message">
+                {{ listing.error_message }}
+              </div>
+            </div>
+            <div class="text-xs text-gray-400 mt-1.5">{{ listing.last_pushed_at || 'Never' }}</div>
+            <div class="flex gap-2 mt-2">
+              <button @click="push(listing)" class="text-xs text-green-600 hover:text-green-800 font-medium">{{ $t.repush || 'Re-push' }}</button>
+              <button @click="remove(listing)" class="text-xs text-red-500 hover:text-red-700">Delete</button>
+            </div>
+          </div>
+        </div>
+        <div v-if="listingsLoadingMore" class="text-center py-4 text-gray-400 text-sm">Loading more…</div>
+        <div v-else-if="!listingsHasMore" class="text-center py-3 text-gray-400 text-xs">
+          All {{ listingsTotal }} listings loaded
+        </div>
+      </div>
+
+      <!-- Desktop: Table layout -->
+      <div v-if="!loadingListings && listings.length > 0" class="hidden sm:block">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
@@ -212,7 +240,7 @@
         <div v-else-if="!listingsHasMore" class="text-center py-3 text-gray-400 text-xs border-t">
           All {{ listingsTotal }} listings loaded
         </div>
-      </template>
+      </div>
     </div>
 
     <div ref="listingsSentinel" class="h-1"></div>
