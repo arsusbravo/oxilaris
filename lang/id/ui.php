@@ -77,7 +77,7 @@ return [
 
     // Saluran
     'channels'            => 'Saluran',
-    'add_channel'         => '+ Tambah Saluran',
+    'add_channel'         => '+ Tambah Saluran (Developer)',
     'channel_type'        => 'Jenis saluran',
     'test_connection'     => 'Uji Koneksi',
     'no_channels'         => 'Belum ada saluran yang terhubung.',
@@ -186,10 +186,10 @@ return [
     'ch_save'                => 'Simpan Saluran',
     'ch_continue_connect'    => 'Lanjutkan ke Koneksi →',
     'ch_quick_connect'       => 'Sambung Cepat',
-    'ch_quick_connect_sub'   => 'Sambungkan dengan satu klik — tidak perlu kunci API',
+    'ch_quick_connect_sub'   => 'Untuk pengguna umum — cukup klik dan ikuti langkahnya',
     'ch_connect_btn'         => 'Sambungkan →',
     'ch_reconnect'           => 'Otorisasi ulang',
-    'ch_oauth_redirect_notice' => 'Anda akan diarahkan ke :platform untuk memberi izin akses. Tidak perlu kunci API.',
+    'ch_oauth_redirect_notice' => 'Klik tombol di bawah dan Anda akan dibawa ke :platform untuk masuk. Cukup setujui akses dan Anda akan kembali ke sini. Tidak perlu kunci API atau kode apa pun.',
     'ch_platform_not_configured' => 'Aplikasi platform belum dikonfigurasi. Masukkan kredensial Anda sendiri di bawah.',
 
     // WooCommerce

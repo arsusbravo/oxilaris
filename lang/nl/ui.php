@@ -77,7 +77,7 @@ return [
 
     // Kanalen
     'channels'            => 'Kanalen',
-    'add_channel'         => '+ Kanaal toevoegen',
+    'add_channel'         => '+ Kanaal toevoegen (Developer)',
     'channel_type'        => 'Kanaaltype',
     'test_connection'     => 'Verbinding testen',
     'no_channels'         => 'Nog geen kanalen verbonden.',
@@ -186,10 +186,10 @@ return [
     'ch_save'                => 'Kanaal opslaan',
     'ch_continue_connect'    => 'Doorgaan naar verbinden →',
     'ch_quick_connect'       => 'Snel verbinden',
-    'ch_quick_connect_sub'   => 'Verbind met één klik — geen API-sleutels nodig',
+    'ch_quick_connect_sub'   => 'Voor gewone gebruikers — klik en volg de stappen',
     'ch_connect_btn'         => 'Verbinden →',
     'ch_reconnect'           => 'Opnieuw autoriseren',
-    'ch_oauth_redirect_notice' => 'U wordt doorgestuurd naar :platform om toegang te verlenen. Geen API-sleutels nodig.',
+    'ch_oauth_redirect_notice' => 'Klik op de knop hieronder en u wordt naar :platform gebracht om in te loggen. Geef gewoon toegang goed en u keert hier terug. Geen API-sleutels of codes nodig.',
     'ch_platform_not_configured' => 'Platform-app niet geconfigureerd. Voer uw eigen inloggegevens hieronder in.',
 
     // WooCommerce

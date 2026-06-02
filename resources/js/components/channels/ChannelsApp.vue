@@ -58,7 +58,7 @@
 const PLATFORM_META = {
   shopify:     { emoji: '🛍️', label: 'Shopify' },
   woocommerce: { emoji: '🔌', label: 'WooCommerce' },
-  tiktok_shop: { emoji: '🎵', label: 'TikTok Shop' },
+  tiktok_shop: { emoji: '🎵', label: 'TikTok Shop/Tokopedia' },
   shopee:      { emoji: '🟠', label: 'Shopee' },
 };
 

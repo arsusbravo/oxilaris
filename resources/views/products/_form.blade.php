@@ -44,9 +44,41 @@
                     <option value="draft"    {{ old('status', $p?->status ?? 'active') === 'draft'    ? 'selected' : '' }}>{{ __('ui.status_draft') }}</option>
                 </select>
             </div>
-            <div>
-                <x-input-label for="store_id" :value="__('ui.store_optional')" />
-                <select id="store_id" name="store_id"
+            <div x-data="{
+                showNew: false,
+                storeId: '{{ old('store_id', $p?->store_id) }}',
+                newName: '',
+                newUrl: '',
+                saving: false,
+                err: null,
+                getCsrf() {
+                    const m = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+                    return m ? decodeURIComponent(m[1]) : '';
+                },
+                async createStore() {
+                    if (!this.newName) return;
+                    this.saving = true; this.err = null;
+                    try {
+                        const r = await fetch('/api/stores', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-XSRF-TOKEN': this.getCsrf() },
+                            body: JSON.stringify({ name: this.newName, url: this.newUrl })
+                        });
+                        const d = await r.json();
+                        if (!r.ok) { this.err = d.message || 'Gagal menyimpan toko.'; return; }
+                        const sel = document.getElementById('store_id_select');
+                        const opt = new Option(d.name, d.id);
+                        sel.add(opt, sel.options[sel.options.length - 1]);
+                        this.storeId = String(d.id);
+                        this.showNew = false; this.newName = ''; this.newUrl = '';
+                    } catch(e) { this.err = 'Terjadi kesalahan. Coba lagi.'; }
+                    finally { this.saving = false; }
+                }
+            }">
+                <x-input-label for="store_id_select" :value="__('ui.store_optional')" />
+                <input type="hidden" name="store_id" :value="storeId">
+                <select id="store_id_select"
+                    @change="$el.value === '__new__' ? (showNew = true) : (storeId = $el.value)"
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                     <option value="">{{ __('ui.no_store_option') }}</option>
                     @foreach($stores as $store)
@@ -54,7 +86,34 @@
                             {{ $store->name }}
                         </option>
                     @endforeach
+                    <option value="__new__">➕ Tambah toko baru...</option>
                 </select>
+
+                {{-- Inline new store panel --}}
+                <div x-show="showNew" x-cloak class="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
+                    <p class="text-xs font-semibold text-slate-600">Toko baru (manual)</p>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Nama toko *</label>
+                        <input type="text" x-model="newName" placeholder="Contoh: Toko Utama"
+                            class="block w-full border-gray-300 rounded-md shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">URL toko (opsional)</label>
+                        <input type="url" x-model="newUrl" placeholder="https://tokosaya.com"
+                            class="block w-full border-gray-300 rounded-md shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500" />
+                    </div>
+                    <div x-show="err" class="text-xs text-red-600 bg-red-50 rounded px-2 py-1" x-text="err"></div>
+                    <div class="flex gap-2 pt-1">
+                        <button type="button" @click="createStore()" :disabled="!newName || saving"
+                            class="px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded hover:bg-indigo-700 disabled:opacity-50 transition-colors">
+                            <span x-text="saving ? 'Menyimpan...' : 'Simpan Toko'"></span>
+                        </button>
+                        <button type="button" @click="showNew = false; document.getElementById('store_id_select').value = storeId"
+                            class="px-3 py-1.5 text-xs text-slate-500 hover:text-slate-700 border border-slate-200 rounded transition-colors">
+                            Batal
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 

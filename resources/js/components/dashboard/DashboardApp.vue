@@ -1,179 +1,153 @@
 <template>
-  <div class="p-6 space-y-6">
+  <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
 
     <!-- Stats grid -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       <div v-for="stat in stats" :key="stat.label"
-           class="bg-white rounded-xl shadow-sm border border-slate-100 p-5 flex items-start justify-between hover:shadow-md transition-shadow"
+           class="bg-white rounded-xl shadow-sm border border-slate-100 p-4 sm:p-5 flex items-start justify-between hover:shadow-md transition-shadow"
            :class="`border-l-4 ${stat.borderColor}`">
         <div class="min-w-0">
           <p class="text-xs font-semibold uppercase tracking-wider" :class="stat.labelColor">{{ stat.label }}</p>
-          <p class="text-3xl font-bold text-slate-800 mt-1 leading-none">{{ stat.value }}</p>
+          <p class="text-2xl sm:text-3xl font-bold text-slate-800 mt-1 leading-none">{{ stat.value }}</p>
           <a :href="stat.href" class="inline-flex items-center gap-1 text-xs font-medium mt-2 transition-colors" :class="stat.linkColor">
-            {{ $t.view_all || 'View all' }}
+            {{ $t.view_all || 'Lihat' }}
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
           </a>
         </div>
-        <div class="rounded-xl p-2.5 ml-3 shrink-0" :class="stat.iconBg">
-          <svg class="w-5 h-5" :class="stat.iconColor" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="rounded-xl p-2 sm:p-2.5 ml-2 shrink-0" :class="stat.iconBg">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5" :class="stat.iconColor" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="stat.icon" />
           </svg>
         </div>
       </div>
     </div>
 
-    <!-- Quick actions + flowchart -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- CTA banner -->
+    <a href="/products/create"
+       class="flex items-center gap-4 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-2xl p-5 shadow-md transition-all active:scale-[0.99] group">
+      <div class="w-12 h-12 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+        </svg>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-white font-bold text-base leading-snug">{{ $t.qa_add_product || 'Tambah Produk' }}</p>
+        <p class="text-indigo-200 text-sm mt-0.5 leading-snug">{{ $t.qa_add_product_sub || 'Upload foto, isi detail, lalu push ke Tokopedia, Shopee & lainnya.' }}</p>
+      </div>
+      <svg class="w-5 h-5 text-white/50 group-hover:text-white/80 shrink-0 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </a>
 
-      <!-- Quick Actions -->
-      <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <div class="px-5 py-4 border-b border-slate-100">
-          <h3 class="font-semibold text-slate-800 text-sm">{{ $t.quick_actions || 'Quick Actions' }}</h3>
-          <p class="text-xs text-slate-400 mt-0.5">{{ $t.quick_actions_sub || 'Jump right in' }}</p>
-        </div>
-        <div class="p-3 space-y-2">
-          <a v-for="action in quickActions" :key="action.href" :href="action.href"
-             class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group"
-             :class="action.bg">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" :class="action.iconBg">
-              <svg class="w-4 h-4" :class="action.iconColor" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="action.icon" />
-              </svg>
-            </div>
-            <span class="text-sm font-medium flex-1" :class="action.text">{{ action.label }}</span>
-            <svg class="w-4 h-4 opacity-40 group-hover:opacity-80 transition-opacity" :class="action.iconColor"
-                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </a>
-        </div>
+    <!-- How it works -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-100">
+        <h3 class="font-semibold text-slate-800 text-sm">{{ $t.how_it_works || 'Cara kerjanya' }}</h3>
+        <p class="text-xs text-slate-400 mt-0.5">{{ $t.how_it_works_sub || 'Dari produk ke pembeli dalam 4 langkah' }}</p>
       </div>
 
-      <!-- Workflow Flowchart (spans 2 columns) -->
-      <div class="md:col-span-2 bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <div class="px-5 py-4 border-b border-slate-100">
-          <h3 class="font-semibold text-slate-800 text-sm">{{ $t.how_it_works || 'How it works' }}</h3>
-          <p class="text-xs text-slate-400 mt-0.5">{{ $t.how_it_works_sub || 'Your complete product distribution workflow' }}</p>
-        </div>
-        <div class="p-5 space-y-3">
+      <!-- Mobile: vertical list -->
+      <div class="sm:hidden divide-y divide-slate-100">
 
-          <!-- Step 1: Create Channels (full width — must happen first) -->
-          <div class="rounded-lg bg-rose-50 border-2 border-rose-200 p-3">
-            <div class="flex items-center gap-2 mb-2">
-              <div class="w-6 h-6 rounded-full bg-rose-500 text-white text-xs font-bold flex items-center justify-center shrink-0">1</div>
-              <div>
-                <p class="text-xs font-bold text-rose-700">{{ $t.flow_create_channels || 'Create your channels' }}</p>
-                <p class="text-[10px] text-rose-400">{{ $t.flow_create_channels_sub || 'Go to Channels → Add Channel and add credentials for each platform you want to use' }}</p>
-              </div>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <div class="bg-white rounded-md p-2 border border-rose-100">
-                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1">{{ $t.flow_store_channels || 'Store channels' }}</p>
-                <div class="flex flex-wrap gap-1">
-                  <span class="text-[10px] bg-indigo-100 text-indigo-600 px-1.5 py-0.5 rounded font-medium">WooCommerce</span>
-                  <span class="text-[10px] bg-indigo-100 text-indigo-600 px-1.5 py-0.5 rounded font-medium">Shopify</span>
-                  <span class="text-[10px] bg-indigo-100 text-indigo-600 px-1.5 py-0.5 rounded font-medium">Magento</span>
-                  <span class="text-[10px] bg-indigo-100 text-indigo-600 px-1.5 py-0.5 rounded font-medium">CS-Cart</span>
-                </div>
-              </div>
-              <div class="bg-white rounded-md p-2 border border-rose-100">
-                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide mb-1">{{ $t.flow_market_ad_channels || 'Marketplace & Ad channels' }}</p>
-                <div class="flex flex-wrap gap-1">
-                  <span v-for="m in [...marketplaces, ...adChannels]" :key="m"
-                    class="text-[10px] bg-violet-100 text-violet-600 px-1.5 py-0.5 rounded font-medium">{{ m }}</span>
-                </div>
-              </div>
-            </div>
+        <a href="/products/create" class="flex items-center gap-4 px-5 py-4 hover:bg-slate-50 active:bg-slate-100 transition-colors">
+          <div class="w-9 h-9 rounded-full bg-sky-100 text-sky-600 font-bold text-sm flex items-center justify-center shrink-0">1</div>
+          <div class="flex-1">
+            <p class="text-sm font-semibold text-slate-800">{{ $t.flow_add_product || 'Tambah Produk' }}</p>
+            <p class="text-xs text-slate-400 mt-0.5">{{ $t.flow_add_product_sub || 'Isi info & upload foto' }}</p>
           </div>
+          <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </a>
 
-          <!-- Down arrow -->
-          <div class="flex justify-center"><div class="w-px h-3 bg-slate-300"></div></div>
-
-          <!-- Steps 2–3: Connect store + import -->
-          <div class="flex items-center gap-1.5">
-            <div class="flex-1 rounded-lg bg-indigo-50 border border-indigo-100 p-3 text-center">
-              <div class="w-6 h-6 rounded-full bg-indigo-500 text-white text-xs font-bold flex items-center justify-center mx-auto mb-1">2</div>
-              <p class="text-xs font-semibold text-indigo-700">{{ $t.flow_connect_store || 'Connect a Store' }}</p>
-              <p class="text-[10px] text-indigo-400 mt-0.5">{{ $t.flow_connect_store_sub || 'Add store → test connection' }}</p>
-            </div>
-            <svg class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-            <div class="flex-1 rounded-lg bg-emerald-50 border border-emerald-100 p-3 text-center">
-              <div class="w-6 h-6 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center mx-auto mb-1">3</div>
-              <p class="text-xs font-semibold text-emerald-700">{{ $t.flow_import_products || 'Import Products' }}</p>
-              <p class="text-[10px] text-emerald-400 mt-0.5">{{ $t.flow_import_products_sub || 'Sync or add manually' }}</p>
-            </div>
-            <svg class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-            <div class="flex-1 rounded-lg bg-sky-50 border border-sky-100 p-3 text-center">
-              <div class="w-6 h-6 rounded-full bg-sky-500 text-white text-xs font-bold flex items-center justify-center mx-auto mb-1">4</div>
-              <p class="text-xs font-semibold text-sky-700">{{ $t.flow_product_catalog || 'Product Catalog' }}</p>
-              <p class="text-[10px] text-sky-400 mt-0.5">{{ $t.flow_product_catalog_sub || 'Ready to distribute' }}</p>
-            </div>
+        <a href="/channels" class="flex items-center gap-4 px-5 py-4 hover:bg-slate-50 active:bg-slate-100 transition-colors">
+          <div class="w-9 h-9 rounded-full bg-violet-100 text-violet-600 font-bold text-sm flex items-center justify-center shrink-0">2</div>
+          <div class="flex-1">
+            <p class="text-sm font-semibold text-slate-800">{{ $t.flow_connect_channel || 'Hubungkan Channel' }}</p>
+            <p class="text-xs text-slate-400 mt-0.5">{{ $t.flow_connect_channel_sub || 'Tokopedia, Shopee, dll.' }}</p>
           </div>
+          <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </a>
 
-          <!-- Down + fork -->
-          <div class="flex justify-center"><div class="w-px h-3 bg-slate-300"></div></div>
-          <div class="relative h-3">
-            <div class="absolute left-[25%] right-[25%] top-0 h-px bg-slate-300"></div>
-            <div class="absolute left-[25%] top-0 w-px h-full bg-slate-300"></div>
-            <div class="absolute right-[25%] top-0 w-px h-full bg-slate-300"></div>
+        <a href="/listings" class="flex items-center gap-4 px-5 py-4 hover:bg-slate-50 active:bg-slate-100 transition-colors">
+          <div class="w-9 h-9 rounded-full bg-indigo-100 text-indigo-600 font-bold text-sm flex items-center justify-center shrink-0">3</div>
+          <div class="flex-1">
+            <p class="text-sm font-semibold text-slate-800">{{ $t.flow_push_listings || 'Push ke Listings' }}</p>
+            <p class="text-xs text-slate-400 mt-0.5">{{ $t.flow_push_listings_sub || 'Pilih produk & channel' }}</p>
           </div>
+          <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </a>
 
-          <!-- Phase 2: Two paths -->
-          <div :class="marketplaces.length && adChannels.length ? 'grid-cols-2' : 'grid-cols-1 max-w-sm mx-auto'" class="grid gap-3">
-
-            <!-- Path A: Marketplace -->
-            <div v-if="marketplaces.length" class="space-y-2">
-              <div class="rounded-lg bg-violet-50 border border-violet-100 p-3">
-                <div class="flex items-center gap-2 mb-1.5">
-                  <div class="w-5 h-5 rounded-full bg-violet-500 text-white text-[10px] font-bold flex items-center justify-center shrink-0">5</div>
-                  <p class="text-xs font-semibold text-violet-700">{{ $t.flow_push_marketplace || 'Push to Marketplace' }}</p>
-                </div>
-                <div class="flex flex-wrap gap-1">
-                  <span v-for="m in marketplaces" :key="m" class="text-[10px] bg-violet-100 text-violet-600 px-1.5 py-0.5 rounded font-medium">{{ m }}</span>
-                </div>
-              </div>
-              <div class="flex justify-center"><div class="w-px h-3 bg-slate-200"></div></div>
-              <div class="rounded-lg bg-violet-600 p-3 text-center">
-                <svg class="w-4 h-4 text-violet-200 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <p class="text-xs font-bold text-white">{{ $t.flow_live_listings || 'Live Listings' }}</p>
-                <p class="text-[10px] text-violet-200 mt-0.5">{{ $t.flow_live_listings_sub || 'Products visible to buyers' }}</p>
-              </div>
-            </div>
-
-            <!-- Path B: Advertising -->
-            <div v-if="adChannels.length" class="space-y-2">
-              <div class="rounded-lg bg-amber-50 border border-amber-100 p-3">
-                <div class="flex items-center gap-2 mb-1.5">
-                  <div class="w-5 h-5 rounded-full bg-amber-500 text-white text-[10px] font-bold flex items-center justify-center shrink-0">6</div>
-                  <p class="text-xs font-semibold text-amber-700">{{ $t.flow_ai_campaign || 'AI Ad Campaign' }}</p>
-                </div>
-                <div class="flex flex-wrap gap-1">
-                  <span v-for="a in adChannels" :key="a" class="text-[10px] bg-amber-100 text-amber-600 px-1.5 py-0.5 rounded font-medium">{{ a }}</span>
-                </div>
-              </div>
-              <div class="flex justify-center"><div class="w-px h-3 bg-slate-200"></div></div>
-              <div class="rounded-lg bg-amber-500 p-3 text-center">
-                <svg class="w-4 h-4 text-amber-100 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                </svg>
-                <p class="text-xs font-bold text-white">{{ $t.flow_running_ads || 'Running Ads' }}</p>
-                <p class="text-[10px] text-amber-100 mt-0.5">{{ $t.flow_running_ads_sub || 'AI-generated copy live' }}</p>
-              </div>
-            </div>
-
+        <div class="flex items-center gap-4 px-5 py-4 bg-emerald-50">
+          <div class="w-9 h-9 rounded-full bg-emerald-500 text-white font-bold text-sm flex items-center justify-center shrink-0">✓</div>
+          <div class="flex-1">
+            <p class="text-sm font-semibold text-emerald-700">{{ $t.flow_live || 'Produk Tayang!' }}</p>
+            <p class="text-xs text-emerald-500 mt-0.5">{{ $t.flow_live_sub || 'Terlihat oleh pembeli' }}</p>
           </div>
         </div>
+
       </div>
 
+      <!-- Desktop: horizontal cards -->
+      <div class="hidden sm:flex items-center gap-2 p-5">
+
+        <a href="/products/create" class="flex-1 rounded-xl bg-sky-50 border-2 border-sky-200 p-4 text-center hover:border-sky-400 transition-colors">
+          <div class="w-8 h-8 rounded-full bg-sky-500 text-white text-sm font-bold flex items-center justify-center mx-auto mb-2">1</div>
+          <svg class="w-5 h-5 text-sky-500 mx-auto mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+          </svg>
+          <p class="text-xs font-bold text-sky-700">{{ $t.flow_add_product || 'Tambah Produk' }}</p>
+          <p class="text-[10px] text-sky-400 mt-0.5">{{ $t.flow_add_product_sub || 'Isi info & upload foto' }}</p>
+        </a>
+
+        <svg class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+
+        <a href="/channels" class="flex-1 rounded-xl bg-violet-50 border-2 border-violet-200 p-4 text-center hover:border-violet-400 transition-colors">
+          <div class="w-8 h-8 rounded-full bg-violet-500 text-white text-sm font-bold flex items-center justify-center mx-auto mb-2">2</div>
+          <svg class="w-5 h-5 text-violet-500 mx-auto mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+          </svg>
+          <p class="text-xs font-bold text-violet-700">{{ $t.flow_connect_channel || 'Hubungkan Channel' }}</p>
+          <p class="text-[10px] text-violet-400 mt-0.5">{{ $t.flow_connect_channel_sub || 'Tokopedia, Shopee, dll.' }}</p>
+        </a>
+
+        <svg class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+
+        <a href="/listings" class="flex-1 rounded-xl bg-indigo-50 border-2 border-indigo-200 p-4 text-center hover:border-indigo-400 transition-colors">
+          <div class="w-8 h-8 rounded-full bg-indigo-500 text-white text-sm font-bold flex items-center justify-center mx-auto mb-2">3</div>
+          <svg class="w-5 h-5 text-indigo-500 mx-auto mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+          </svg>
+          <p class="text-xs font-bold text-indigo-700">{{ $t.flow_push_listings || 'Push ke Listings' }}</p>
+          <p class="text-[10px] text-indigo-400 mt-0.5">{{ $t.flow_push_listings_sub || 'Pilih produk & channel' }}</p>
+        </a>
+
+        <svg class="w-4 h-4 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+
+        <div class="flex-1 rounded-xl bg-emerald-500 border-2 border-emerald-500 p-4 text-center">
+          <div class="w-8 h-8 rounded-full bg-white/20 text-white text-sm font-bold flex items-center justify-center mx-auto mb-2">✓</div>
+          <svg class="w-5 h-5 text-emerald-100 mx-auto mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <p class="text-xs font-bold text-white">{{ $t.flow_live || 'Produk Tayang!' }}</p>
+          <p class="text-[10px] text-emerald-100 mt-0.5">{{ $t.flow_live_sub || 'Terlihat oleh pembeli' }}</p>
+        </div>
+
+      </div>
     </div>
+
   </div>
 </template>
 
@@ -214,33 +188,6 @@ export default {
         },
       ],
 
-      quickActions: [
-        {
-          label: 'Connect a channel', href: '/channels/create',
-          bg: 'bg-indigo-50 hover:bg-indigo-100', iconBg: 'bg-indigo-600',
-          iconColor: 'text-white', text: 'text-indigo-800',
-          icon: 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1',
-        },
-        {
-          label: 'Add a store & import', href: '/stores',
-          bg: 'bg-emerald-50 hover:bg-emerald-100', iconBg: 'bg-emerald-600',
-          iconColor: 'text-white', text: 'text-emerald-800',
-          icon: 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z',
-        },
-        {
-          label: 'Push products to market', href: '/listings',
-          bg: 'bg-violet-50 hover:bg-violet-100', iconBg: 'bg-violet-600',
-          iconColor: 'text-white', text: 'text-violet-800',
-          icon: 'M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12',
-        },
-        {
-          label: 'Create an AI ad campaign', href: '/campaigns/create',
-          bg: 'bg-amber-50 hover:bg-amber-100', iconBg: 'bg-amber-500',
-          iconColor: 'text-white', text: 'text-amber-800',
-          icon: 'M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z',
-        },
-      ],
-
       marketplaces: JSON.parse(document.getElementById('dashboard-app')?.dataset.marketplaces || '[]'),
       adChannels:   JSON.parse(document.getElementById('dashboard-app')?.dataset.adChannels   || '[]'),
     };
@@ -256,11 +203,6 @@ export default {
     this.stats[1].label = t.stat_products  || 'Products';
     this.stats[2].label = t.stat_listings  || 'Active Listings';
     this.stats[3].label = t.stat_campaigns || 'Active Campaigns';
-    this.quickActions[0].label = t.qa_connect_channel  || 'Connect a channel';
-    this.quickActions[1].label = t.qa_add_store        || 'Add a store & import';
-    this.quickActions[2].label = t.qa_push_products    || 'Push products to market';
-    this.quickActions[3].label = t.qa_create_campaign  || 'Create an AI ad campaign';
-
     try {
       const data = await window.api('/api/dashboard/stats');
       this.stats[0].value = data.stores;

@@ -112,6 +112,23 @@ class StoreController extends Controller
         );
     }
 
+    public function apiStore(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'url'  => 'nullable|url|max:255',
+        ]);
+
+        $store = Store::create([
+            'user_id'               => $request->user()->id,
+            'channel_integration_id' => null,
+            'name'                  => $validated['name'],
+            'url'                   => $validated['url'] ?? null,
+        ]);
+
+        return response()->json(['id' => $store->id, 'name' => $store->name], 201);
+    }
+
     public function sync(Request $request, Store $store)
     {
         abort_if($store->user_id !== $request->user()->id, 403);

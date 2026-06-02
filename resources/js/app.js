@@ -7,6 +7,7 @@ Alpine.start();
 
 // Import all Vue components
 import DashboardApp from './components/dashboard/DashboardApp.vue';
+import DemoApp from './components/demo/DemoApp.vue';
 import StoresApp from './components/stores/StoresApp.vue';
 import ProductsApp from './components/products/ProductsApp.vue';
 import ChannelsApp from './components/channels/ChannelsApp.vue';
@@ -15,6 +16,7 @@ import ListingsApp from './components/listings/ListingsApp.vue';
 
 // Mount each component if its mount point exists in the DOM
 const mounts = {
+    '#demo-app':      DemoApp,
     '#dashboard-app': DashboardApp,
     '#stores-app': StoresApp,
     '#products-app': ProductsApp,

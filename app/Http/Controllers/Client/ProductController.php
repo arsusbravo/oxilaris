@@ -68,7 +68,7 @@ class ProductController extends Controller
             'raw_data'    => [],
         ]);
 
-        return redirect()->route('products.show', $product)->with('success', 'Product created.');
+        return redirect()->route('listings.index')->with('success', 'Produk berhasil disimpan! Pilih produk di bawah lalu push ke channel Anda.');
     }
 
     public function show(Request $request, Product $product)

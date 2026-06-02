@@ -10,9 +10,13 @@ use App\Http\Controllers\Client\CampaignController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ChannelSettingsController;
+use App\Http\Controllers\DemoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => view('welcome'));
+
+Route::get('/demo', [DemoController::class, 'index'])->name('demo');
+Route::post('/demo/scan', [DemoController::class, 'scan'])->middleware('throttle:5,1440')->name('demo.scan');
 
 // WooCommerce posts credentials here server-to-server — no session, no auth middleware
 Route::match(['get', 'post'], '/channels/woocommerce/callback', [ChannelController::class, 'woocommerceCallback'])
@@ -23,6 +27,7 @@ Route::middleware(['auth'])->prefix('api')->name('api.')->group(function () {
     Route::get('/dashboard/stats', [DashboardController::class, 'stats'])->name('dashboard.stats');
     Route::get('/stores', [StoreController::class, 'apiIndex'])->name('stores.index');
     Route::get('/stores/all', [StoreController::class, 'apiAll'])->name('stores.all');
+    Route::post('/stores', [StoreController::class, 'apiStore'])->name('stores.apiStore');
     Route::get('/products', [ProductController::class, 'apiIndex'])->name('products.index');
     Route::post('/products/upload-image',  [ProductController::class, 'uploadImage'])->name('api.products.upload-image');
     Route::post('/products/analyze-image', [ProductController::class, 'analyzeImage'])->name('api.products.analyze-image');

@@ -16,6 +16,17 @@
                 <div class="bg-red-50 border border-red-200 text-red-700 rounded p-3 text-sm">{{ session('error') }}</div>
             @endif
 
+            <div class="flex flex-wrap gap-3">
+                <a href="{{ route('channels.create') }}"
+                   class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded hover:bg-indigo-700 transition-colors">
+                    + Tambah channel lain
+                </a>
+                <a href="{{ route('listings.index') }}"
+                   class="px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded hover:bg-slate-50 transition-colors">
+                    Ke halaman Listings →
+                </a>
+            </div>
+
             <div class="bg-white rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-4">
                     <div>

@@ -77,7 +77,7 @@ return [
 
     // Channels
     'channels'            => 'Channels',
-    'add_channel'         => '+ Add Channel',
+    'add_channel'         => '+ Add Channel (Developer)',
     'channel_type'        => 'Channel type',
     'test_connection'     => 'Test Connection',
     'no_channels'         => 'No channels connected yet.',
@@ -186,10 +186,10 @@ return [
     'ch_save'                => 'Save Channel',
     'ch_continue_connect'    => 'Continue to Connect →',
     'ch_quick_connect'       => 'Quick Connect',
-    'ch_quick_connect_sub'   => 'Connect in one click — no API keys needed',
+    'ch_quick_connect_sub'   => 'For regular users — just click and follow the steps',
     'ch_connect_btn'         => 'Connect →',
     'ch_reconnect'           => 'Re-authorize',
-    'ch_oauth_redirect_notice' => 'You\'ll be redirected to :platform to authorize access. No API keys needed.',
+    'ch_oauth_redirect_notice' => 'Click the button below and you\'ll be taken to :platform to sign in. Just approve access and you\'ll be brought back here. No API keys or codes needed.',
     'ch_platform_not_configured' => 'Platform app not configured. Enter your own credentials below.',
 
     // WooCommerce
