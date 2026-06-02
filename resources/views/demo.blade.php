@@ -16,7 +16,7 @@
             <a href="/" class="flex items-center gap-2">
                 <img src="/images/oxilaris-icon.png" alt="OXIlaris" class="h-7 w-7 object-contain">
                 <span class="font-extrabold text-base tracking-tight leading-none">
-                    <span style="color:#C0391A;">OXI</span><span class="text-slate-900">Laris</span>
+                    <span style="color:#C0391A;">OXI</span><span class="text-slate-900">laris</span>
                 </span>
             </a>
             <div class="flex items-center gap-3">

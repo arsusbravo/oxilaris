@@ -16,7 +16,7 @@
             <a href="/" class="flex items-center gap-2.5">
                 <img src="/images/oxilaris-icon.png" alt="OXIlaris" class="h-8 w-8 object-contain">
                 <span class="font-extrabold text-lg tracking-tight leading-none select-none">
-                    <span style="color:#C0391A;">OXI</span><span class="text-slate-900">Laris</span>
+                    <span style="color:#C0391A;">OXI</span><span class="text-slate-900">laris</span>
                 </span>
             </a>
             <div class="flex items-center gap-3">
@@ -246,7 +246,7 @@
             <div class="flex items-center gap-2">
                 <img src="/images/oxilaris-icon.png" alt="OXIlaris" class="h-6 w-6 object-contain">
                 <span class="font-extrabold text-sm tracking-tight">
-                    <span style="color:#C0391A;">OXI</span><span class="text-slate-900">Laris</span>
+                    <span style="color:#C0391A;">OXI</span><span class="text-slate-900">laris</span>
                 </span>
             </div>
             <p class="text-slate-400 text-sm">

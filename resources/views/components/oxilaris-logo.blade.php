@@ -11,6 +11,6 @@ $textSize = $textSizes[$size] ?? 'text-lg';
 <div {{ $attributes->merge(['class' => 'flex items-center gap-2.5']) }}>
     <img src="/images/oxilaris-icon.png" alt="OXIlaris" class="{{ $iconSize }} object-contain {{ $variant === 'dark' ? 'rounded-md bg-white p-0.5' : '' }}">
     <span class="font-extrabold {{ $textSize }} tracking-tight leading-none select-none">
-        <span style="color: #C0391A;">OXI</span><span class="{{ $larisColor }}">Laris</span>
+        <span style="color: #C0391A;">OXI</span><span class="{{ $larisColor }}">laris</span>
     </span>
 </div>
