@@ -6,7 +6,6 @@ use App\Services\AiContentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
 
 class DemoController extends Controller
 {
@@ -44,13 +43,20 @@ class DemoController extends Controller
         ]);
 
         // Verify Turnstile CAPTCHA
-        $response = Http::asForm()->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
-            'secret' => config('services.turnstile.secret_key'),
-            'response' => $request->input('cf-turnstile-response'),
-        ]);
+        $secretKey = config('services.turnstile.secret_key');
+        if ($secretKey) {
+            try {
+                $cfResponse = Http::timeout(10)->asForm()->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
+                    'secret'   => $secretKey,
+                    'response' => $request->input('cf-turnstile-response'),
+                ]);
 
-        if (! $response->json('success')) {
-            return response()->json(['error' => 'CAPTCHA verification failed. Please try again.'], 422);
+                if (! $cfResponse->json('success')) {
+                    return response()->json(['error' => 'Verifikasi CAPTCHA gagal. Selesaikan CAPTCHA lalu coba lagi.'], 422);
+                }
+            } catch (\Exception) {
+                // Don't block scan if Cloudflare is unreachable
+            }
         }
 
         $imageData = $request->input('image_data') ?? $request->input('url');

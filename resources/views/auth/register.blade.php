@@ -1,5 +1,7 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}" x-data="{ turnstileVerified: false }">
+    <form method="POST" action="{{ route('register') }}"
+          x-data="{ turnstileVerified: false }"
+          @turnstile-done.window="turnstileVerified = true">
         @csrf
 
         <!-- Name -->
@@ -19,23 +21,19 @@
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
-
             <x-text-input id="password" class="block mt-1 w-full"
                             type="password"
                             name="password"
                             required autocomplete="new-password" />
-
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <!-- Confirm Password -->
         <div class="mt-4">
             <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
             <x-text-input id="password_confirmation" class="block mt-1 w-full"
                             type="password"
                             name="password_confirmation" required autocomplete="new-password" />
-
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
@@ -45,7 +43,7 @@
             <div class="cf-turnstile"
                  data-sitekey="{{ config('services.turnstile.site_key') }}"
                  data-theme="light"
-                 data-callback="window.turnstileRegisterCallback"></div>
+                 data-callback="onTurnstileDone"></div>
             <x-input-error :messages="$errors->get('cf-turnstile-response')" class="mt-2" />
             <p x-show="!turnstileVerified" class="text-sm text-amber-600 mt-2">Selesaikan verifikasi CAPTCHA untuk melanjutkan</p>
         </div>
@@ -64,8 +62,7 @@
 </x-guest-layout>
 
 <script>
-window.turnstileRegisterCallback = function(token) {
-    // This is called by Turnstile when verification succeeds
-    // Alpine.js will handle the state update
+function onTurnstileDone(token) {
+    window.dispatchEvent(new CustomEvent('turnstile-done'));
 }
 </script>

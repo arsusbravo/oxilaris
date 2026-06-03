@@ -39,15 +39,24 @@ class RegisteredUserController extends Controller
         ]);
 
         // Verify Turnstile CAPTCHA
-        $response = Http::asForm()->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
-            'secret' => config('services.turnstile.secret_key'),
-            'response' => $request->input('cf-turnstile-response'),
-        ]);
+        $secretKey = config('services.turnstile.secret_key');
+        if ($secretKey) {
+            try {
+                $cfResponse = Http::timeout(10)->asForm()->post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
+                    'secret'   => $secretKey,
+                    'response' => $request->input('cf-turnstile-response'),
+                ]);
 
-        if (! $response->json('success')) {
-            throw ValidationException::withMessages([
-                'cf-turnstile-response' => 'CAPTCHA verification failed. Please try again.',
-            ]);
+                if (! $cfResponse->json('success')) {
+                    throw ValidationException::withMessages([
+                        'cf-turnstile-response' => 'Verifikasi CAPTCHA gagal. Coba lagi.',
+                    ]);
+                }
+            } catch (ValidationException $e) {
+                throw $e;
+            } catch (\Exception) {
+                // Don't block registration if Cloudflare is unreachable
+            }
         }
 
         $user = User::create([
