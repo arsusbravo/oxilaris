@@ -72,22 +72,16 @@
           <!-- Error -->
           <div v-if="error" class="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2 mb-3">{{ error }}</div>
 
-          <!-- Turnstile CAPTCHA -->
-          <div v-show="!captchaVerified && previewUrl" ref="turnstileContainer" class="mb-4 p-4 rounded-lg bg-amber-50 border border-amber-200">
+          <!-- Turnstile CAPTCHA — rendered explicitly via JS, not auto-render -->
+          <div v-if="!captchaVerified && previewUrl" class="mb-4 p-4 rounded-lg bg-amber-50 border border-amber-200">
             <p class="text-xs text-amber-700 font-semibold mb-3">Verifikasi keamanan diperlukan untuk melanjutkan</p>
-            <div id="turnstile-widget" class="cf-turnstile" :data-sitekey="turnstileSiteKey" data-theme="light" data-callback="turnstileCallback"></div>
-          </div>
-
-          <!-- CAPTCHA Required Message (fallback if widget doesn't show) -->
-          <div v-if="previewUrl && !captchaVerified && turnstileSiteKey" class="mb-4 p-3 rounded-lg bg-amber-50 border border-amber-200">
-            <p class="text-sm text-amber-700 font-medium">Tunggu... widget keamanan sedang dimuat...</p>
+            <div ref="turnstileWidget"></div>
           </div>
 
           <!-- Submit -->
           <button @click="doScan" :disabled="scanning || !previewUrl || !captchaVerified"
                   class="w-full rounded-xl font-bold text-white text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                  style="background-color:#C0391A; padding: 0.875rem;"
-                  :title="!captchaVerified && previewUrl ? 'Selesaikan verifikasi CAPTCHA terlebih dahulu' : ''">
+                  style="background-color:#C0391A; padding: 0.875rem;">
             <span v-if="scanning" class="flex items-center justify-center gap-2">
               <svg style="width:1rem;height:1rem;animation:spin 1s linear infinite;" fill="none" viewBox="0 0 24 24">
                 <circle style="opacity:0.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -95,7 +89,6 @@
               </svg>
               AI sedang menganalisis...
             </span>
-            <span v-else-if="!captchaVerified && previewUrl">Verifikasi CAPTCHA terlebih dahulu →</span>
             <span v-else>✦ Scan dengan AI →</span>
           </button>
         </div>
@@ -392,21 +385,17 @@ export default {
   },
 
   mounted() {
-    window.turnstileCallback = (token) => {
-      this.turnstileToken = token
-      this.captchaVerified = true
-    }
-
-    // Watch for when preview image is set and render Turnstile
     this.$watch('previewUrl', (newVal) => {
-      if (newVal && window.turnstile) {
+      if (newVal && !this.captchaVerified) {
         this.$nextTick(() => {
-          const container = document.getElementById('turnstile-widget')
-          if (container && !container.querySelector('iframe')) {
-            window.turnstile.render('#turnstile-widget', {
+          if (window.turnstile && this.$refs.turnstileWidget) {
+            window.turnstile.render(this.$refs.turnstileWidget, {
               sitekey: this.turnstileSiteKey,
               theme: 'light',
-              callback: 'turnstileCallback'
+              callback: (token) => {
+                this.turnstileToken = token
+                this.captchaVerified = true
+              },
             })
           }
         })
@@ -448,18 +437,6 @@ export default {
       this.turnstileToken = null
       this.captchaVerified = false
       if (this.$refs.fileInput) this.$refs.fileInput.value = ''
-      // Reset Turnstile widget
-      if (window.turnstile) {
-        try {
-          window.turnstile.reset()
-        } catch (e) {
-          // Widget might not be rendered yet
-          const container = document.getElementById('turnstile-widget')
-          if (container) {
-            container.innerHTML = ''
-          }
-        }
-      }
     },
 
     async doScan() {

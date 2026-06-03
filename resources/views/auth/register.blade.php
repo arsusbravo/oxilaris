@@ -39,11 +39,7 @@
 
         <!-- Turnstile CAPTCHA -->
         <div class="mt-4">
-            <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-            <div class="cf-turnstile"
-                 data-sitekey="{{ config('services.turnstile.site_key') }}"
-                 data-theme="light"
-                 data-callback="onTurnstileDone"></div>
+            <div id="turnstile-register"></div>
             <x-input-error :messages="$errors->get('cf-turnstile-response')" class="mt-2" />
             <p x-show="!turnstileVerified" class="text-sm text-amber-600 mt-2">Selesaikan verifikasi CAPTCHA untuk melanjutkan</p>
         </div>
@@ -59,10 +55,17 @@
             </button>
         </div>
     </form>
-</x-guest-layout>
 
-<script>
-function onTurnstileDone(token) {
-    window.dispatchEvent(new CustomEvent('turnstile-done'));
-}
-</script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad" async defer></script>
+    <script>
+        function onTurnstileLoad() {
+            turnstile.render('#turnstile-register', {
+                sitekey: '{{ config('services.turnstile.site_key') }}',
+                theme: 'light',
+                callback: function(token) {
+                    window.dispatchEvent(new CustomEvent('turnstile-done'));
+                },
+            });
+        }
+    </script>
+</x-guest-layout>
