@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" action="{{ route('register') }}" x-data="{ turnstileVerified: false }">
         @csrf
 
         <!-- Name -->
@@ -39,14 +39,33 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
+        <!-- Turnstile CAPTCHA -->
+        <div class="mt-4">
+            <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+            <div class="cf-turnstile"
+                 data-sitekey="{{ config('services.turnstile.site_key') }}"
+                 data-theme="light"
+                 data-callback="window.turnstileRegisterCallback"></div>
+            <x-input-error :messages="$errors->get('cf-turnstile-response')" class="mt-2" />
+            <p x-show="!turnstileVerified" class="text-sm text-amber-600 mt-2">Selesaikan verifikasi CAPTCHA untuk melanjutkan</p>
+        </div>
+
         <div class="flex items-center justify-end mt-4">
             <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
                 {{ __('Already registered?') }}
             </a>
 
-            <x-primary-button class="ms-4">
+            <button type="submit" :disabled="!turnstileVerified"
+                    class="ms-4 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
                 {{ __('Register') }}
-            </x-primary-button>
+            </button>
         </div>
     </form>
 </x-guest-layout>
+
+<script>
+window.turnstileRegisterCallback = function(token) {
+    // This is called by Turnstile when verification succeeds
+    // Alpine.js will handle the state update
+}
+</script>

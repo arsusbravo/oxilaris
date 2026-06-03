@@ -72,10 +72,22 @@
           <!-- Error -->
           <div v-if="error" class="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2 mb-3">{{ error }}</div>
 
+          <!-- Turnstile CAPTCHA -->
+          <div v-if="!captchaVerified && previewUrl" ref="turnstileContainer" class="mb-4 p-4 rounded-lg bg-amber-50 border border-amber-200">
+            <p class="text-xs text-amber-700 font-semibold mb-3">Verifikasi keamanan diperlukan untuk melanjutkan</p>
+            <div class="cf-turnstile" :data-sitekey="turnstileSiteKey" data-theme="light" data-callback="turnstileCallback"></div>
+          </div>
+
+          <!-- CAPTCHA Required Message -->
+          <div v-else-if="previewUrl && !captchaVerified" class="mb-4 p-3 rounded-lg bg-amber-50 border border-amber-200">
+            <p class="text-sm text-amber-700 font-medium">✓ Foto sudah siap — selesaikan verifikasi CAPTCHA untuk scan</p>
+          </div>
+
           <!-- Submit -->
-          <button @click="doScan" :disabled="scanning || !previewUrl"
-                  class="w-full rounded-xl font-bold text-white text-sm transition-all disabled:opacity-40"
-                  style="background-color:#C0391A; padding: 0.875rem;">
+          <button @click="doScan" :disabled="scanning || !previewUrl || !captchaVerified"
+                  class="w-full rounded-xl font-bold text-white text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                  style="background-color:#C0391A; padding: 0.875rem;"
+                  :title="!captchaVerified && previewUrl ? 'Selesaikan verifikasi CAPTCHA terlebih dahulu' : ''">
             <span v-if="scanning" class="flex items-center justify-center gap-2">
               <svg style="width:1rem;height:1rem;animation:spin 1s linear infinite;" fill="none" viewBox="0 0 24 24">
                 <circle style="opacity:0.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -83,6 +95,7 @@
               </svg>
               AI sedang menganalisis...
             </span>
+            <span v-else-if="!captchaVerified && previewUrl">Verifikasi CAPTCHA terlebih dahulu →</span>
             <span v-else>✦ Scan dengan AI →</span>
           </button>
         </div>
@@ -348,17 +361,20 @@ export default {
   data() {
     const el = document.getElementById('demo-app')
     return {
-      step:             1,
-      scanning:         false,
-      error:            null,
-      previewUrl:       null,
-      imageBase64:      null,
-      platforms:        JSON.parse(el?.dataset.platforms || '[]'),
-      scansLeft:        parseInt(el?.dataset.scansLeft || '2'),
-      csrf:             el?.dataset.csrf || '',
-      meta:             PLATFORM_META,
-      selectedPlatform: null,
-      savedProduct:     null,
+      step:               1,
+      scanning:           false,
+      error:              null,
+      previewUrl:         null,
+      imageBase64:        null,
+      platforms:          JSON.parse(el?.dataset.platforms || '[]'),
+      scansLeft:          parseInt(el?.dataset.scansLeft || '2'),
+      csrf:               el?.dataset.csrf || '',
+      turnstileSiteKey:   el?.dataset.turnstileKey || '',
+      turnstileToken:     null,
+      captchaVerified:    false,
+      meta:               PLATFORM_META,
+      selectedPlatform:   null,
+      savedProduct:       null,
       form: {
         title:       '',
         description: '',
@@ -373,6 +389,13 @@ export default {
 
   created() {
     if (this.scansLeft === 0) this.step = 3
+  },
+
+  mounted() {
+    window.turnstileCallback = (token) => {
+      this.turnstileToken = token
+      this.captchaVerified = true
+    }
   },
 
   methods: {
@@ -406,7 +429,13 @@ export default {
     clearImage() {
       this.imageBase64 = null
       this.previewUrl  = null
+      this.turnstileToken = null
+      this.captchaVerified = false
       if (this.$refs.fileInput) this.$refs.fileInput.value = ''
+      // Reset Turnstile widget
+      if (window.turnstile) {
+        window.turnstile.reset()
+      }
     },
 
     async doScan() {
@@ -420,7 +449,10 @@ export default {
         return
       }
 
-      const body = { image_data: this.imageBase64 }
+      const body = {
+        image_data: this.imageBase64,
+        'cf-turnstile-response': this.turnstileToken,
+      }
 
       try {
         const r = await fetch('/demo/scan', {

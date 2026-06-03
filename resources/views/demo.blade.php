@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body class="font-sans antialiased bg-slate-50">
 
@@ -34,7 +35,8 @@
     <div id="demo-app"
          data-scans-left="{{ $scansLeft }}"
          data-platforms="{{ json_encode($platforms) }}"
-         data-csrf="{{ csrf_token() }}">
+         data-csrf="{{ csrf_token() }}"
+         data-turnstile-key="{{ config('services.turnstile.site_key') }}">
     </div>
 
 </body>
