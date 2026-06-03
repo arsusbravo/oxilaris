@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class ChannelController extends Controller
 {
     // OAuth-capable channel types that only need minimal user input
-    private const OAUTH_TYPES = ['shopify', 'woocommerce', 'tiktok_shop', 'shopee'];
+    private const OAUTH_TYPES = ['shopify', 'woocommerce', 'tiktok_shop', 'shopee', 'olx'];
 
     public function __construct(private ChannelManager $channelManager) {}
 

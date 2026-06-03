@@ -27,7 +27,7 @@
                                 $activeStores  = array_intersect_key($channelTypes, array_flip($storeTypes));
                                 $activeMarkets = array_intersect_key($channelTypes, array_flip($marketTypes));
                                 $activeAds     = array_intersect_key($channelTypes, array_flip($adTypes));
-                                $oauthTypes    = ['shopify', 'woocommerce', 'tiktok_shop', 'shopee'];
+                                $oauthTypes    = ['shopify', 'woocommerce', 'tiktok_shop', 'shopee', 'olx'];
                             @endphp
                             @if($activeStores)
                                 <optgroup label="{{ __('ui.ch_optgroup_stores') }}">
@@ -212,12 +212,15 @@
 
                     {{-- OLX --}}
                     <div x-show="type === 'olx'" class="space-y-4 mb-5">
+                        <div class="rounded-xl bg-emerald-50 border border-emerald-200 p-4 flex items-start gap-3">
+                            <svg class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <p class="text-sm text-emerald-700">{{ __('ui.ch_oauth_redirect_notice', [':platform' => 'OLX']) }}</p>
+                        </div>
                         @include('channels._guide', ['color' => 'orange', 'title' => __('ui.ch_olx_guide_title'),
-                            'steps' => ['ch_olx_step_1','ch_olx_step_2','ch_olx_step_3','ch_olx_step_4'],
+                            'steps' => ['ch_olx_step_1','ch_olx_step_2','ch_olx_step_3'],
                             'url' => 'https://developer.olx.com', 'urlLabel' => __('ui.ch_olx_portal')])
-                        <div><x-input-label value="Client ID" /><x-text-input type="text" name="credentials[client_id]" class="mt-1 block w-full" value="{{ old('credentials.client_id') }}" /></div>
-                        <div><x-input-label value="Client Secret" /><x-text-input type="password" name="credentials[client_secret]" class="mt-1 block w-full" /></div>
-                        <div><x-input-label value="Access Token" /><x-text-input type="password" name="credentials[access_token]" class="mt-1 block w-full" /></div>
+                        <div><x-input-label value="Client ID" /><x-text-input type="text" name="credentials[client_id]" class="mt-1 block w-full" value="{{ old('credentials.client_id') }}" required /></div>
+                        <div><x-input-label value="Client Secret" /><x-text-input type="password" name="credentials[client_secret]" class="mt-1 block w-full" required /></div>
                         <div><x-input-label value="Default Category ID (optional)" /><x-text-input type="text" name="credentials[category_id]" class="mt-1 block w-full" value="{{ old('credentials.category_id') }}" placeholder="3" /></div>
                     </div>
 
