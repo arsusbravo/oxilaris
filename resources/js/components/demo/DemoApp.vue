@@ -61,7 +61,7 @@
             </svg>
           </div>
           <div class="text-center">
-            <p class="text-sm font-semibold text-slate-700">Ketuk untuk ambil foto atau pilih gambar</p>
+            <p class="text-sm font-semibold text-slate-700">Tekan untuk ambil foto atau pilih gambar</p>
             <p class="text-xs text-slate-400 mt-1">JPG, PNG, WebP — maks 8MB</p>
           </div>
           <input ref="fileInput" type="file" accept="image/*" capture="environment"
