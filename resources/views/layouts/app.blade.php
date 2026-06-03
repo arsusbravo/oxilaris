@@ -5,7 +5,26 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'OXIlaris') }}</title>
+        <meta name="description" content="OXIlaris — Kelola produk dan jual di Tokopedia, Shopee, OLX dan banyak platform lainnya dari satu dashboard.">
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" href="/images/oxilaris-icon.png">
+        <link rel="apple-touch-icon" href="/images/oxilaris-icon.png">
+
+        <!-- Open Graph -->
+        <meta property="og:title" content="OXIlaris">
+        <meta property="og:description" content="Kelola produk dan jual di Tokopedia, Shopee, OLX dan banyak platform lainnya dari satu dashboard.">
+        <meta property="og:image" content="{{ url('/images/oxilaris-icon.png') }}">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="OXIlaris">
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="OXIlaris">
+        <meta name="twitter:description" content="Kelola produk dan jual di Tokopedia, Shopee, OLX dan banyak platform lainnya dari satu dashboard.">
+        <meta name="twitter:image" content="{{ url('/images/oxilaris-icon.png') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

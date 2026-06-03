@@ -4,6 +4,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Demo Gratis — OXIlaris</title>
+    <meta name="description" content="Coba gratis! Scan foto produk Anda dan biarkan AI OXIlaris membuat judul, deskripsi, kategori, dan spesifikasi dalam hitungan detik.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/oxilaris-icon.png">
+    <link rel="apple-touch-icon" href="/images/oxilaris-icon.png">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Demo Gratis AI Produk — OXIlaris">
+    <meta property="og:description" content="Scan foto produk, AI isi detailnya otomatis. Coba gratis sekarang — tidak perlu daftar!">
+    <meta property="og:image" content="{{ url('/images/oxilaris-icon.png') }}">
+    <meta property="og:url" content="{{ url('/demo') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="OXIlaris">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Demo Gratis AI Produk — OXIlaris">
+    <meta name="twitter:description" content="Scan foto produk, AI isi detailnya otomatis. Coba gratis sekarang!">
+    <meta name="twitter:image" content="{{ url('/images/oxilaris-icon.png') }}">
+
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
