@@ -73,14 +73,14 @@
           <div v-if="error" class="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2 mb-3">{{ error }}</div>
 
           <!-- Turnstile CAPTCHA -->
-          <div v-if="!captchaVerified && previewUrl" ref="turnstileContainer" class="mb-4 p-4 rounded-lg bg-amber-50 border border-amber-200">
+          <div v-show="!captchaVerified && previewUrl" ref="turnstileContainer" class="mb-4 p-4 rounded-lg bg-amber-50 border border-amber-200">
             <p class="text-xs text-amber-700 font-semibold mb-3">Verifikasi keamanan diperlukan untuk melanjutkan</p>
-            <div class="cf-turnstile" :data-sitekey="turnstileSiteKey" data-theme="light" data-callback="turnstileCallback"></div>
+            <div id="turnstile-widget" class="cf-turnstile" :data-sitekey="turnstileSiteKey" data-theme="light" data-callback="turnstileCallback"></div>
           </div>
 
-          <!-- CAPTCHA Required Message -->
-          <div v-else-if="previewUrl && !captchaVerified" class="mb-4 p-3 rounded-lg bg-amber-50 border border-amber-200">
-            <p class="text-sm text-amber-700 font-medium">✓ Foto sudah siap — selesaikan verifikasi CAPTCHA untuk scan</p>
+          <!-- CAPTCHA Required Message (fallback if widget doesn't show) -->
+          <div v-if="previewUrl && !captchaVerified && turnstileSiteKey" class="mb-4 p-3 rounded-lg bg-amber-50 border border-amber-200">
+            <p class="text-sm text-amber-700 font-medium">Tunggu... widget keamanan sedang dimuat...</p>
           </div>
 
           <!-- Submit -->
@@ -396,6 +396,22 @@ export default {
       this.turnstileToken = token
       this.captchaVerified = true
     }
+
+    // Watch for when preview image is set and render Turnstile
+    this.$watch('previewUrl', (newVal) => {
+      if (newVal && window.turnstile) {
+        this.$nextTick(() => {
+          const container = document.getElementById('turnstile-widget')
+          if (container && !container.querySelector('iframe')) {
+            window.turnstile.render('#turnstile-widget', {
+              sitekey: this.turnstileSiteKey,
+              theme: 'light',
+              callback: 'turnstileCallback'
+            })
+          }
+        })
+      }
+    })
   },
 
   methods: {
@@ -434,7 +450,15 @@ export default {
       if (this.$refs.fileInput) this.$refs.fileInput.value = ''
       // Reset Turnstile widget
       if (window.turnstile) {
-        window.turnstile.reset()
+        try {
+          window.turnstile.reset()
+        } catch (e) {
+          // Widget might not be rendered yet
+          const container = document.getElementById('turnstile-widget')
+          if (container) {
+            container.innerHTML = ''
+          }
+        }
       }
     },
 
